@@ -31,7 +31,7 @@ public class Computer {
 	/**
 	 * Le nom du manufactureur
 	 */
-	private int idEntreprise=-1;
+	private Companie entreprise;
 	
 	/**
 	 * Constructeur minimale de la classe Computeur
@@ -43,7 +43,7 @@ public class Computer {
 		this.id=cb.id;
 		this.introductDate=cb.introductDate;
 		this.discontinueDate=cb.discontinueDate;
-		this.idEntreprise=cb.idEntreprise;
+		this.entreprise=cb.entreprise;
 	}
 	
 	public String getName() {
@@ -78,12 +78,12 @@ public class Computer {
 		this.discontinueDate = discontinueDate;
 	}
 	
-	public int getIDEntreprise() {
-		return idEntreprise;
+	public Companie getEntreprise() {
+		return entreprise;
 	}
 	
-	public void setIDEntreprise(int idEntreprise) {
-		this.idEntreprise = idEntreprise;
+	public void setEntreprise(Companie entreprise) {
+		this.entreprise = entreprise;
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class Computer {
 		res+=this.discontinueDate==null?"non définie":this.discontinueDate;
 		
 		res+="\nID du Fabricant: ";
-		res+=this.idEntreprise==0?"non définie":this.idEntreprise;
+		res+=this.entreprise==null?"non définie":this.entreprise.getId();
 		
 		return res;
 	}
@@ -125,7 +125,7 @@ public class Computer {
 		
 		private LocalDateTime discontinueDate;
 		
-		private int idEntreprise;
+		private Companie entreprise;
 		
 		/**
 		 * Constructeur de la classe Builder
@@ -173,12 +173,12 @@ public class Computer {
 			return this;
 		}
 
-		public int getIdEntreprise() {
-			return idEntreprise;
+		public Companie getEntreprise() {
+			return entreprise;
 		}
 
-		public ComputerBuilder setIdEntreprise(int idEntreprise) {
-			this.idEntreprise = idEntreprise;
+		public ComputerBuilder setEntreprise(Companie entreprise) {
+			this.entreprise = entreprise;
 			return this;
 		}
 		

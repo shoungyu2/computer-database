@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
 
 /**
@@ -22,11 +23,12 @@ public class ComputerDAO {
 	 */
 	private final static String INSERT_COMPUTER="INSERT INTO computer VALUES(?,?,?,?,?)";
 	private final static String SELECT_ALL_COMPUTER=
-			"SELECT id,name,introduced,discontinued,company_id FROM computer";
-	private final static String SELECT_COMPUTER_BY_ID=
-			"SELECT * FROM computer where id=?";
-	private final static String SELECT_COMPUTER_BY_NAME=
-			"SELECT * FROM computer where name=?";
+			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
+			+ " FROM computer LEFT JOIN company ON company_id=company.id" ;
+	private final static String SELECT_COMPUTER=
+			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
+			+ " FROM computer LEFT JOIN company ON company_id=company.id"
+			+ " WHERE computer.id=?";
 	private final static String UPDATE_COMPUTER=
 			"UPDATE computer SET introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
@@ -56,8 +58,8 @@ public class ComputerDAO {
 				
 				Computer c;
 				
-				String name=res.getString("name");
-				int id=res.getInt("id");
+				String name=res.getString("computer.name");
+				int id=res.getInt("computer.id");
 				
 				c=new Computer.ComputerBuilder(name, id).build();
 				
@@ -74,7 +76,10 @@ public class ComputerDAO {
 				}
 				
 				int compID=res.getInt("company_id");
-				c.setIDEntreprise(compID);
+				Companie company=
+						compID==0?
+						null:new Companie(res.getString("company.name"),compID);
+				c.setEntreprise(company);
 				
 				listComp.add(c);
 			
@@ -83,7 +88,6 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.exit(-1);
 		}
 		
 		return listComp;
@@ -92,41 +96,37 @@ public class ComputerDAO {
 	/**
 	 * Affiche en console les détails de l'ordinateur dont l'ID est le paramètre donné
 	 * @param id un entier
-	 * @return un ordinateur si l'id fournit était présent dans la base
+	 * @return un Optional<Computer>
 	 */
-	public static Optional<Computer> showDetailComputerByID(int id) {
+	public static Optional<Computer> showDetailComputer(int id) {
 		
-		try {
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER)){
 			
-			PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER_BY_ID);
 			pstmt.setInt(1, id);
 			ResultSet res=pstmt.executeQuery();
 			if(res.next()) {
 				
 				Computer c;
 				
-				String name=res.getString("name");
-				int idComputer=res.getInt("id");
+				String name=res.getString("computer.name");
+				int idComputer=res.getInt("computer.id");
 				
 				c=new Computer.ComputerBuilder(name, idComputer).build();
 				
 				Timestamp introDate=res.getTimestamp("introduced");
-				if(introDate!=null) {
-					LocalDateTime introLDT=introDate.toLocalDateTime();
-					c.setIntroductDate(introLDT);
-				}
+				LocalDateTime introLDT=introDate==null?null:introDate.toLocalDateTime();
+				c.setIntroductDate(introLDT);
 				
 				Timestamp discDate=res.getTimestamp("discontinued");
-				if(discDate!=null) {
-					LocalDateTime discLDT=discDate.toLocalDateTime();
-					c.setDiscontinueDate(discLDT);
-				}
+				LocalDateTime discLDT=discDate==null?null:discDate.toLocalDateTime();
+				c.setDiscontinueDate(discLDT);
 				
 				int idCompanie=res.getInt("company_id");
-				c.setIDEntreprise(idCompanie);
-				
-				System.out.println(c);
-				
+				Companie company=
+						idCompanie==0?
+						null:new Companie(res.getString("company.name"),idCompanie);
+				c.setEntreprise(company);
+								
 				return Optional.of(c);
 				
 			}
@@ -141,66 +141,13 @@ public class ComputerDAO {
 	}
 	
 	/**
-	 * Affiche en console les détails de l'ordinateur dont le nom est le paramètre donné
-	 * @param name une chaîne de caractère
-	 * @return un ordinateur si le nom fournit était dans la BDD
-	 */
-	public static Optional<Computer> showDetailComputerByName(String name) {
-		
-		try {
-			
-			PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER_BY_NAME);
-			pstmt.setString(1, name);
-			ResultSet res=pstmt.executeQuery();
-			if(res.next()) {
-				
-				Computer c;
-				
-				String nameComp=res.getString("name");
-				int idComputer=res.getInt("id");
-				
-				c=new Computer.ComputerBuilder(nameComp, idComputer).build();
-				
-				Timestamp introDate=res.getTimestamp("introduced");
-				if(introDate!=null) {
-					LocalDateTime introLDT=introDate.toLocalDateTime();
-					c.setIntroductDate(introLDT);
-				}
-				
-				Timestamp discDate=res.getTimestamp("discontinued");
-				if(discDate!=null) {
-					LocalDateTime discLDT=discDate.toLocalDateTime();
-					c.setDiscontinueDate(discLDT);
-				}
-				
-				int idCompanie=res.getInt("company_id");
-				c.setIDEntreprise(idCompanie);
-				
-				System.out.println(c);
-				
-				return Optional.of(c);
-				
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return Optional.empty();
-		
-	}
-	
-	
-	/**
 	 * Méthode permettant d'ajouter un nouvel ordinateur dans la BDD
 	 * @param c un ordinateur
 	 */
 	public static void createComputer(Computer c) {
 		
-		try {
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER)){
 			
-			PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER);
 			pstmt.setInt(1, c.getID());
 			pstmt.setString(2, c.getName());
 			
@@ -214,7 +161,8 @@ public class ComputerDAO {
 							null : Timestamp.valueOf(c.getDiscontinueDate());
 			pstmt.setTimestamp(4, discDate);			
 			
-			pstmt.setInt(5, c.getIDEntreprise());
+			int companyID=c.getEntreprise()==null?0:c.getEntreprise().getId();
+			pstmt.setInt(5, companyID);
 			
 			pstmt.executeUpdate();
 			
@@ -231,9 +179,7 @@ public class ComputerDAO {
 	 */
 	public static void updateComputer(Computer c) {
 		
-		try {
-			
-			PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER);
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
 			
 			pstmt.setInt(4, c.getID());
 			
@@ -247,7 +193,8 @@ public class ComputerDAO {
 							null : Timestamp.valueOf(c.getDiscontinueDate());
 			pstmt.setTimestamp(2, discDate);
 			
-			pstmt.setInt(3, c.getIDEntreprise());
+			int companyID=c.getEntreprise()==null?0:c.getEntreprise().getId();
+			pstmt.setInt(3, companyID);
 			
 			pstmt.executeUpdate();
 			
@@ -264,9 +211,8 @@ public class ComputerDAO {
 	 */
 	public static void deleteComputer(int id) {
 		
-		try {
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(DELETE_COMPUTER)){
 			
-			PreparedStatement pstmt=dbc.getPreparedStatement(DELETE_COMPUTER);
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 		
