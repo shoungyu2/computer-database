@@ -60,30 +60,33 @@ public class ComputerDAO {
 				
 				String name=res.getString("computer.name");
 				int id=res.getInt("computer.id");
-				
-				c=new Computer.ComputerBuilder(name, id).build();
-				
+								
 				Timestamp introDate=res.getTimestamp("introduced");
+				LocalDateTime introLDT=null;
 				if(introDate!=null) {
-					LocalDateTime introLDT=introDate.toLocalDateTime();
-					c.setIntroductDate(introLDT);
+					introLDT=introDate.toLocalDateTime();
 				}
 				
 				Timestamp discDate=res.getTimestamp("discontinued");
+				LocalDateTime discLDT=null;
 				if(discDate!=null) {
-					LocalDateTime discLDT=discDate.toLocalDateTime();
-					c.setDiscontinueDate(discLDT);
+					discLDT=discDate.toLocalDateTime();
 				}
 				
 				int compID=res.getInt("company_id");
 				Companie company=
 						compID==0?
 						null:new Companie(res.getString("company.name"),compID);
-				c.setEntreprise(company);
-				
+
+				c=new Computer.ComputerBuilder(name,id)
+						.setIntroductDate(introLDT)
+						.setDiscontinueDate(discLDT)
+						.setEntreprise(company)
+						.build();
+
 				listComp.add(c);
 			
-			}
+			}	
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -111,22 +114,27 @@ public class ComputerDAO {
 				String name=res.getString("computer.name");
 				int idComputer=res.getInt("computer.id");
 				
-				c=new Computer.ComputerBuilder(name, idComputer).build();
-				
 				Timestamp introDate=res.getTimestamp("introduced");
-				LocalDateTime introLDT=introDate==null?null:introDate.toLocalDateTime();
-				c.setIntroductDate(introLDT);
+				LocalDateTime introLDT=
+						introDate==null ?
+						null:introDate.toLocalDateTime();
 				
 				Timestamp discDate=res.getTimestamp("discontinued");
-				LocalDateTime discLDT=discDate==null?null:discDate.toLocalDateTime();
-				c.setDiscontinueDate(discLDT);
+				LocalDateTime discLDT=
+						discDate==null ?
+						null:discDate.toLocalDateTime();
 				
 				int idCompanie=res.getInt("company_id");
 				Companie company=
 						idCompanie==0?
 						null:new Companie(res.getString("company.name"),idCompanie);
-				c.setEntreprise(company);
-								
+
+				c=new Computer.ComputerBuilder(name,idComputer)
+						.setIntroductDate(introLDT)
+						.setDiscontinueDate(discLDT)
+						.setEntreprise(company)
+						.build();
+				
 				return Optional.of(c);
 				
 			}
@@ -153,12 +161,12 @@ public class ComputerDAO {
 			
 			Timestamp introDate=
 					c.getIntroductDate()==null ? 
-							null : Timestamp.valueOf(c.getIntroductDate());
+					null : Timestamp.valueOf(c.getIntroductDate());
 			pstmt.setTimestamp(3, introDate);
 			
 			Timestamp discDate=
 					c.getDiscontinueDate()==null ? 
-							null : Timestamp.valueOf(c.getDiscontinueDate());
+					null : Timestamp.valueOf(c.getDiscontinueDate());
 			pstmt.setTimestamp(4, discDate);			
 			
 			int companyID=c.getEntreprise()==null?0:c.getEntreprise().getId();
@@ -185,15 +193,17 @@ public class ComputerDAO {
 			
 			Timestamp introDate=
 					c.getIntroductDate()==null ? 
-							null : Timestamp.valueOf(c.getIntroductDate());
+					null : Timestamp.valueOf(c.getIntroductDate());
 			pstmt.setTimestamp(1, introDate);
 			
 			Timestamp discDate=
 					c.getDiscontinueDate()==null ? 
-							null : Timestamp.valueOf(c.getDiscontinueDate());
+					null : Timestamp.valueOf(c.getDiscontinueDate());
 			pstmt.setTimestamp(2, discDate);
 			
-			int companyID=c.getEntreprise()==null?0:c.getEntreprise().getId();
+			int companyID=
+					c.getEntreprise()==null ?
+					0:c.getEntreprise().getId();
 			pstmt.setInt(3, companyID);
 			
 			pstmt.executeUpdate();

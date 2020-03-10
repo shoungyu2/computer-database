@@ -66,16 +66,8 @@ public class Computer {
 		return introductDate;
 	}
 
-	public void setIntroductDate(LocalDateTime introductDate) {
-		this.introductDate = introductDate;
-	}
-
 	public LocalDateTime getDiscontinueDate() {
 		return discontinueDate;
-	}
-	
-	public void setDiscontinueDate(LocalDateTime discontinueDate) {
-		this.discontinueDate = discontinueDate;
 	}
 	
 	public Companie getEntreprise() {
@@ -128,13 +120,21 @@ public class Computer {
 		private Companie entreprise;
 		
 		/**
-		 * Constructeur de la classe Builder
-		 * @param name
-		 * @param id
+		 * Constructeur de la classe Builder prenant nom et ID en paramètre
+		 * @param name le nom de l'ordinateur
+		 * @param id l'ID de l'ordinateur
 		 */
 		public ComputerBuilder(String name, int id) {
 			this.name=name;
 			this.id=id;
+		}
+		
+		/**
+		 * Constructeur de la classe Builder ne prenant que le nom en paramètre
+		 * @param name le nom de l'ordinateur
+		 */
+		public ComputerBuilder(String name) {
+			this.name=name;
 		}
 
 		public String getName() {

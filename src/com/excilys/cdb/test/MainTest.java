@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.CompanieDAO;
 import com.excilys.cdb.persistence.ComputerDAO;
 import com.excilys.cdb.ui.CommandeLineInterface;;
 
@@ -15,13 +16,14 @@ public class MainTest {
 		// TODO Auto-generated method stub
 		
 		new ComputerDAO();
+		new CompanieDAO();
 		Optional<Computer> oc;
 		Companie company=new Companie("Apple Inc.",1);
 		Companie company2=new Companie("Thinking Machines",2);
 		Computer c= new Computer.ComputerBuilder("iPhone 4S", 574).setEntreprise(company).build();
 		
-		//Test de listComputer
-		/*System.out.println("Test de listComputer");
+		/*//Test de listComputer
+		System.out.println("Test de listComputer");
 		for(Computer comp: ComputerDAO.listComputer()) {
 			System.out.println(comp);
 			System.out.println();
@@ -45,7 +47,12 @@ public class MainTest {
 		c= new Computer.ComputerBuilder("iPhone 4S", 574).setEntreprise(company2).build();
 		ComputerDAO.updateComputer(c);
 		oc=ComputerDAO.showDetailComputer(574);
-		System.out.println(oc.get());
+		try {
+			System.out.println(oc.get());
+		}
+		catch(NoSuchElementException nsee) {
+			System.out.println("Not Found");
+		}
 		System.out.println();
 		
 		// Test de deleteComputer
@@ -62,10 +69,17 @@ public class MainTest {
 		
 		
 		//Test de showComputerCLI
-		CommandeLineInterface.showComputerCLI();
+		//CommandeLineInterface.showComputerCLI();
 		
 		//Test de listComputerCLI
-		CommandeLineInterface.listComputerCLI();
+		//CommandeLineInterface.listComputerCLI();
+		
+		//Test de updateComputerCLI
+		oc=ComputerDAO.showDetailComputer(573);
+		System.out.println(oc.get());
+		CommandeLineInterface.updateComputerCLI();
+		oc=ComputerDAO.showDetailComputer(573);
+		System.out.println(oc.get());
 	}
 
 }

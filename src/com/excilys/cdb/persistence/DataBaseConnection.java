@@ -71,4 +71,14 @@ public class DataBaseConnection {
 		int result=st.executeUpdate(insertQuery);
 		return result;
 	}
+	
+	@Override
+	public void finalize() {
+		try {
+			this.conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
