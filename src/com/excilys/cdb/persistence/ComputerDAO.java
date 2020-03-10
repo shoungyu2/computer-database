@@ -193,7 +193,7 @@ public class ComputerDAO {
 	
 	
 	/**
-	 * Méthode permettant d'ajouter un nouvel ordianateur dans la BDD
+	 * Méthode permettant d'ajouter un nouvel ordinateur dans la BDD
 	 * @param c un ordinateur
 	 */
 	public static void createComputer(Computer c) {
@@ -258,6 +258,10 @@ public class ComputerDAO {
 		
 	}
 	
+	/**
+	 * Méthode permettant de supprimer un ordinateur de la base de donnée grâce à son id
+	 * @param id un entier
+	 */
 	public static void deleteComputer(int id) {
 		
 		try {

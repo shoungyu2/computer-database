@@ -35,8 +35,8 @@ public class Computer {
 	
 	/**
 	 * Constructeur minimale de la classe Computeur
-	 * @param nomPC le nom du PC
-	 * @param dates les dates d'introduction et/ou de retrait du PC (optionnel)
+	 * @param cb le builder contenant toutes les infos nécessaires 
+	 * à la construction d'un ordinateur (Voir ComputerBuilder pour plus d'informations)
 	 */
 	public Computer(ComputerBuilder cb) {
 		this.name=cb.name;
@@ -46,14 +46,6 @@ public class Computer {
 		this.idEntreprise=cb.idEntreprise;
 	}
 	
-	public LocalDateTime getDiscontinueDate() {
-		return discontinueDate;
-	}
-	
-	public void setDiscontinueDate(LocalDateTime discontinueDate) {
-		this.discontinueDate = discontinueDate;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -78,6 +70,14 @@ public class Computer {
 		this.introductDate = introductDate;
 	}
 
+	public LocalDateTime getDiscontinueDate() {
+		return discontinueDate;
+	}
+	
+	public void setDiscontinueDate(LocalDateTime discontinueDate) {
+		this.discontinueDate = discontinueDate;
+	}
+	
 	public int getIDEntreprise() {
 		return idEntreprise;
 	}
@@ -95,34 +95,19 @@ public class Computer {
 		res+="\nNom: "+this.name;
 		
 		res+="\nDate d'introduction: ";
-		if(this.introductDate==null) {
-			res+="non définie";
-		}
-		else {
-			res+=this.introductDate;
-		}
+		res+=this.introductDate==null?"non définie":this.introductDate;
 		
 		res+="\nDate de retrait: ";
-		if(this.discontinueDate==null) {
-			res+="non définie";
-		}
-		else {
-			res+=this.discontinueDate;
-		}
+		res+=this.discontinueDate==null?"non définie":this.discontinueDate;
 		
 		res+="\nID du Fabricant: ";
-		if(this.idEntreprise<0) {
-			res+="non définie";
-		}
-		else {
-			res+=this.idEntreprise;
-		}
+		res+=this.idEntreprise==0?"non définie":this.idEntreprise;
 		
 		return res;
 	}
 	
 	/**
-	 * Builder pour la classe Computer
+	 * Builder de la classe Computer
 	 * @author masterchief
 	 */
 	public static class ComputerBuilder{
@@ -142,6 +127,11 @@ public class Computer {
 		
 		private int idEntreprise;
 		
+		/**
+		 * Constructeur de la classe Builder
+		 * @param name
+		 * @param id
+		 */
 		public ComputerBuilder(String name, int id) {
 			this.name=name;
 			this.id=id;
