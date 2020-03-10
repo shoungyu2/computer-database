@@ -13,6 +13,12 @@ public class MainTest {
 		Computer c= new Computer.ComputerBuilder("iPhone 4S", 574).setIdEntreprise(12).build();
 		ComputerDAO.updateComputer(c);
 		ComputerDAO.showDetailComputerByID(574);
+		
+		ComputerDAO.deleteComputer(574);
+		ComputerDAO.showDetailComputerByID(574);
+		
+		ComputerDAO.createComputer(c);
+		ComputerDAO.showDetailComputerByID(574);
 	}
 
 }

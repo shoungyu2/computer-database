@@ -29,6 +29,7 @@ public class ComputerDAO {
 			"SELECT * FROM computer where name=?";
 	private final static String UPDATE_COMPUTER=
 			"UPDATE computer SET introduced=?, discontinued=?, company_id=? WHERE id=?";
+	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
 	
 	
 	/**
@@ -258,6 +259,17 @@ public class ComputerDAO {
 	}
 	
 	public static void deleteComputer(int id) {
+		
+		try {
+			
+			PreparedStatement pstmt=dbc.getPreparedStatement(DELETE_COMPUTER);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+		
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
