@@ -4,6 +4,7 @@ package com.excilys.cdb.test;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.CompanieDAO;
@@ -15,8 +16,6 @@ public class MainTest {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		new ComputerDAO();
-		new CompanieDAO();
 		Optional<Computer> oc;
 		Companie company=new Companie("Apple Inc.",1);
 		Companie company2=new Companie("Thinking Machines",2);
@@ -77,7 +76,12 @@ public class MainTest {
 		//Test de updateComputerCLI
 		oc=ComputerDAO.showDetailComputer(573);
 		System.out.println(oc.get());
-		CommandeLineInterface.updateComputerCLI();
+		try {
+			CommandeLineInterface.updateComputerCLI();
+		} catch (NotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		oc=ComputerDAO.showDetailComputer(573);
 		System.out.println(oc.get());
 	}

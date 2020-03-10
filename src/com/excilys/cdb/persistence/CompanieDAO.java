@@ -21,18 +21,14 @@ public class CompanieDAO {
 	public final static	String SELECT_ALL_COMPANIE="SELECT id,name FROM company";
 	public final static String SELECT_COMPANIE="SELECT id,name FROM company WHERE id=?";
 	
-	public static DataBaseConnection dbc;
-	
-	public CompanieDAO() {
-		dbc=DataBaseConnection.getDbCon();
-	}
-	
 	/**
 	 * Méthode retournant la liste de toutes les companies de la BDD
 	 * @return une List<Companie> représentant la liste de toutes les companies
 	 */
 	public static List<Companie> listCompanie(){
 				
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
+		
 		List<Companie> listComp=new ArrayList<>();
 		
 		try {
@@ -57,7 +53,15 @@ public class CompanieDAO {
 	
 	}
 	
+	/**
+	 * Méthode permettant de récupérer la Companie 
+	 * correspondant à l'ID donné en paramètre
+	 * @param id l'ID de la companie cherchée
+	 * @return un Optional<Companie>
+	 */
 	public static Optional<Companie> showDetailCompanie(int id) {
+		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
 		try(PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPANIE)){
 			

@@ -33,23 +33,13 @@ public class ComputerDAO {
 			"UPDATE computer SET introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
 	
-	
-	/**
-	 * La connection à la BDD
-	 */
-	private static DataBaseConnection dbc;
-	
-	
-	public ComputerDAO() {
-		dbc=DataBaseConnection.getDbCon();
-	}
-	
 	/**
 	 * Liste tous les ordinateurs de la BDD
 	 * @return listComp la liste de tous les ordinateurs de la BDD
 	 */
 	public static List<Computer> listComputer(){
 		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		List<Computer> listComp=new ArrayList<>();
 		
 		try {
@@ -103,6 +93,8 @@ public class ComputerDAO {
 	 */
 	public static Optional<Computer> showDetailComputer(int id) {
 		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
+		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER)){
 			
 			pstmt.setInt(1, id);
@@ -154,6 +146,8 @@ public class ComputerDAO {
 	 */
 	public static void createComputer(Computer c) {
 		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
+		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER)){
 			
 			pstmt.setInt(1, c.getID());
@@ -186,6 +180,8 @@ public class ComputerDAO {
 	 * @param c un ordinateur
 	 */
 	public static void updateComputer(Computer c) {
+		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
 			
@@ -220,6 +216,8 @@ public class ComputerDAO {
 	 * @param id un entier
 	 */
 	public static void deleteComputer(int id) {
+		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(DELETE_COMPUTER)){
 			
