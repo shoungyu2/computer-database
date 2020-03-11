@@ -22,7 +22,7 @@ public class DataBaseConnection {
 		String dbName="computer-database-db";
 		String driver="com.mysql.cj.jdbc.Driver";
 		String username="admincdb";
-		String password="azerty1234";
+		String password="qwerty1234";
 		try {
 			Class.forName(driver);
 			this.conn=(Connection)DriverManager.getConnection(url+dbName,username,password);

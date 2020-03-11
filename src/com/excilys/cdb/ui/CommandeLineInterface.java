@@ -1,6 +1,7 @@
 package com.excilys.cdb.ui;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,6 +34,23 @@ public class CommandeLineInterface {
 		String rep=SC.nextLine();
 		if(rep.equals("o")) {
 			for(Computer c: listComp) {
+				System.out.println(c);
+				System.out.println();
+			}
+		}
+		
+	}
+	
+	public static void listCompanieCLI() {
+		
+		List<Companie> listComp=CompanieDAO.listCompanie();
+		
+		System.out.println("Nombre de companies dans la BDD: "+listComp.size());
+		
+		System.out.println("Voulez vous les afficher(o/n)?");
+		String rep=SC.nextLine();
+		if(rep.equals("o")) {
+			for (Companie c: listComp) {
 				System.out.println(c);
 				System.out.println();
 			}
@@ -81,15 +99,21 @@ public class CommandeLineInterface {
 		LocalDateTime introLDT=null;
 		try {
 			String str=SC.nextLine();
-			introLDT=LocalDateTime.parse(str);
-		} catch (NoSuchElementException nsee) {}
+			if(!str.equals("")) {
+				introLDT=LocalDateTime.parse(str);
+			}
+		} catch (DateTimeParseException nsee) {
+			System.out.println("Date invlaide, valeur mise à null");
+		}
 		
 		System.out.println("Computer discontinued(optional):");
 		LocalDateTime discLDT=null;
 		try {
 			String str=SC.nextLine();
-			discLDT=LocalDateTime.parse(str);
-		} catch(NoSuchElementException nsee) {}
+			if(!str.equals("")) {
+				discLDT=LocalDateTime.parse(str);
+			}
+		} catch(DateTimeParseException nsee) {}
 		
 		System.out.println("Company ID(optional):");
 		Companie c=null;
@@ -110,6 +134,8 @@ public class CommandeLineInterface {
 				.setEntreprise(c)
 				.build();
 		
+		System.out.println("Données mise à jour: ");
+		System.out.println(computer);
 		ComputerDAO.updateComputer(computer);
 	}
 	
@@ -128,15 +154,23 @@ public class CommandeLineInterface {
 		LocalDateTime introLDT=null;
 		try {
 			String str=SC.nextLine();
-			introLDT=LocalDateTime.parse(str);
-		} catch (NoSuchElementException nsee) {}
+			if(!str.equals("")) {
+				introLDT=LocalDateTime.parse(str);
+			}
+		} catch (DateTimeParseException nsee) {
+			System.out.println("Date invalide, valeur mise à null");
+		}
 		
 		System.out.println("Computer discontinued date(optional):");
 		LocalDateTime discLDT=null;
 		try {
 			String str=SC.nextLine();
-			discLDT=LocalDateTime.parse(str);
-		} catch(NoSuchElementException nsee) {}
+			if(!str.equals("")) {
+				discLDT=LocalDateTime.parse(str);
+			}
+		} catch(DateTimeParseException nsee) {
+			System.out.println("Date invalide, valeur mise à null");
+		}
 		
 		System.out.println("Company ID(optional):");
 		Companie c=null;
@@ -155,6 +189,8 @@ public class CommandeLineInterface {
 				.build();
 		
 		ComputerDAO.createComputer(computer);
+		System.out.println("Ordinateur crée: ");
+		System.out.println(computer);
 	}
 	
 	/**
@@ -172,5 +208,89 @@ public class CommandeLineInterface {
 		}
 		
 		ComputerDAO.deleteComputer(id);
+	}
+	
+	public static void afficheMenu() {
+		System.out.println("Choisissez l'une des options suivantes");
+		System.out.println();
+		System.out.println("1.Lister les ordinateurs");
+		System.out.println("2.Lister les companies");
+		System.out.println("3.Afficher les détails d'un ordinateurs");
+		System.out.println("4.Créer un ordinateur");
+		System.out.println("5.Mettre à jour un ordinateur");
+		System.out.println("6.Supprimer un ordinateur");
+		System.out.println("7.Quitter");
+	}
+	
+	public static boolean revenirMenu(boolean ok) {
+		
+		System.out.println("Revenir au menu ?");
+		System.out.println();
+		System.out.println("1. Oui");
+		System.out.println("Autre entrée: Non et quitter");
+		if(!(SC.nextLine().equals("1"))) {
+			System.out.println("Au revoir");
+			ok=true;
+		}
+		
+		return ok;
+		
+	}
+	
+	public static void faitesVotreChoix() {
+		
+		boolean ok=false;
+		
+		while(!ok) {
+			
+			afficheMenu();
+			
+			try {
+				int choix=Integer.parseInt(SC.nextLine());
+				switch(choix) {
+				
+				case 1:
+					listComputerCLI();
+					ok=revenirMenu(ok);
+					break;
+				
+				case 2:
+					listCompanieCLI();
+					ok=revenirMenu(ok);
+					break;
+					
+				case 3:
+					showComputerCLI();
+					ok=revenirMenu(ok);
+					break;
+					
+				case 4:
+					createComputerCLI();
+					ok=revenirMenu(ok);
+					break;
+					
+				case 5:
+					updateComputerCLI();
+					ok=revenirMenu(ok);
+					break;
+				
+				case 6:
+					deleteComputerCLI();
+					ok=revenirMenu(ok);
+					break;
+					
+				default:
+					System.out.println("Au revoir");
+					ok=true;
+					
+				}
+			}
+			catch(NotFoundException nfe) {
+				System.err.println(nfe.getMessage());
+			}
+			catch(NumberFormatException nfe) {
+				System.err.println("Veuillez choisir un nombre entre 1 et 7");
+			}
+		}
 	}
 }
