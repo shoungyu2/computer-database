@@ -12,16 +12,11 @@ import java.util.Optional;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
 
-/**
- * Classe implémentant les méthodes de manipulation des données concernant les ordinateurs
- * @author masterchief
- */
+
 public class ComputerDAO {
 	
-	/**
-	 * Toutes les requêtes nécessaires pour les méthodes ci-dessous
-	 */
-	private final static String INSERT_COMPUTER="INSERT INTO computer VALUES(?,?,?,?,?)";
+	private final static String INSERT_COMPUTER="INSERT INTO computer "
+			+ "(name,introduced,discontinued, company_id) VALUES (?,?,?,?,?)";
 	private final static String SELECT_ALL_COMPUTER=
 			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
 			+ " FROM computer LEFT JOIN company ON company_id=company.id" ;
@@ -33,188 +28,153 @@ public class ComputerDAO {
 			"UPDATE computer SET introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
 	
-	/**
-	 * Liste tous les ordinateurs de la BDD
-	 * @return listComp la liste de tous les ordinateurs de la BDD
-	 */
+	private static String getComputerNameFromBDD(ResultSet res) throws SQLException{
+		
+		return res.getString("computer.name");
+		
+	}
+
+	private static int getComputerIDFromBDD(ResultSet res)throws SQLException{
+		
+		return res.getInt("computer.id");
+		
+	}
+	
+	private static LocalDateTime getComputerIntroDateFromBDD(ResultSet res) throws SQLException{
+		
+		Timestamp introDate=res.getTimestamp("introduced");
+		LocalDateTime introLDT=null;
+		if(introDate!=null) {
+			introLDT=introDate.toLocalDateTime();
+		}
+		return introLDT;
+		
+	}
+
+	private static LocalDateTime getComputerDiscDateFromBDD(ResultSet res) throws SQLException{
+		
+		Timestamp discDate=res.getTimestamp("discontinued");
+		LocalDateTime discLDT=null;
+		if(discDate!=null) {
+			discLDT=discDate.toLocalDateTime();
+		}
+		return discLDT;
+		
+	}
+	
+	private static Companie getComputerCompanieFromBDD(ResultSet res) throws SQLException{
+		
+		int compID=res.getInt("company_id");
+		Companie company=
+				compID==0?
+				null:new Companie(res.getString("company.name"),compID);
+		return company;
+	}
+	
+	private static Computer createComputerFromBDD(ResultSet res) throws SQLException {
+		
+		Computer c;
+		
+		String name=getComputerNameFromBDD(res);
+		int id=getComputerIDFromBDD(res);
+		LocalDateTime introLDT=getComputerIntroDateFromBDD(res);
+		LocalDateTime discLDT=getComputerDiscDateFromBDD(res);
+		Companie company=getComputerCompanieFromBDD(res);
+		
+		c=new Computer.ComputerBuilder(name,id)
+				.setIntroductDate(introLDT)
+				.setDiscontinueDate(discLDT)
+				.setEntreprise(company)
+				.build();
+		
+		return c;
+		
+	}
+	
+	private static Timestamp getDateFromComputer(LocalDateTime ldt) {
+		
+		Timestamp date=
+				ldt==null ? 
+				null : Timestamp.valueOf(ldt);
+		return date;
+		
+	}
+	
+	private static int getCompanieIDFromComputer(Computer c) {
+		
+		return c.getEntreprise()==null?0:c.getEntreprise().getId();
+		
+	}
+	
 	public static List<Computer> listComputer(){
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		List<Computer> listComp=new ArrayList<>();
-		
 		try {
 			ResultSet res=dbc.query(SELECT_ALL_COMPUTER);
 			while(res.next()) {
-				
-				Computer c;
-				
-				String name=res.getString("computer.name");
-				int id=res.getInt("computer.id");
-								
-				Timestamp introDate=res.getTimestamp("introduced");
-				LocalDateTime introLDT=null;
-				if(introDate!=null) {
-					introLDT=introDate.toLocalDateTime();
-				}
-				
-				Timestamp discDate=res.getTimestamp("discontinued");
-				LocalDateTime discLDT=null;
-				if(discDate!=null) {
-					discLDT=discDate.toLocalDateTime();
-				}
-				
-				int compID=res.getInt("company_id");
-				Companie company=
-						compID==0?
-						null:new Companie(res.getString("company.name"),compID);
-
-				c=new Computer.ComputerBuilder(name,id)
-						.setIntroductDate(introLDT)
-						.setDiscontinueDate(discLDT)
-						.setEntreprise(company)
-						.build();
-
+				Computer c=createComputerFromBDD(res);
 				listComp.add(c);
-			
 			}	
-
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return listComp;
 	}
 	
-	/**
-	 * Affiche en console les détails de l'ordinateur dont l'ID est le paramètre donné
-	 * @param id un entier
-	 * @return un Optional<Computer>
-	 */
 	public static Optional<Computer> showDetailComputer(int id) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER)){
-			
 			pstmt.setInt(1, id);
 			ResultSet res=pstmt.executeQuery();
 			if(res.next()) {
-				
-				Computer c;
-				
-				String name=res.getString("computer.name");
-				int idComputer=res.getInt("computer.id");
-				
-				Timestamp introDate=res.getTimestamp("introduced");
-				LocalDateTime introLDT=
-						introDate==null ?
-						null:introDate.toLocalDateTime();
-				
-				Timestamp discDate=res.getTimestamp("discontinued");
-				LocalDateTime discLDT=
-						discDate==null ?
-						null:discDate.toLocalDateTime();
-				
-				int idCompanie=res.getInt("company_id");
-				Companie company=
-						idCompanie==0?
-						null:new Companie(res.getString("company.name"),idCompanie);
-
-				c=new Computer.ComputerBuilder(name,idComputer)
-						.setIntroductDate(introLDT)
-						.setDiscontinueDate(discLDT)
-						.setEntreprise(company)
-						.build();
-				
+				Computer c=createComputerFromBDD(res);
 				return Optional.of(c);
-				
 			}
-
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 		return Optional.empty();
-		
 	}
 	
-	/**
-	 * Méthode permettant d'ajouter un nouvel ordinateur dans la BDD
-	 * @param c un ordinateur
-	 */
 	public static void createComputer(Computer c) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER)){
-			
 			pstmt.setInt(1, c.getID());
 			pstmt.setString(2, c.getName());
-			
-			Timestamp introDate=
-					c.getIntroductDate()==null ? 
-					null : Timestamp.valueOf(c.getIntroductDate());
+			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
 			pstmt.setTimestamp(3, introDate);
-			
-			Timestamp discDate=
-					c.getDiscontinueDate()==null ? 
-					null : Timestamp.valueOf(c.getDiscontinueDate());
+			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
 			pstmt.setTimestamp(4, discDate);			
-			
-			int companyID=c.getEntreprise()==null?0:c.getEntreprise().getId();
+			int companyID=getCompanieIDFromComputer(c);
 			pstmt.setInt(5, companyID);
-			
 			pstmt.executeUpdate();
-			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	
-	/**
-	 * Méthode permettant la mise à jour des données d'un ordianateur dans la BDD
-	 * @param c un ordinateur
-	 */
 	public static void updateComputer(Computer c) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
-			
 			pstmt.setInt(4, c.getID());
-			
-			Timestamp introDate=
-					c.getIntroductDate()==null ? 
-					null : Timestamp.valueOf(c.getIntroductDate());
+			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
 			pstmt.setTimestamp(1, introDate);
-			
-			Timestamp discDate=
-					c.getDiscontinueDate()==null ? 
-					null : Timestamp.valueOf(c.getDiscontinueDate());
+			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
 			pstmt.setTimestamp(2, discDate);
-			
-			int companyID=
-					c.getEntreprise()==null ?
-					0:c.getEntreprise().getId();
+			int companyID=getCompanieIDFromComputer(c);
 			pstmt.setInt(3, companyID);
-			
 			pstmt.executeUpdate();
-			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 	
-	/**
-	 * Méthode permettant de supprimer un ordinateur de la base de donnée grâce à son id
-	 * @param id un entier
-	 */
 	public static void deleteComputer(int id) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
@@ -225,7 +185,6 @@ public class ComputerDAO {
 			pstmt.executeUpdate();
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

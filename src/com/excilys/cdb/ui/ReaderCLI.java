@@ -16,11 +16,11 @@ import com.excilys.cdb.persistence.ComputerDAO;
 public class ReaderCLI {
 
 	private final static Scanner SC=new Scanner(System.in);
-	private final static DateTimeFormatter dtf=DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private final static DateTimeFormatter DTF=DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	
 	private static LocalDateTime stringToDate(String str) {
 		
-		LocalDateTime ldt=LocalDate.parse(str, dtf).atStartOfDay();
+		LocalDateTime ldt=LocalDate.parse(str, DTF).atStartOfDay();
 		return ldt;
 		
 	}
@@ -73,7 +73,6 @@ public class ReaderCLI {
 		} catch(NumberFormatException nsee) {
 			System.out.println("ID invalide, valeur de la companie mise à null");
 		}
-		
 		return c;
 		
 	}
@@ -82,30 +81,23 @@ public class ReaderCLI {
 		
 		System.out.println("Computer ID(mandatory):");
 		int id=choixID();
-		
 		Optional<Computer> oc=ComputerDAO.showDetailComputer(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("Computer Not Found");
 		}
-		
 		System.out.println("Computer name(mandatory):");
 		String name=SC.nextLine();
-		
 		System.out.println("Computer introduced date(optional):");
-		LocalDateTime introLDT=ReaderCLI.choixDate();
-		
+		LocalDateTime introLDT=choixDate();
 		System.out.println("Computer discontinued(optional):");
-		LocalDateTime discLDT=ReaderCLI.choixDate();
-		
+		LocalDateTime discLDT=choixDate();
 		System.out.println("Company ID(optional):");
 		Companie c=ReaderCLI.choixCompanie();
-		
 		Computer computer=new Computer.ComputerBuilder(name, id)
 				.setIntroductDate(introLDT)
 				.setDiscontinueDate(discLDT)
 				.setEntreprise(c)
 				.build();
-		
 		return computer;
 		
 	}

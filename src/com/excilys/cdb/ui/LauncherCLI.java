@@ -1,6 +1,5 @@
 package com.excilys.cdb.ui;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import com.excilys.cdb.exception.NotFoundException;
@@ -91,6 +90,11 @@ public class LauncherCLI {
 				System.err.println("Veuillez choisir un nombre entre 1 et 7");
 			}
 		}
+	}
+	
+	@Override
+	public void finalize() {
+		SC.close();
 	}
 	
 }
