@@ -16,7 +16,7 @@ import com.excilys.cdb.model.Computer;
 public class ComputerDAO {
 	
 	private final static String INSERT_COMPUTER="INSERT INTO computer "
-			+ "(name,introduced,discontinued, company_id) VALUES (?,?,?,?,?)";
+			+ "(name,introduced,discontinued, company_id) VALUES (?,?,?,?)";
 	private final static String SELECT_ALL_COMPUTER=
 			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
 			+ " FROM computer LEFT JOIN company ON company_id=company.id" ;
@@ -25,7 +25,7 @@ public class ComputerDAO {
 			+ " FROM computer LEFT JOIN company ON company_id=company.id"
 			+ " WHERE computer.id=?";
 	private final static String UPDATE_COMPUTER=
-			"UPDATE computer SET introduced=?, discontinued=?, company_id=? WHERE id=?";
+			"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
 	
 	private static String getComputerNameFromBDD(ResultSet res) throws SQLException{
@@ -142,14 +142,13 @@ public class ComputerDAO {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER)){
-			pstmt.setInt(1, c.getID());
-			pstmt.setString(2, c.getName());
+			pstmt.setString(1, c.getName());
 			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
-			pstmt.setTimestamp(3, introDate);
+			pstmt.setTimestamp(2, introDate);
 			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
-			pstmt.setTimestamp(4, discDate);			
+			pstmt.setTimestamp(3, discDate);			
 			int companyID=getCompanieIDFromComputer(c);
-			pstmt.setInt(5, companyID);
+			pstmt.setInt(4, companyID);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -161,13 +160,14 @@ public class ComputerDAO {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
-			pstmt.setInt(4, c.getID());
+			pstmt.setInt(5, c.getID());
+			pstmt.setString(1, c.getName());
 			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
-			pstmt.setTimestamp(1, introDate);
+			pstmt.setTimestamp(2, introDate);
 			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
-			pstmt.setTimestamp(2, discDate);
+			pstmt.setTimestamp(3, discDate);
 			int companyID=getCompanieIDFromComputer(c);
-			pstmt.setInt(3, companyID);
+			pstmt.setInt(4, companyID);
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
