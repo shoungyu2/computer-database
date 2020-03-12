@@ -1,14 +1,16 @@
 package com.excilys.cdb.ui;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
+import com.excilys.cdb.exception.DateInvalideException;
+import com.excilys.cdb.exception.InvalidEntryException;
+import com.excilys.cdb.exception.NameIsNullException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.persistence.CompanieDAO;
-import com.excilys.cdb.persistence.ComputerDAO;
+import com.excilys.cdb.service.CompanieService;
+import com.excilys.cdb.service.ComputerService;
 
 public class OperationCLI {
 
@@ -16,7 +18,7 @@ public class OperationCLI {
 
 	public static void listComputerCLI() {
 			
-		List<Computer> listComp=ComputerDAO.listComputer();
+		List<Computer> listComp=ComputerService.listComputerService();
 		System.out.println("Nombre de PC dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
@@ -31,7 +33,7 @@ public class OperationCLI {
 	
 	public static void listCompanieCLI() {
 		
-		List<Companie> listComp=CompanieDAO.listCompanie();
+		List<Companie> listComp=CompanieService.listCompanieService();
 		System.out.println("Nombre de companies dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
@@ -46,29 +48,27 @@ public class OperationCLI {
 
 	public static void showComputerCLI() throws NotFoundException{
 		
+		System.out.println("Computer ID:");
 		int id=ReaderCLI.choixID();
-		Optional<Computer> oc=ComputerDAO.showDetailComputer(id);
-		if(oc.isEmpty()) {
-			throw new NotFoundException("Computer Not Found");
-		}
+		Computer c=ComputerService.showDetailComputerService(id);
 		System.out.println("Voici les informations demandées: ");
-		System.out.println(oc.get());
+		System.out.println(c);
 	
 	}
 
-	public static void updateComputerCLI() throws NotFoundException {
+	public static void updateComputerCLI() throws InvalidEntryException, DateInvalideException, NameIsNullException, NotFoundException {
 		
-		Computer c=ReaderCLI.choixComputer();
+		Computer c=ReaderCLI.choixComputerForUpdate();
+		ComputerService.updateComputerService(c);
 		System.out.println("Données mise à jour: ");
 		System.out.println(c);
-		ComputerDAO.updateComputer(c);
 		
 	}
 
-	public static void createComputerCLI() throws NotFoundException{
+	public static void createComputerCLI() throws DateInvalideException, NameIsNullException, NotFoundException{
 		
-		Computer c=ReaderCLI.choixComputer();
-		ComputerDAO.createComputer(c);
+		Computer c=ReaderCLI.choixComputerForCreate();
+		ComputerService.createComputerService(c);
 		System.out.println("Ordinateur crée: ");
 		System.out.println(c);
 		
@@ -77,12 +77,9 @@ public class OperationCLI {
 	public static void deleteComputerCLI() throws NotFoundException{
 		
 		System.out.println("Computer ID:");
-		int id=Integer.parseInt(SC.nextLine());
-		Optional<Computer> oc=ComputerDAO.showDetailComputer(id);
-		if(oc.isEmpty()) {
-			throw new NotFoundException("Computer Not Found");
-		}
-		ComputerDAO.deleteComputer(id);
+		int id=ReaderCLI.choixID();
+		ComputerService.deleteComputer(id);
+	
 	}
 	
 }

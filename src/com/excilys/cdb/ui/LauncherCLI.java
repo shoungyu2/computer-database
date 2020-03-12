@@ -42,7 +42,6 @@ public class LauncherCLI {
 		while(!ok) {
 			
 			afficheMenu();
-			
 			try {
 				int choix=Integer.parseInt(SC.nextLine());
 				switch(choix) {
@@ -82,13 +81,10 @@ public class LauncherCLI {
 					ok=true;
 					
 				}
+			} catch (NumberFormatException nfe) {
+				System.out.println("Veuillez choisir un nombre entre 1 et 7");
 			}
-			catch(NotFoundException nfe) {
-				System.err.println(nfe.getMessage());
-			}
-			catch(NumberFormatException nfe) {
-				System.err.println("Veuillez choisir un nombre entre 1 et 7");
-			}
+			
 		}
 	}
 	

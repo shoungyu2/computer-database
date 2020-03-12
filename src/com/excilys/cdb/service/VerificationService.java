@@ -1,9 +1,13 @@
 package com.excilys.cdb.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import com.excilys.cdb.exception.DateInvalideException;
 import com.excilys.cdb.exception.NameIsNullException;
+import com.excilys.cdb.exception.NotFoundException;
+import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.persistence.ComputerDAO;
 
 public class VerificationService {
 
@@ -19,6 +23,15 @@ public class VerificationService {
 		
 		if(name!=null) {
 			throw new NameIsNullException("Name cannot be null");
+		}
+		
+	}
+	
+	public static void verifIDInBDD(int id) throws NotFoundException{
+		
+		Optional<Computer> oc= ComputerDAO.showDetailComputer(id);
+		if(oc.isEmpty()) {
+			throw new NotFoundException("ID Not Found");
 		}
 		
 	}
