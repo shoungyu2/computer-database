@@ -1,10 +1,10 @@
 package com.excilys.cdb.ui;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
 import com.excilys.cdb.exception.DateInvalideException;
-import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NameIsNullException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.model.Companie;
@@ -46,39 +46,85 @@ public class OperationCLI {
 		
 	}
 
-	public static void showComputerCLI() throws NotFoundException{
+	public static void showComputerCLI() {
 		
-		System.out.println("Computer ID:");
-		int id=ReaderCLI.choixID();
-		Computer c=ComputerService.showDetailComputerService(id);
-		System.out.println("Voici les informations demandées: ");
-		System.out.println(c);
+		boolean ok=false;
+		while(!ok) {
+			String id= ReaderCLI.choixID();
+			try {
+				int idComp=Integer.parseInt(id);
+				System.out.println(ComputerService.showDetailComputerService(idComp));
+				ok=true;
+			} catch(NotFoundException nfe) {
+				System.out.println("L'id n'est pas dans la BDD");
+			}
+			catch(NumberFormatException nfe) {
+				System.out.println("ID invalide");
+			}
+		}
 	
 	}
 
-	public static void updateComputerCLI() throws InvalidEntryException, DateInvalideException, NameIsNullException, NotFoundException {
+	public static void updateComputerCLI() {
 		
-		Computer c=ReaderCLI.choixComputerForUpdate();
-		ComputerService.updateComputerService(c);
-		System.out.println("Données mise à jour: ");
-		System.out.println(c);
+		boolean ok=false;
+		while(!ok) {
+			List<String> infoComp=ReaderCLI.choixComputerForUpdate();
+			try {
+				ComputerService.updateComputerService(infoComp);
+				ok=true;
+			} catch (NotFoundException nfe) {
+				System.out.println("L'ID n'est pas dans la base");
+			} catch (NumberFormatException nfe) {
+				System.out.println("ID invalide");
+			} catch (NameIsNullException nine) {
+				System.out.println("Le nom est obligatoire");
+			} catch (DateInvalideException die) {
+				System.out.println("La date d'introduction doit être avant la date de retrait");
+			} catch (DateTimeParseException dtpe) {
+				System.out.println("Date invalide");
+			}
+		}
 		
 	}
 
-	public static void createComputerCLI() throws DateInvalideException, NameIsNullException, NotFoundException{
+	public static void createComputerCLI() {
 		
-		Computer c=ReaderCLI.choixComputerForCreate();
-		ComputerService.createComputerService(c);
-		System.out.println("Ordinateur crée: ");
-		System.out.println(c);
+		boolean ok=false;
+		while(!ok) {
+			List<String> infoComp=ReaderCLI.choixComputerForCreate();
+			try {
+				ComputerService.createComputerService(infoComp);
+				ok=true;
+			} catch (NotFoundException nfe) {
+				System.out.println("L'ID n'est pas dans la base");
+			} catch (NumberFormatException nfe) {
+				System.out.println("ID invalide");
+			} catch (NameIsNullException nine) {
+				System.out.println("Le nom est obligatoire");
+			} catch (DateInvalideException die) {
+				System.out.println("La date d'introduction doit être avant la date de retrait");
+			} catch (DateTimeParseException dtpe) {
+				System.out.println("Date invalide");
+			}
+		}
 		
 	}
 
-	public static void deleteComputerCLI() throws NotFoundException{
+	public static void deleteComputerCLI() {
 		
-		System.out.println("Computer ID:");
-		int id=ReaderCLI.choixID();
-		ComputerService.deleteComputer(id);
+		boolean ok=false;
+		while(!ok) {
+			System.out.println("Computer ID:");
+			try {
+				int id=Integer.parseInt(ReaderCLI.choixID());
+				ComputerService.deleteComputer(id);
+			} catch(NotFoundException nfe) {
+				System.out.println("l'ID n'est pas dans la base");
+			} catch(NumberFormatException nfe) {
+				System.out.println("ID invalide");
+			}
+		}
 	
 	}
 	

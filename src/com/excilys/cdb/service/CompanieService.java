@@ -16,7 +16,7 @@ public class CompanieService {
 	
 	public static Companie showDetailCompanie(int id) throws NotFoundException{
 		
-		VerificationService.verifIDInBDD(id);
+		VerificationService.verifIDCompanieInBDD(id);
 		return CompanieDAO.showDetailCompanie(id).get();
 		
 	}

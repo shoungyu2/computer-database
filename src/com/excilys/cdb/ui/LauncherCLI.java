@@ -2,12 +2,10 @@ package com.excilys.cdb.ui;
 
 import java.util.Scanner;
 
-import com.excilys.cdb.exception.NotFoundException;
-
 public class LauncherCLI {
 	
 	private final static Scanner SC=new Scanner(System.in);	
-	
+
 	private static void afficheMenu() {
 		System.out.println("Choisissez l'une des options suivantes");
 		System.out.println();

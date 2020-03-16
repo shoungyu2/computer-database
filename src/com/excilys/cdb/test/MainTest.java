@@ -9,5 +9,5 @@ public class MainTest {
 		
 		LauncherCLI.faitesVotreChoix();
 	}
-
+	
 }
