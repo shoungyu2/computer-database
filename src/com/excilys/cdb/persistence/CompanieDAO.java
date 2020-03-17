@@ -14,7 +14,7 @@ public class CompanieDAO {
 	public final static	String SELECT_ALL_COMPANIE="SELECT id,name FROM company";
 	public final static String SELECT_COMPANIE="SELECT id,name FROM company WHERE id=?";
 	
-	public static List<Companie> listCompanie(){
+	public List<Companie> listCompanie(){
 				
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
@@ -42,7 +42,7 @@ public class CompanieDAO {
 	
 	}
 	
-	public static Optional<Companie> showDetailCompanie(int id) {
+	public Optional<Companie> showDetailCompanie(int id) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		

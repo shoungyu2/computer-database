@@ -28,19 +28,19 @@ public class ComputerDAO {
 			"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
 	
-	private static String getComputerNameFromBDD(ResultSet res) throws SQLException{
+	private String getComputerNameFromBDD(ResultSet res) throws SQLException{
 		
 		return res.getString("computer.name");
 		
 	}
 
-	private static int getComputerIDFromBDD(ResultSet res)throws SQLException{
+	private int getComputerIDFromBDD(ResultSet res)throws SQLException{
 		
 		return res.getInt("computer.id");
 		
 	}
 	
-	private static LocalDateTime getComputerIntroDateFromBDD(ResultSet res) throws SQLException{
+	private LocalDateTime getComputerIntroDateFromBDD(ResultSet res) throws SQLException{
 		
 		Timestamp introDate=res.getTimestamp("introduced");
 		LocalDateTime introLDT=null;
@@ -51,7 +51,7 @@ public class ComputerDAO {
 		
 	}
 
-	private static LocalDateTime getComputerDiscDateFromBDD(ResultSet res) throws SQLException{
+	private LocalDateTime getComputerDiscDateFromBDD(ResultSet res) throws SQLException{
 		
 		Timestamp discDate=res.getTimestamp("discontinued");
 		LocalDateTime discLDT=null;
@@ -62,7 +62,7 @@ public class ComputerDAO {
 		
 	}
 	
-	private static Companie getComputerCompanieFromBDD(ResultSet res) throws SQLException{
+	private Companie getComputerCompanieFromBDD(ResultSet res) throws SQLException{
 		
 		int compID=res.getInt("company_id");
 		Companie company=
@@ -71,7 +71,7 @@ public class ComputerDAO {
 		return company;
 	}
 	
-	private static Computer createComputerFromBDD(ResultSet res) throws SQLException {
+	private Computer createComputerFromBDD(ResultSet res) throws SQLException {
 		
 		Computer c;
 		
@@ -91,7 +91,7 @@ public class ComputerDAO {
 		
 	}
 	
-	private static Timestamp getDateFromComputer(LocalDateTime ldt) {
+	private Timestamp getDateFromComputer(LocalDateTime ldt) {
 		
 		Timestamp date=
 				ldt==null ? 
@@ -100,13 +100,13 @@ public class ComputerDAO {
 		
 	}
 	
-	private static int getCompanieIDFromComputer(Computer c) {
+	private int getCompanieIDFromComputer(Computer c) {
 		
 		return c.getEntreprise()==null?0:c.getEntreprise().getId();
 		
 	}
 	
-	public static List<Computer> listComputer(){
+	public List<Computer> listComputer(){
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		List<Computer> listComp=new ArrayList<>();
@@ -122,7 +122,7 @@ public class ComputerDAO {
 		return listComp;
 	}
 	
-	public static Optional<Computer> showDetailComputer(int id) {
+	public Optional<Computer> showDetailComputer(int id) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER)){
@@ -138,7 +138,7 @@ public class ComputerDAO {
 		return Optional.empty();
 	}
 	
-	public static void createComputer(Computer c) {
+	public void createComputer(Computer c) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER)){
@@ -156,7 +156,7 @@ public class ComputerDAO {
 		
 	}
 	
-	public static void updateComputer(Computer c) {
+	public void updateComputer(Computer c) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
@@ -175,7 +175,7 @@ public class ComputerDAO {
 		
 	}
 	
-	public static void deleteComputer(int id) {
+	public void deleteComputer(int id) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		

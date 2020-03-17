@@ -15,10 +15,25 @@ import com.excilys.cdb.service.ComputerService;
 public class OperationCLI {
 
 	private final static Scanner SC=new Scanner(System.in);
+	private ComputerService computerServ;
+	private CompanieService companieServ;
+	private ReaderCLI rcli;
+	
+	public void setComputerServ(ComputerService computerServ) {
+		this.computerServ = computerServ;
+	}
 
-	public static void listComputerCLI() {
+	public void setCompanieServ(CompanieService companieServ) {
+		this.companieServ = companieServ;
+	}
+
+	public void setRcli(ReaderCLI rcli) {
+		this.rcli = rcli;
+	}
+
+	public void listComputerCLI() {
 			
-		List<Computer> listComp=ComputerService.listComputerService();
+		List<Computer> listComp=computerServ.listComputerService();
 		System.out.println("Nombre de PC dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
@@ -31,9 +46,9 @@ public class OperationCLI {
 		
 	}
 	
-	public static void listCompanieCLI() {
+	public void listCompanieCLI() {
 		
-		List<Companie> listComp=CompanieService.listCompanieService();
+		List<Companie> listComp=companieServ.listCompanieService();
 		System.out.println("Nombre de companies dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
@@ -46,32 +61,28 @@ public class OperationCLI {
 		
 	}
 
-	public static void showComputerCLI() {
+	public void showComputerCLI() {
 		
-		boolean ok=false;
-		while(!ok) {
-			String id= ReaderCLI.choixID();
-			try {
-				int idComp=Integer.parseInt(id);
-				System.out.println(ComputerService.showDetailComputerService(idComp));
-				ok=true;
-			} catch(NotFoundException nfe) {
-				System.out.println("L'id n'est pas dans la BDD");
-			}
-			catch(NumberFormatException nfe) {
-				System.out.println("ID invalide");
-			}
-		}
+		String id= rcli.choixID();
+		System.out.println(computerServ.showDetailComputerService(id));
+
+	}
 	
+	public void showCompanieCLI() {
+		
+		String id= rcli.choixID();
+		System.out.println(companieServ.showDetailCompanieService(id));
+		
 	}
+	
 
-	public static void updateComputerCLI() {
+	public void updateComputerCLI() {
 		
 		boolean ok=false;
 		while(!ok) {
-			List<String> infoComp=ReaderCLI.choixComputerForUpdate();
+			List<String> infoComp=rcli.choixComputerForUpdate();
 			try {
-				ComputerService.updateComputerService(infoComp);
+				computerServ.updateComputerService(infoComp);
 				ok=true;
 			} catch (NotFoundException nfe) {
 				System.out.println("L'ID n'est pas dans la base");
@@ -88,13 +99,13 @@ public class OperationCLI {
 		
 	}
 
-	public static void createComputerCLI() {
+	public void createComputerCLI() {
 		
 		boolean ok=false;
 		while(!ok) {
-			List<String> infoComp=ReaderCLI.choixComputerForCreate();
+			List<String> infoComp=rcli.choixComputerForCreate();
 			try {
-				ComputerService.createComputerService(infoComp);
+				computerServ.createComputerService(infoComp);
 				ok=true;
 			} catch (NotFoundException nfe) {
 				System.out.println("L'ID n'est pas dans la base");
@@ -111,20 +122,10 @@ public class OperationCLI {
 		
 	}
 
-	public static void deleteComputerCLI() {
+	public void deleteComputerCLI() {
 		
-		boolean ok=false;
-		while(!ok) {
-			System.out.println("Computer ID:");
-			try {
-				int id=Integer.parseInt(ReaderCLI.choixID());
-				ComputerService.deleteComputer(id);
-			} catch(NotFoundException nfe) {
-				System.out.println("l'ID n'est pas dans la base");
-			} catch(NumberFormatException nfe) {
-				System.out.println("ID invalide");
-			}
-		}
+		String id=rcli.choixID();
+		computerServ.deleteComputerService(id);
 	
 	}
 	

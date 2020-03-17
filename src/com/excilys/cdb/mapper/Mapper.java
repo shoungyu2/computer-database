@@ -14,27 +14,34 @@ import com.excilys.cdb.service.CompanieService;
 public class Mapper {
 
 	private static final DateTimeFormatter DTF= DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private final CompanieService companieService;
 	
-	public static LocalDateTime stringToDate(String str) {
+	public Mapper() {
+		
+		companieService=new CompanieService();
+		
+	}
+	
+	
+	public LocalDateTime stringToDate(String str) {
 		
 		return LocalDate.parse(str, DTF).atStartOfDay();
 		
 	}
 	
-	public static Companie stringToCompanie(String id) throws NotFoundException {
+	public Companie stringToCompanie(String id) throws NotFoundException {
 		
-		int idComp=Integer.parseInt(id);
-		return CompanieService.showDetailCompanie(idComp);
+		return companieService.showDetailCompanieService(id);
 		
 	}
 	
-	public static int stringToID(String id) {
+	public int stringToID(String id) {
 		
 		return Integer.parseInt(id);
 				
 	}
 	
-	public static Computer stringToComputer(List<String> infoComp) throws NotFoundException {
+	public Computer stringToComputer(List<String> infoComp) throws NotFoundException {
 		
 		int idComputer=stringToID(infoComp.get(0));
 		String name= infoComp.get(1);

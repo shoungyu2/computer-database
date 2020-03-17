@@ -11,44 +11,63 @@ import com.excilys.cdb.persistence.ComputerDAO;
 
 public class ComputerService {
 
-	public static List<Computer> listComputerService(){
+	private VerificationService verifServ;
+	private ComputerDAO compDAO;
+	private Mapper map;
+	
+	public void setVerifServ(VerificationService verifServ) {
+		this.verifServ = verifServ;
+	}
+
+	public void setCompDAO(ComputerDAO compDAO) {
+		this.compDAO = compDAO;
+	}
+
+	public void setMap(Mapper map) {
+		this.map = map;
+	}
+
+	public List<Computer> listComputerService(){
 		
-		return ComputerDAO.listComputer();		
+		return compDAO.listComputer();		
 	
 	}
 	
-	public static Computer showDetailComputerService(int id) throws NotFoundException{
+	public Computer showDetailComputerService(String id) throws NotFoundException{
 		
-		VerificationService.verifIDComputerInBDD(id);
-		return ComputerDAO.showDetailComputer(id).get();
 		
-	}
-	
-	public static void createComputerService(List<String> infoComp) throws NotFoundException, DateInvalideException, NameIsNullException{
-		
-		Computer c=Mapper.stringToComputer(infoComp);
-		VerificationService.verifNameIsNotNull(c.getName());
-		VerificationService.verifDate(c.getIntroductDate(), c.getDiscontinueDate());
-		VerificationService.verifIDCompanieInBDD(c.getEntreprise().getId());
-		ComputerDAO.createComputer(c);
+		int idComp=map.stringToID(id);
+		verifServ.verifIDComputerInBDD(idComp);
+		return compDAO.showDetailComputer(idComp).get();
 		
 	}
 	
-	public static void updateComputerService(List<String> infoComp) throws DateInvalideException, NameIsNullException, NotFoundException{
+	public void createComputerService(List<String> infoComp) throws NotFoundException, DateInvalideException, NameIsNullException{
 		
-		Computer c=Mapper.stringToComputer(infoComp);
-		VerificationService.verifIDComputerInBDD(c.getID());
-		VerificationService.verifNameIsNotNull(c.getName());
-		VerificationService.verifDate(c.getIntroductDate(), c.getDiscontinueDate());
-		VerificationService.verifIDCompanieInBDD(c.getEntreprise().getId());
-		ComputerDAO.updateComputer(c);
+		Computer c=map.stringToComputer(infoComp);
+		verifServ.verifNameIsNotNull(c.getName());
+		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate());
+		verifServ.verifIDCompanieInBDD(c.getEntreprise().getId());
+		compDAO.createComputer(c);
 		
 	}
 	
-	public static void deleteComputer(int id) throws NotFoundException{
+	public void updateComputerService(List<String> infoComp) throws DateInvalideException, NameIsNullException, NotFoundException{
 		
-		VerificationService.verifIDComputerInBDD(id);
-		ComputerDAO.deleteComputer(id);
+		Computer c=map.stringToComputer(infoComp);
+		verifServ.verifIDComputerInBDD(c.getID());
+		verifServ.verifNameIsNotNull(c.getName());
+		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate());
+		verifServ.verifIDCompanieInBDD(c.getEntreprise().getId());
+		compDAO.updateComputer(c);
+		
+	}
+	
+	public void deleteComputerService(String id) throws NotFoundException{
+		
+		int idComp=map.stringToID(id);
+		verifServ.verifIDComputerInBDD(idComp);
+		compDAO.deleteComputer(idComp);
 		
 	}
 	

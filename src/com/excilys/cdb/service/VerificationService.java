@@ -12,8 +12,19 @@ import com.excilys.cdb.persistence.CompanieDAO;
 import com.excilys.cdb.persistence.ComputerDAO;
 
 public class VerificationService {
+	
+	private ComputerDAO computerDAO;
+	private CompanieDAO companieDAO;
 
-	public static void verifDate(LocalDateTime introLDT, LocalDateTime discLDT) throws DateInvalideException{
+	public void setComputerDAO(ComputerDAO computerDAO) {
+		this.computerDAO = computerDAO;
+	}
+
+	public void setCompanieDAO(CompanieDAO companieDAO) {
+		this.companieDAO = companieDAO;
+	}
+
+	public void verifDate(LocalDateTime introLDT, LocalDateTime discLDT) throws DateInvalideException{
 		
 		if((introLDT!=null && discLDT!=null) && (introLDT.isAfter(discLDT))) {
 			throw new DateInvalideException("La date d'introduction doit être antérieure à la date de retrait");
@@ -21,7 +32,7 @@ public class VerificationService {
 		
 	}
 	
-	public static void verifNameIsNotNull(String name) throws NameIsNullException{
+	public void verifNameIsNotNull(String name) throws NameIsNullException{
 		
 		if(name==null) {
 			throw new NameIsNullException("Name cannot be null");
@@ -29,18 +40,18 @@ public class VerificationService {
 		
 	}
 	
-	public static void verifIDComputerInBDD(int id) throws NotFoundException{
+	public void verifIDComputerInBDD(int id) throws NotFoundException{
 		
-		Optional<Computer> oc= ComputerDAO.showDetailComputer(id);
+		Optional<Computer> oc= computerDAO.showDetailComputer(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID Not Found");
 		}
 		
 	}
 	
-	public static void verifIDCompanieInBDD(int id) throws NotFoundException{
+	public  void verifIDCompanieInBDD(int id) throws NotFoundException{
 		
-		Optional<Companie> oc= CompanieDAO.showDetailCompanie(id);
+		Optional<Companie> oc= companieDAO.showDetailCompanie(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID not found");
 		}

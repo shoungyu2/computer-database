@@ -9,58 +9,59 @@ public class ReaderCLI {
 
 	private final static Scanner SC=new Scanner(System.in);
 	
-	public static String choixID(){
+	public String choixID(){
 
 		System.out.println("Choisissez l'ID voulu: ");
 		return SC.nextLine();
 		
 	}
 	
-	public static String choixNom() {
+	public String choixNom() {
 		
 		return SC.nextLine();
 		
 	}
 	
-	public static String choixDate(){
+	public String choixDate(){
 		
 		System.out.println("Choisissez une date: ");
 		return SC.nextLine();
 		
 	}
 	
-	public static String choixCompanie() {
+	public String choixCompanie() {
 
 		System.out.println("Choisissez votre Companie: ");
 		return choixID();
 		
 	}
 	
-	public static List<String> choixComputerForUpdate() {
+	public List<String> choixComputerForUpdate() {
 		
 		List<String> res=new ArrayList<String>();
-		res.add(ReaderCLI.choixID());
+		res.add(choixID());
 		System.out.println("Nom de l'odinateur");
-		res.add(ReaderCLI.choixNom());
+		res.add(choixNom());
 		System.out.println("Date d'introduction");
-		res.add(ReaderCLI.choixDate());
+		res.add(choixDate());
 		System.out.println("Date de retrait");
-		res.add(ReaderCLI.choixDate());
-		res.add(ReaderCLI.choixCompanie());
+		res.add(choixDate());
+		res.add(choixCompanie());
 		return res;
+		
 	}
 	
-	public static List<String> choixComputerForCreate() {
+	public List<String> choixComputerForCreate() {
 		
 		List<String> res=new ArrayList<String>();
 		res.add("0");
 		System.out.println("Nom de l'odinateur");
-		res.add(ReaderCLI.choixNom());
+		res.add(choixNom());
 		System.out.println("Date d'introduction");
-		res.add(ReaderCLI.choixDate());
+		res.add(choixDate());
 		System.out.println("Date de retrait");
-		res.add(ReaderCLI.choixDate());
-		res.add(ReaderCLI.choixCompanie());
+		res.add(choixDate());
+		res.add(choixCompanie());
 		return res;
 		
 	}

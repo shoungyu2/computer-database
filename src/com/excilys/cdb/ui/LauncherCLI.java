@@ -4,7 +4,14 @@ import java.util.Scanner;
 
 public class LauncherCLI {
 	
-	private final static Scanner SC=new Scanner(System.in);	
+	private final static Scanner SC=new Scanner(System.in);
+	private static OperationCLI opCLI;
+	
+	public static void setOpCLI(OperationCLI operatCLI) {
+		
+		opCLI=operatCLI;
+		
+	}
 
 	private static void afficheMenu() {
 		System.out.println("Choisissez l'une des options suivantes");
@@ -18,7 +25,7 @@ public class LauncherCLI {
 		System.out.println("7.Quitter");
 	}
 	
-	private static boolean revenirMenu(boolean ok) {
+	private static boolean revenirMenu() {
 		
 		System.out.println("Revenir au menu ?");
 		System.out.println();
@@ -26,10 +33,10 @@ public class LauncherCLI {
 		System.out.println("Autre entrée: Non et quitter");
 		if(!(SC.nextLine().equals("1"))) {
 			System.out.println("Au revoir");
-			ok=true;
+			return true;
 		}
 		
-		return ok;
+		return false;
 		
 	}
 	
@@ -45,33 +52,33 @@ public class LauncherCLI {
 				switch(choix) {
 				
 				case 1:
-					OperationCLI.listComputerCLI();
-					ok=revenirMenu(ok);
+					opCLI.listComputerCLI();
+					ok=revenirMenu();
 					break;
 				
 				case 2:
-					OperationCLI.listCompanieCLI();
-					ok=revenirMenu(ok);
+					opCLI.listCompanieCLI();
+					ok=revenirMenu();
 					break;
 					
 				case 3:
-					OperationCLI.showComputerCLI();
-					ok=revenirMenu(ok);
+					opCLI.showComputerCLI();
+					ok=revenirMenu();
 					break;
 					
 				case 4:
-					OperationCLI.createComputerCLI();
-					ok=revenirMenu(ok);
+					opCLI.createComputerCLI();
+					ok=revenirMenu();
 					break;
 					
 				case 5:
-					OperationCLI.updateComputerCLI();
-					ok=revenirMenu(ok);
+					opCLI.updateComputerCLI();
+					ok=revenirMenu();
 					break;
 				
 				case 6:
-					OperationCLI.deleteComputerCLI();
-					ok=revenirMenu(ok);
+					opCLI.deleteComputerCLI();
+					ok=revenirMenu();
 					break;
 					
 				default:
