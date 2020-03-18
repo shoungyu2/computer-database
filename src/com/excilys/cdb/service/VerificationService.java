@@ -34,26 +34,32 @@ public class VerificationService {
 	
 	public void verifNameIsNotNull(String name) throws NameIsNullException{
 		
-		if(name==null) {
+		if(name==null || name.equals("")) {
 			throw new NameIsNullException("Name cannot be null");
 		}
 		
 	}
 	
-	public void verifIDComputerInBDD(int id) throws NotFoundException{
+	public Optional<Computer> verifIDComputerInBDD(int id) throws NotFoundException{
 		
 		Optional<Computer> oc= computerDAO.showDetailComputer(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID Not Found");
 		}
+		else {
+			return oc;
+		}
 		
 	}
 	
-	public  void verifIDCompanieInBDD(int id) throws NotFoundException{
+	public Optional<Companie> verifIDCompanieInBDD(int id) throws NotFoundException{
 		
 		Optional<Companie> oc= companieDAO.showDetailCompanie(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID not found");
+		}
+		else {
+			return oc;
 		}
 		
 	}

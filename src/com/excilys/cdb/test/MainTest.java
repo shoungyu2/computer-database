@@ -21,7 +21,6 @@ public class MainTest {
 	
 	public static void injectionDepdencies() {
 		
-		Mapper map=new Mapper();
 		
 		ReaderCLI rCLI=new ReaderCLI();
 		OperationCLI opCLI=new OperationCLI();
@@ -30,11 +29,16 @@ public class MainTest {
 		CompanieService companieService=new CompanieService();
 		VerificationService verifService=new VerificationService();
 		
+		Mapper map=new Mapper();
+
 		ComputerDAO computerDAO= new ComputerDAO();
 		CompanieDAO companieDAO= new CompanieDAO();
 		
 		verifService.setCompanieDAO(companieDAO);
 		verifService.setComputerDAO(computerDAO);
+		
+		map.setCompanieDAO(companieDAO);
+		map.setVerifService(verifService);
 		
 		computerService.setCompDAO(computerDAO);
 		computerService.setVerifServ(verifService);
