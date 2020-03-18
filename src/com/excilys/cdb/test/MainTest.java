@@ -1,6 +1,7 @@
 package com.excilys.cdb.test;
 
 import com.excilys.cdb.mapper.Mapper;
+import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanieDAO;
 import com.excilys.cdb.persistence.ComputerDAO;
 import com.excilys.cdb.service.CompanieService;
@@ -15,6 +16,7 @@ public class MainTest {
 	public static void main(String[] args) {
 		
 		injectionDepdencies();
+		Page.setNbrPages(573/20+1);
 		LauncherCLI.faitesVotreChoix();
 		
 	}

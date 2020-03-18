@@ -8,21 +8,25 @@ import java.util.List;
 import java.util.Optional;
 
 import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Page;
 
 public class CompanieDAO {
 	
-	public final static	String SELECT_ALL_COMPANIE="SELECT id,name FROM company";
+	public final static	String SELECT_ALL_COMPANIE="SELECT id,name FROM company"
+			+ " ORDER BY id LIMIT ? OFFSET ?";
 	public final static String SELECT_COMPANIE="SELECT id,name FROM company WHERE id=?";
 	
-	public List<Companie> listCompanie(){
+	public List<Companie> listCompanie(Page page){
 				
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
 		List<Companie> listComp=new ArrayList<>();
 		
-		try {
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPANIE)){
 			
-			ResultSet res=dbc.query(SELECT_ALL_COMPANIE);
+			pstmt.setInt(0, page.getNbrElements());
+			pstmt.setInt(1, page.getOffset());
+			ResultSet res=pstmt.executeQuery();
 			
 			while(res.next()) {
 				Companie c;

@@ -2,6 +2,8 @@ package com.excilys.cdb.ui;
 
 import java.util.Scanner;
 
+import com.excilys.cdb.model.Page;
+
 public class LauncherCLI {
 	
 	private final static Scanner SC=new Scanner(System.in);
@@ -40,6 +42,56 @@ public class LauncherCLI {
 		
 	}
 	
+	private static void afficherPage(Page page) {
+		
+		System.out.println("prec/suiv");
+		String rep=SC.nextLine();
+		switch(rep) {
+		
+		case "suiv":
+			afficherPageSuivante(page);
+			break;
+			
+		case "prec":
+			afficherPagePrecedente(page);
+			break;
+			
+		default:
+
+		}
+		
+	}
+	
+	private static void afficherPageSuivante(Page page) {
+		
+		if(page.getNumPage()!=Page.getNbrPages()) {
+			Page pageSuiv=new Page(page.getNumPage()+1);
+			opCLI.listComputerCLI(pageSuiv);
+			afficherPage(pageSuiv);
+		}
+		else {
+			Page firstPage=new Page(0);
+			opCLI.listComputerCLI(firstPage);
+			afficherPage(firstPage);
+		}
+		
+	}
+	
+	private static void afficherPagePrecedente(Page page) {
+		
+		if(page.getNumPage()!=1) {
+			Page pagePrec=new Page(page.getNumPage()-1);
+			opCLI.listComputerCLI(pagePrec);
+			afficherPage(pagePrec);
+		}
+		else {
+			Page lastPage=new Page(Page.getNbrPages());
+			opCLI.listComputerCLI(lastPage);
+			afficherPage(lastPage);
+		}
+		
+	}
+	
 	public static void faitesVotreChoix() {
 		
 		boolean ok=false;
@@ -52,12 +104,14 @@ public class LauncherCLI {
 				switch(choix) {
 				
 				case 1:
-					opCLI.listComputerCLI();
+					Page firstPage=new Page(1);
+					opCLI.listComputerCLI(firstPage);
+					afficherPage(firstPage);
 					ok=revenirMenu();
 					break;
 				
 				case 2:
-					opCLI.listCompanieCLI();
+					opCLI.listCompanieCLI(new Page(1));
 					ok=revenirMenu();
 					break;
 					

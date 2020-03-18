@@ -9,6 +9,7 @@ import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanieDAO;
 
 public class CompanieService {
@@ -30,9 +31,9 @@ public class CompanieService {
 		this.map=map;
 	}
 
-	public List<Companie> listCompanieService(){
+	public List<Companie> listCompanieService(Page page){
 		
-		return compDAO.listCompanie();
+		return compDAO.listCompanie(page);
 		
 	}
 	

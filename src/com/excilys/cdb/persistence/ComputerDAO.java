@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 
 
 public class ComputerDAO {
@@ -19,7 +20,8 @@ public class ComputerDAO {
 			+ "(name,introduced,discontinued, company_id) VALUES (?,?,?,?)";
 	private final static String SELECT_ALL_COMPUTER=
 			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id" ;
+			+ " FROM computer LEFT JOIN company ON company_id=company.id"
+			+ " ORDER BY computer.id LIMIT ? OFFSET ?" ;
 	private final static String SELECT_COMPUTER=
 			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
 			+ " FROM computer LEFT JOIN company ON company_id=company.id"
@@ -27,6 +29,24 @@ public class ComputerDAO {
 	private final static String UPDATE_COMPUTER=
 			"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
+	
+	private final static String GET_NBR_COMPUTER="SELECT computer.id FROM computer"
+			+ " ORDER BY computer.id DESC";
+	
+	private static int getNbrComputer() {
+		
+		DataBaseConnection dbc=DataBaseConnection.getDbCon();
+		try {
+			ResultSet res=dbc.query(GET_NBR_COMPUTER);
+			if(res.next()) {
+				return res.getInt("computer.id");
+			}
+		} catch(SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		return 0;
+		
+	}
 	
 	private String getComputerNameFromBDD(ResultSet res) throws SQLException{
 		
@@ -106,12 +126,14 @@ public class ComputerDAO {
 		
 	}
 	
-	public List<Computer> listComputer(){
+	public List<Computer> listComputer(Page page){
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		List<Computer> listComp=new ArrayList<>();
-		try {
-			ResultSet res=dbc.query(SELECT_ALL_COMPUTER);
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPUTER)){
+			pstmt.setInt(1, page.getNbrElements());
+			pstmt.setInt(2, page.getOffset());
+			ResultSet res=pstmt.executeQuery();
 			while(res.next()) {
 				Computer c=createComputerFromBDD(res);
 				listComp.add(c);
@@ -152,6 +174,10 @@ public class ComputerDAO {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		int max=getNbrComputer()/20+1;
+		if(max>Page.getNbrPages()) {
+			Page.setNbrPages(max);
 		}
 		
 	}

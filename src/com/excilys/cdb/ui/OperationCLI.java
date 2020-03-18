@@ -7,6 +7,7 @@ import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
+import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.CompanieService;
 import com.excilys.cdb.service.ComputerService;
 
@@ -29,24 +30,20 @@ public class OperationCLI {
 		this.rcli = rcli;
 	}
 
-	public void listComputerCLI() {
+	public void listComputerCLI(Page page) {
 			
-		List<Computer> listComp=computerServ.listComputerService();
-		System.out.println("Nombre de PC dans la BDD: "+listComp.size());
-		System.out.println("Voulez vous les afficher(o/n)?");
-		String rep=SC.nextLine();
-		if(rep.equals("o")) {
-			for(Computer c: listComp) {
-				System.out.println(c);
-				System.out.println();
-			}
+		List<Computer> listComp=computerServ.listComputerService(page);
+		for(Computer c: listComp) {
+			System.out.println(c);
+			System.out.println();
 		}
+		System.out.println(page.getNumPage()+"/"+Page.getNbrPages());
 		
 	}
 	
-	public void listCompanieCLI() {
+	public void listCompanieCLI(Page page) {
 		
-		List<Companie> listComp=companieServ.listCompanieService();
+		List<Companie> listComp=companieServ.listCompanieService(page);
 		System.out.println("Nombre de companies dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
@@ -55,6 +52,7 @@ public class OperationCLI {
 				System.out.println(c);
 				System.out.println();
 			}
+			System.out.println(page.getNumPage()+"/"+Page.getNbrPages());
 		}
 		
 	}
