@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +171,12 @@ public class ComputerDAO {
 			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
 			pstmt.setTimestamp(3, discDate);			
 			int companyID=getCompanieIDFromComputer(c);
-			pstmt.setInt(4, companyID);
+			if(companyID==0) {
+				pstmt.setNull(4, Types.BIGINT);
+			}
+			else {
+				pstmt.setInt(4, companyID);
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

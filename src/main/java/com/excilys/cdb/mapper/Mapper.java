@@ -61,14 +61,20 @@ public class Mapper {
 	
 	public Optional<Companie> stringToCompanie(String id) {
 		
-		int idComp=stringToID(id);
-		try {
-			verifService.verifIDCompanieInBDD(idComp);
-		} catch(NotFoundException nfe) {
-			parseProb.add(Problems.createIDNotFoundProblem(id));
+		if(!id.equals("")) {
+			int idComp=stringToID(id);
+			try {
+				verifService.verifIDCompanieInBDD(idComp);
+			} catch(NotFoundException nfe) {
+				parseProb.add(Problems.createIDNotFoundProblem(id));
+			}
+			return companieDAO.showDetailCompanie(idComp);
 		}
-		return companieDAO.showDetailCompanie(idComp);
-		
+		else {
+			
+			return Optional.empty();
+			
+		}
 	}	
 	
 	public Computer stringToComputer(List<String> infoComp) {
@@ -92,14 +98,16 @@ public class Mapper {
 		
 		LocalDateTime introDate=null;
 		try {
-			introDate=stringToDate(infoComp.get(2));
+			introDate=
+					infoComp.get(2).equals("") ? null : stringToDate(infoComp.get(2));
 		} catch (DateTimeParseException dtpe) {
 			parseProb.add(Problems.createNotADateProblem(infoComp.get(2)));
 		}
 		
 		LocalDateTime discDate=null;
 		try {
-			discDate=stringToDate(infoComp.get(3));
+			discDate=
+					infoComp.get(3).equals("") ? null : stringToDate(infoComp.get(3));
 		} catch(DateTimeParseException dtpe) {
 			parseProb.add(Problems.createNotADateProblem(infoComp.get(3)));
 		}

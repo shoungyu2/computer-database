@@ -1,10 +1,13 @@
 package com.excilys.cdb.ui;
 
 import java.util.Scanner;
+import org.apache.log4j.Logger;
 
 import com.excilys.cdb.model.Page;
 
 public class LauncherCLI {
+	
+	private final static Logger LOGGER=Logger.getLogger(LauncherCLI.class);
 	
 	private final static Scanner SC=new Scanner(System.in);
 	private static OperationCLI opCLI;
@@ -135,13 +138,16 @@ public class LauncherCLI {
 					ok=revenirMenu();
 					break;
 					
-				default:
+				case 7:
 					System.out.println("Au revoir");
 					ok=true;
 					
+				default:
+					throw new NumberFormatException();
+					
 				}
 			} catch (NumberFormatException nfe) {
-				System.out.println("Veuillez choisir un nombre entre 1 et 7");
+				LOGGER.error("Veuillez choisir un nombre entre 1 et 7");
 			}
 			
 		}

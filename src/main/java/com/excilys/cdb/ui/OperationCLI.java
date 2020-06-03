@@ -1,7 +1,12 @@
 package com.excilys.cdb.ui;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
@@ -12,11 +17,26 @@ import com.excilys.cdb.service.CompanieService;
 import com.excilys.cdb.service.ComputerService;
 
 public class OperationCLI {
-
+	
+	private final static Logger LOGGER=Logger.getLogger(OperationCLI.class);
+	
 	private final static Scanner SC=new Scanner(System.in);
+	
 	private ComputerService computerServ;
 	private CompanieService companieServ;
 	private ReaderCLI rcli;
+	
+	public OperationCLI() {
+		
+		try {
+			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
+					"src/main/java/com/excilys/cdb/logger/log.txt");
+			LOGGER.addAppender(fa);
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+		
+	}
 	
 	public void setComputerServ(ComputerService computerServ) {
 		this.computerServ = computerServ;
@@ -64,7 +84,7 @@ public class OperationCLI {
 			System.out.println(computerServ.showDetailComputerService(id).get());
 		} catch (InvalidEntryException iee) {
 			for(Problems p: iee.getListProb()) {
-				System.out.println(p);
+				LOGGER.error(p);
 			}
 		}
 	}
@@ -76,7 +96,7 @@ public class OperationCLI {
 			System.out.println(companieServ.showDetailCompanieService(id).get());
 		} catch(InvalidEntryException iee) {
 			for(Problems p:iee.getListProb()) {
-				System.out.println(p);
+				LOGGER.error(p);
 			}
 		}
 	}
@@ -90,9 +110,10 @@ public class OperationCLI {
 			try {
 				computerServ.updateComputerService(infoComp);
 				ok=true;
+				LOGGER.info("Ordinateur d'id: "+infoComp.get(0)+" mis à jour");
 			} catch (InvalidEntryException iee) {
 				for(Problems p: iee.getListProb()) {
-					System.out.println(p);
+					LOGGER.error(p);
 				}
 			}
 		}
@@ -107,9 +128,10 @@ public class OperationCLI {
 			try {
 				computerServ.createComputerService(infoComp);
 				ok=true;
+				LOGGER.info("Ajout d'un nouvel ordinateur la base de donnée:\n");
 			} catch(InvalidEntryException iee) {
 				for (Problems p: iee.getListProb()) {
-					System.out.println(p);
+					LOGGER.error(p);
 				}
 			}
 		}
@@ -121,9 +143,10 @@ public class OperationCLI {
 		String id=rcli.choixID();
 		try {
 			computerServ.deleteComputerService(id);
+			LOGGER.info("Suppression de l'ordinateur d'id: "+id);
 		} catch(InvalidEntryException iee) {
 			for(Problems p: iee.getListProb()) {
-				System.out.println(p);
+				LOGGER.error(p);
 			}
 		}
 		

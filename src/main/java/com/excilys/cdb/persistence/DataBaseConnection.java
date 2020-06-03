@@ -21,7 +21,8 @@ public class DataBaseConnection {
 		String password="qwerty1234";
 		try {
 			Class.forName(driver);
-			this.conn=(Connection)DriverManager.getConnection(url+dbName,username,password);
+			this.conn=(Connection)DriverManager.getConnection(
+					url+dbName+"?useLegacyDatetimeCode=false&serverTimezone=Europe/Paris",username,password);
 		}
 		catch(Exception sqle) {
 			sqle.printStackTrace();

@@ -72,8 +72,8 @@ public class Problems {
 	
 	@Override
 	public String toString() {
-		return "Origine: "+this.origin
-				+"\nProblem: "+this.dp.toString();
+		return "Origin: "+this.origin
+				+" Problem: "+this.dp.toString();
 	}
 	
 }
