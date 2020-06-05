@@ -39,7 +39,6 @@ public class MainTest {
 		verifService.setCompanieDAO(companieDAO);
 		verifService.setComputerDAO(computerDAO);
 		
-		map.setCompanieDAO(companieDAO);
 		map.setVerifService(verifService);
 		
 		computerService.setCompDAO(computerDAO);

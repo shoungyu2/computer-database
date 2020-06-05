@@ -21,6 +21,28 @@ public class Companie {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj==null) {
+			return false;
+		}
+		
+		if(!(obj instanceof Companie)) {
+			return false;
+		}
+		else {
+			Companie objComp=(Companie) obj;
+			if (objComp.getId()==this.id && objComp.getName().equals(this.name)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		
+	}
+	
+	@Override
 	public String toString() {
 		return "ID: "+id+" Nom: "+name;
 	}

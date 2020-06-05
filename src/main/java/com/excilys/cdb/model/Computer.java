@@ -59,6 +59,124 @@ public class Computer {
 		return res;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this.name==null) {
+			return true;
+		}
+		
+		if(obj==null) {
+			return false;
+		}
+		
+		if (!(obj instanceof Computer)) {
+			return false;
+		}
+		else {
+			Computer objComp=(Computer) obj;
+			if (this.id!=objComp.id) {
+				return false;
+			}
+			if (!this.name.equals(objComp.name)) {
+				return false;
+			}
+			if (this.introductDate!=null && this.discontinueDate!=null && this.entreprise!=null) {
+				if (
+						this.introductDate.isEqual(objComp.introductDate)
+						&& this.discontinueDate.isEqual(objComp.discontinueDate)
+						&& this.entreprise.equals(objComp.entreprise)
+					) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				if (this.introductDate==null) {
+					if (objComp.introductDate!=null) {
+						return false;
+					}
+					if (this.discontinueDate==null) {
+						if(objComp.discontinueDate!=null) {
+							return false;
+						}
+						if (this.entreprise==null) {
+							if (objComp.entreprise!=null) {
+								return false;
+							}
+							return true;
+						}
+						if (this.entreprise.equals(objComp.entreprise)) {
+							return true;
+						}
+						else {
+							return false;
+						}
+					}
+					if(this.discontinueDate.isEqual(objComp.discontinueDate)) {
+						if (this.entreprise==null) {
+							if (objComp.entreprise!=null) {
+								return false;
+							}
+							return true;
+						}
+						if (this.entreprise.equals(objComp.entreprise)) {
+							return true;
+						}
+						else {
+							return false;
+						}
+					}
+					else {
+						return false;
+					}
+				}
+				if(this.introductDate.isEqual(objComp.introductDate)) {
+					if (this.discontinueDate==null) {
+						if(objComp.discontinueDate!=null) {
+							return false;
+						}
+						if (this.entreprise==null) {
+							if (objComp.entreprise!=null) {
+								return false;
+							}
+							return true;
+						}
+						if (this.entreprise.equals(objComp.entreprise)) {
+							return true;
+						}
+						else {
+							return false;
+						}
+					}
+					if(this.discontinueDate.isEqual(objComp.discontinueDate)) {
+						if (this.entreprise==null) {
+							if (objComp.entreprise!=null) {
+								return false;
+							}
+							return true;
+						}
+						if (this.entreprise.equals(objComp.entreprise)) {
+							return true;
+						}
+						else {
+							return false;
+						}
+					}
+					else {
+						return false;
+					}
+				}
+				else {
+					return false;
+				}
+			
+			}
+		}
+	}
+	
 	
 	public static class ComputerBuilder{
 		

@@ -54,7 +54,7 @@ public class ReaderCLI {
 	public List<String> choixComputerForCreate() {
 		
 		List<String> res=new ArrayList<String>();
-		res.add("0");
+		res.add("-1");
 		System.out.println("Nom de l'odinateur");
 		res.add(choixNom());
 		System.out.println("Date d'introduction");

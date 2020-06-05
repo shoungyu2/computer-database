@@ -14,14 +14,12 @@ import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.persistence.CompanieDAO;
 import com.excilys.cdb.service.VerificationService;
 
 
 public class Mapper {
 
 	private static final DateTimeFormatter DTF= DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	private CompanieDAO companieDAO;
 	private List<Problems> parseProb=new ArrayList<Problems>();
 	private VerificationService verifService;
 	
@@ -35,10 +33,6 @@ public class Mapper {
 	
 	public void setVerifService(VerificationService verifService) {
 		this.verifService=verifService;
-	}
-	
-	public void setCompanieDAO(CompanieDAO companieDAO) {
-		this.companieDAO=companieDAO;
 	}
 	
 	public int stringToID(String id) {
@@ -61,14 +55,16 @@ public class Mapper {
 	
 	public Optional<Companie> stringToCompanie(String id) {
 		
-		if(!id.equals("")) {
+		if(!(id==null || id.isEmpty())) {
 			int idComp=stringToID(id);
 			try {
-				verifService.verifIDCompanieInBDD(idComp);
+				Optional<Companie> opComp= verifService.verifIDCompanieInBDD(idComp);
+				return opComp;
 			} catch(NotFoundException nfe) {
 				parseProb.add(Problems.createIDNotFoundProblem(id));
+				return Optional.empty();
 			}
-			return companieDAO.showDetailCompanie(idComp);
+			
 		}
 		else {
 			
@@ -81,7 +77,7 @@ public class Mapper {
 		
 		
 		int idComputer=stringToID(infoComp.get(0));
-		if(idComputer!=0) {
+		if(idComputer!=-1) {
 			try {
 				verifService.verifIDComputerInBDD(idComputer);
 			} catch (NotFoundException nfe) {
@@ -99,7 +95,8 @@ public class Mapper {
 		LocalDateTime introDate=null;
 		try {
 			introDate=
-					infoComp.get(2).equals("") ? null : stringToDate(infoComp.get(2));
+					infoComp.get(2)==null || infoComp.get(2).isEmpty() 
+					? null : stringToDate(infoComp.get(2));
 		} catch (DateTimeParseException dtpe) {
 			parseProb.add(Problems.createNotADateProblem(infoComp.get(2)));
 		}
@@ -107,7 +104,8 @@ public class Mapper {
 		LocalDateTime discDate=null;
 		try {
 			discDate=
-					infoComp.get(3).equals("") ? null : stringToDate(infoComp.get(3));
+					infoComp.get(3)==null || infoComp.get(3).isEmpty() 
+					? null : stringToDate(infoComp.get(3));
 		} catch(DateTimeParseException dtpe) {
 			parseProb.add(Problems.createNotADateProblem(infoComp.get(3)));
 		}
