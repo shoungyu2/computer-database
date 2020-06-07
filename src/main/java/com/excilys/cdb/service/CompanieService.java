@@ -39,15 +39,17 @@ public class CompanieService {
 	
 	public Optional<Companie> showDetailCompanieService(String id) throws InvalidEntryException{
 		
-		int idComp=0;
+		int idComp=-1;
 		try {
 			idComp=map.stringToID(id);
 		} catch (NumberFormatException nfe) {
 			listProb.add(Problems.createNotAnIDProblem(id));
+			throw new InvalidEntryException(listProb);
 		}
-		if(idComp!=0) {
+		if(idComp!=-1) {
 			try {
-				return verifServ.verifIDCompanieInBDD(idComp);
+				verifServ.verifIDCompanieInBDD(idComp);
+				return compDAO.showDetailCompanie(idComp);
 			} catch (NotFoundException nfe) {
 				listProb.add(Problems.createIDNotFoundProblem(id));
 				throw new InvalidEntryException(listProb);

@@ -84,11 +84,16 @@ public class ComputerService {
 		List<Problems> listProb=map.getParseProb();
 		verifServ.verifNameIsNotNull(c.getName(), listProb);
 		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
+		try {
+			verifServ.verifIDComputerInBDD(c.getID());
+			compDAO.updateComputer(c);
+		} catch (NotFoundException nfe) {
+			listProb.add(Problems.createIDNotFoundProblem(infoComp.getId()));
+		}
 		if(listProb.size()!=0) {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
 		}
-		compDAO.updateComputer(c);
 		
 	}
 	

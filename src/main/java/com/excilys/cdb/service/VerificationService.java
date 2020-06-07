@@ -49,14 +49,11 @@ public class VerificationService {
 		
 	}
 	
-	public Optional<Companie> verifIDCompanieInBDD(int id) throws NotFoundException{
+	public void verifIDCompanieInBDD(int id) throws NotFoundException{
 		
 		Optional<Companie> oc= companieDAO.showDetailCompanie(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID not found");
-		}
-		else {
-			return oc;
 		}
 		
 	}
