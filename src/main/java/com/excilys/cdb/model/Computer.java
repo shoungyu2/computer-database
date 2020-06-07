@@ -60,122 +60,51 @@ public class Computer {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		
-		if (this.name==null) {
-			return true;
-		}
-		
-		if(obj==null) {
-			return false;
-		}
-		
-		if (!(obj instanceof Computer)) {
-			return false;
-		}
-		else {
-			Computer objComp=(Computer) obj;
-			if (this.id!=objComp.id) {
-				return false;
-			}
-			if (!this.name.equals(objComp.name)) {
-				return false;
-			}
-			if (this.introductDate!=null && this.discontinueDate!=null && this.entreprise!=null) {
-				if (
-						this.introductDate.isEqual(objComp.introductDate)
-						&& this.discontinueDate.isEqual(objComp.discontinueDate)
-						&& this.entreprise.equals(objComp.entreprise)
-					) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-			else {
-				if (this.introductDate==null) {
-					if (objComp.introductDate!=null) {
-						return false;
-					}
-					if (this.discontinueDate==null) {
-						if(objComp.discontinueDate!=null) {
-							return false;
-						}
-						if (this.entreprise==null) {
-							if (objComp.entreprise!=null) {
-								return false;
-							}
-							return true;
-						}
-						if (this.entreprise.equals(objComp.entreprise)) {
-							return true;
-						}
-						else {
-							return false;
-						}
-					}
-					if(this.discontinueDate.isEqual(objComp.discontinueDate)) {
-						if (this.entreprise==null) {
-							if (objComp.entreprise!=null) {
-								return false;
-							}
-							return true;
-						}
-						if (this.entreprise.equals(objComp.entreprise)) {
-							return true;
-						}
-						else {
-							return false;
-						}
-					}
-					else {
-						return false;
-					}
-				}
-				if(this.introductDate.isEqual(objComp.introductDate)) {
-					if (this.discontinueDate==null) {
-						if(objComp.discontinueDate!=null) {
-							return false;
-						}
-						if (this.entreprise==null) {
-							if (objComp.entreprise!=null) {
-								return false;
-							}
-							return true;
-						}
-						if (this.entreprise.equals(objComp.entreprise)) {
-							return true;
-						}
-						else {
-							return false;
-						}
-					}
-					if(this.discontinueDate.isEqual(objComp.discontinueDate)) {
-						if (this.entreprise==null) {
-							if (objComp.entreprise!=null) {
-								return false;
-							}
-							return true;
-						}
-						if (this.entreprise.equals(objComp.entreprise)) {
-							return true;
-						}
-						else {
-							return false;
-						}
-					}
-					else {
-						return false;
-					}
-				}
-				else {
-					return false;
-				}
-			
-			}
-		}
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((discontinueDate == null) ? 0 : discontinueDate.hashCode());
+		result = prime * result + ((entreprise == null) ? 0 : entreprise.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((introductDate == null) ? 0 : introductDate.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Computer))
+			return false;
+		Computer other = (Computer) obj;
+		if (discontinueDate == null) {
+			if (other.discontinueDate != null)
+				return false;
+		} else if (!discontinueDate.equals(other.discontinueDate))
+			return false;
+		if (entreprise == null) {
+			if (other.entreprise != null)
+				return false;
+		} else if (!entreprise.equals(other.entreprise))
+			return false;
+		if (id != other.id)
+			return false;
+		if (introductDate == null) {
+			if (other.introductDate != null)
+				return false;
+		} else if (!introductDate.equals(other.introductDate))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
+	
+	
 	
 	
 	public static class ComputerBuilder{
@@ -222,6 +151,10 @@ public class Computer {
 		
 	}
 
+
+
+
+	
 	
 	
 }

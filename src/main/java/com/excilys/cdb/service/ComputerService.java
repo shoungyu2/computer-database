@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.exception.CompanyIsNullException;
+import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
@@ -48,7 +51,8 @@ public class ComputerService {
 		}
 		if(idComp!=0) {
 			try {
-				return verifServ.verifIDComputerInBDD(idComp);
+				verifServ.verifIDComputerInBDD(idComp);
+				return compDAO.showDetailComputer(idComp);
 			} catch (NotFoundException nfe) {
 				compProblems.add(Problems.createIDNotFoundProblem(id));
 				throw new InvalidEntryException(compProblems);
@@ -58,11 +62,13 @@ public class ComputerService {
 		
 	}
 	
-	public void createComputerService(List<String> infoComp) throws InvalidEntryException{
+	public void createComputerService(ComputerDTO infoComp) throws InvalidEntryException, CompanyIsNullException, ComputerIsNullException{
 		
 		Computer c=null;
 		c=map.stringToComputer(infoComp);
 		List<Problems> listProb=map.getParseProb();
+		verifServ.verifNameIsNotNull(c.getName(), listProb);
+		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
 		if (listProb.size()!=0) {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
@@ -71,11 +77,13 @@ public class ComputerService {
 		
 	}
 	
-	public void updateComputerService(List<String> infoComp) throws InvalidEntryException {
+	public void updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, CompanyIsNullException, ComputerIsNullException {
 		
 		Computer c=null;
 		c=map.stringToComputer(infoComp);
 		List<Problems> listProb=map.getParseProb();
+		verifServ.verifNameIsNotNull(c.getName(), listProb);
+		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
 		if(listProb.size()!=0) {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
@@ -86,7 +94,13 @@ public class ComputerService {
 	
 	public void deleteComputerService(String id) throws InvalidEntryException{
 		
-		int idComp=map.stringToID(id);
+		int idComp=0;
+		try {
+			idComp=map.stringToID(id);
+		} catch(NumberFormatException nfe) {
+			compProblems.add(Problems.createNotAnIDProblem(id));
+			throw new InvalidEntryException(compProblems);
+		}
 		try {
 			verifServ.verifIDComputerInBDD(idComp);
 		} catch(NotFoundException nfe) {

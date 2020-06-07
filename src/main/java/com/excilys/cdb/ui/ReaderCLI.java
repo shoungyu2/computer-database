@@ -1,8 +1,9 @@
 package com.excilys.cdb.ui;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+
+import com.excilys.cdb.dto.CompanyDTO;
+import com.excilys.cdb.dto.ComputerDTO;
 
 
 public class ReaderCLI {
@@ -29,40 +30,50 @@ public class ReaderCLI {
 		
 	}
 	
-	public String choixCompanie() {
+	public CompanyDTO choixCompanie() {
 
 		System.out.println("Choisissez votre Companie: ");
-		return choixID();
+		String compID=choixID();
+		return new CompanyDTO.CompanyDTOBuilder(compID).build();
 		
 	}
 	
-	public List<String> choixComputerForUpdate() {
+	public ComputerDTO choixComputerForUpdate() {
 		
-		List<String> res=new ArrayList<String>();
-		res.add(choixID());
-		System.out.println("Nom de l'odinateur");
-		res.add(choixNom());
+		ComputerDTO cdto;
+		String id=choixID();
+		System.out.println("Nom de l'ordinateur");
+		String name=choixNom();
 		System.out.println("Date d'introduction");
-		res.add(choixDate());
+		String introduced=choixDate();
 		System.out.println("Date de retrait");
-		res.add(choixDate());
-		res.add(choixCompanie());
-		return res;
+		String discontinued=choixDate();
+		CompanyDTO companyDTO=choixCompanie();
+		cdto=new ComputerDTO.ComputerDTOBuilder(id, name)
+				.setIntroduced(introduced)
+				.setDiscontinued(discontinued)
+				.setCompanyDTO(companyDTO)
+				.build();
+		return cdto;
 		
 	}
 	
-	public List<String> choixComputerForCreate() {
+	public ComputerDTO choixComputerForCreate() {
 		
-		List<String> res=new ArrayList<String>();
-		res.add("-1");
-		System.out.println("Nom de l'odinateur");
-		res.add(choixNom());
+		ComputerDTO cdto;
+		System.out.println("Nom de l'ordinateur");
+		String name=choixNom();
 		System.out.println("Date d'introduction");
-		res.add(choixDate());
+		String introduced=choixDate();
 		System.out.println("Date de retrait");
-		res.add(choixDate());
-		res.add(choixCompanie());
-		return res;
+		String discontinued=choixDate();
+		CompanyDTO companyDTO=choixCompanie();
+		cdto=new ComputerDTO.ComputerDTOBuilder("-1", name)
+				.setIntroduced(introduced)
+				.setDiscontinued(discontinued)
+				.setCompanyDTO(companyDTO)
+				.build();
+		return cdto;
 		
 	}
 	

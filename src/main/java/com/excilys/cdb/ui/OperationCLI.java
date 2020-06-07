@@ -8,6 +8,9 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
+import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.exception.CompanyIsNullException;
+import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Companie;
@@ -106,15 +109,19 @@ public class OperationCLI {
 		
 		boolean ok=false;
 		while(!ok) {
-			List<String> infoComp=rcli.choixComputerForUpdate();
+			ComputerDTO infoComp=rcli.choixComputerForUpdate();
 			try {
 				computerServ.updateComputerService(infoComp);
 				ok=true;
-				LOGGER.info("Ordinateur d'id: "+infoComp.get(0)+" mis à jour");
+				LOGGER.info("Ordinateur d'id: "+infoComp.getId()+" mis à jour");
 			} catch (InvalidEntryException iee) {
 				for(Problems p: iee.getListProb()) {
 					LOGGER.error(p);
 				}
+			} catch (ComputerIsNullException cine) {
+				LOGGER.error("Veuillez rentrer des informations valides");
+			} catch (CompanyIsNullException cine) {
+				LOGGER.error("Veuillez rentrer des informations valides");
 			}
 		}
 		
@@ -124,7 +131,7 @@ public class OperationCLI {
 		
 		boolean ok=false;
 		while(!ok) {
-			List<String> infoComp=rcli.choixComputerForCreate();
+			ComputerDTO infoComp=rcli.choixComputerForCreate();
 			try {
 				computerServ.createComputerService(infoComp);
 				ok=true;
@@ -133,6 +140,10 @@ public class OperationCLI {
 				for (Problems p: iee.getListProb()) {
 					LOGGER.error(p);
 				}
+			} catch (ComputerIsNullException cine) {
+				LOGGER.error("Veuillez rentrer des informations valides");
+			} catch (CompanyIsNullException cine) {
+				LOGGER.error("Veuillez rentrer des informations valides");
 			}
 		}
 

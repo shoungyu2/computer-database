@@ -1,11 +1,11 @@
 package com.excilys.cdb.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import com.excilys.cdb.exception.DateInvalideException;
-import com.excilys.cdb.exception.NameIsNullException;
 import com.excilys.cdb.exception.NotFoundException;
+import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.CompanieDAO;
@@ -24,30 +24,27 @@ public class VerificationService {
 		this.companieDAO = companieDAO;
 	}
 
-	public void verifDate(LocalDateTime introLDT, LocalDateTime discLDT) throws DateInvalideException{
+	public void verifDate(LocalDateTime introLDT, LocalDateTime discLDT, List<Problems> listProbs) {
 		
 		if((introLDT!=null && discLDT!=null) && (introLDT.isAfter(discLDT))) {
-			throw new DateInvalideException("La date d'introduction doit être antérieure à la date de retrait");
+			listProbs.add(Problems.createInvalidDatesProblem(introLDT.toString()+">"+discLDT.toString()));
 		}
 		
 	}
 	
-	public void verifNameIsNotNull(String name) throws NameIsNullException{
+	public void verifNameIsNotNull(String name,List<Problems> listProbs){
 		
 		if(name==null || name.equals("")) {
-			throw new NameIsNullException("Name cannot be null");
+			listProbs.add(Problems.createNameIsNullProblem(name));
 		}
 		
 	}
 	
-	public Optional<Computer> verifIDComputerInBDD(int id) throws NotFoundException{
+	public void verifIDComputerInBDD(int id) throws NotFoundException{
 		
 		Optional<Computer> oc= computerDAO.showDetailComputer(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID Not Found");
-		}
-		else {
-			return oc;
 		}
 		
 	}

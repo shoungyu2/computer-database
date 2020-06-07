@@ -8,20 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.cdb.exception.DateInvalideException;
-import com.excilys.cdb.exception.NameIsNullException;
-import com.excilys.cdb.exception.NotFoundException;
+import com.excilys.cdb.dto.CompanyDTO;
+import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.exception.CompanyIsNullException;
+import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Companie;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.service.VerificationService;
 
 
 public class Mapper {
 
 	private static final DateTimeFormatter DTF= DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	private List<Problems> parseProb=new ArrayList<Problems>();
-	private VerificationService verifService;
 	
 	public List<Problems> getParseProb() {
 		return this.parseProb;
@@ -29,10 +28,6 @@ public class Mapper {
 	
 	public void setParseProb(List<Problems> parseProb) {
 		this.parseProb=parseProb;
-	}
-	
-	public void setVerifService(VerificationService verifService) {
-		this.verifService=verifService;
 	}
 	
 	public int stringToID(String id) {
@@ -49,82 +44,56 @@ public class Mapper {
 	
 	public LocalDateTime stringToDate(String str) {
 		
-		return LocalDate.parse(str, DTF).atStartOfDay();
-		
+		LocalDateTime ldt=null;
+		try {
+			ldt= str==null || str.contentEquals("")
+					?null:LocalDate.parse(str, DTF).atStartOfDay();
+		} catch (DateTimeParseException dtpe) {
+			parseProb.add(Problems.createNotADateProblem(str));
+		}
+		return ldt;
 	}
 	
-	public Optional<Companie> stringToCompanie(String id) {
+	public Optional<Companie> stringToCompanie(CompanyDTO cdto) throws CompanyIsNullException {
 		
-		if(!(id==null || id.isEmpty())) {
-			int idComp=stringToID(id);
-			try {
-				Optional<Companie> opComp= verifService.verifIDCompanieInBDD(idComp);
-				return opComp;
-			} catch(NotFoundException nfe) {
-				parseProb.add(Problems.createIDNotFoundProblem(id));
+		if(cdto!=null) {
+			if(!(cdto.getId()==null || cdto.getId().isEmpty())) {
+				int idComp=stringToID(cdto.getId());
+				Companie comp= new Companie(cdto.getName(), idComp);
+				return Optional.of(comp);
+			}
+			else {
 				return Optional.empty();
 			}
-			
 		}
 		else {
-			
-			return Optional.empty();
-			
+			throw new CompanyIsNullException();
 		}
 	}	
 	
-	public Computer stringToComputer(List<String> infoComp) {
+	public Computer stringToComputer(ComputerDTO infoComp) throws CompanyIsNullException, ComputerIsNullException {
 		
-		
-		int idComputer=stringToID(infoComp.get(0));
-		if(idComputer!=-1) {
-			try {
-				verifService.verifIDComputerInBDD(idComputer);
-			} catch (NotFoundException nfe) {
-				parseProb.add(Problems.createIDNotFoundProblem(infoComp.get(0)));
-			}
+		if(infoComp!=null) {
+			int idComputer=stringToID(infoComp.getId());
+			
+			String name= infoComp.getName();
+			
+			LocalDateTime introDate=stringToDate(infoComp.getIntroduced());
+			
+			LocalDateTime discDate=stringToDate(infoComp.getDiscontinued());
+			
+			Optional<Companie> oc=stringToCompanie(infoComp.getCompanyDTO());
+			Companie comp=oc.isEmpty()?
+					null:oc.get();
+			return new Computer.ComputerBuilder(name, idComputer)
+					.setIntroductDate(introDate)
+					.setDiscontinueDate(discDate)
+					.setEntreprise(comp)
+					.build();
 		}
-		
-		String name= infoComp.get(1);
-		try {
-			verifService.verifNameIsNotNull(name);
-		} catch (NameIsNullException nine) {
-			parseProb.add(Problems.createNameIsNullProblem(name));
+		else {
+			throw new ComputerIsNullException();
 		}
-		
-		LocalDateTime introDate=null;
-		try {
-			introDate=
-					infoComp.get(2)==null || infoComp.get(2).isEmpty() 
-					? null : stringToDate(infoComp.get(2));
-		} catch (DateTimeParseException dtpe) {
-			parseProb.add(Problems.createNotADateProblem(infoComp.get(2)));
-		}
-		
-		LocalDateTime discDate=null;
-		try {
-			discDate=
-					infoComp.get(3)==null || infoComp.get(3).isEmpty() 
-					? null : stringToDate(infoComp.get(3));
-		} catch(DateTimeParseException dtpe) {
-			parseProb.add(Problems.createNotADateProblem(infoComp.get(3)));
-		}
-		
-		try {
-			verifService.verifDate(introDate, discDate);
-		} catch (DateInvalideException die) {
-			parseProb.add(Problems.createInvalidDatesProblem(infoComp.get(2)+" and "+infoComp.get(3)));
-		}
-		
-		Optional<Companie> oc=stringToCompanie(infoComp.get(4));
-		Companie comp=oc.isEmpty()?
-				null:oc.get();
-		return new Computer.ComputerBuilder(name, idComputer)
-				.setIntroductDate(introDate)
-				.setDiscontinueDate(discDate)
-				.setEntreprise(comp)
-				.build();
-	
 	}
 	
 }

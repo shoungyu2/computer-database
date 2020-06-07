@@ -75,5 +75,23 @@ public class Problems {
 		return "Origin: "+this.origin
 				+" Problem: "+this.dp.toString();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Problems))
+			return false;
+		Problems other = (Problems) obj;
+		if (dp != other.dp)
+			return false;
+		if (origin == null) {
+			if (other.origin != null)
+				return false;
+		} else if (!origin.equals(other.origin))
+			return false;
+		return true;
+	}
+	
 	
 }

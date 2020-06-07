@@ -21,25 +21,29 @@ public class Companie {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		
-		if(obj==null) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Companie))
 			return false;
-		}
-		
-		if(!(obj instanceof Companie)) {
+		Companie other = (Companie) obj;
+		if (id != other.id)
 			return false;
-		}
-		else {
-			Companie objComp=(Companie) obj;
-			if (objComp.getId()==this.id && objComp.getName().equals(this.name)) {
-				return true;
-			}
-			else {
+		if (name == null) {
+			if (other.name != null)
 				return false;
-			}
-		}
-		
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 	
 	@Override
