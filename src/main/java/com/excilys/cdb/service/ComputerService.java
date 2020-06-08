@@ -20,7 +20,6 @@ public class ComputerService {
 	private VerificationService verifServ;
 	private ComputerDAO compDAO;
 	private Mapper map;
-	private List<Problems> compProblems=new ArrayList<Problems>();
 	
 	public void setVerifServ(VerificationService verifServ) {
 		this.verifServ = verifServ;
@@ -42,20 +41,22 @@ public class ComputerService {
 	
 	public Optional<Computer> showDetailComputerService(String id) throws InvalidEntryException {
 		
-		int idComp=0;
+		int idComp=-1;
 		try {
 			idComp=map.stringToID(id);
 		} catch(NumberFormatException nfe) {
-			compProblems.add(Problems.createNotAnIDProblem(id));
-			throw new InvalidEntryException(compProblems);
+			ArrayList<Problems> listProbs=new ArrayList<Problems>();
+			listProbs.add(Problems.createNotAnIDProblem(id));
+			throw new InvalidEntryException(listProbs);
 		}
-		if(idComp!=0) {
+		if(idComp!=-1) {
 			try {
 				verifServ.verifIDComputerInBDD(idComp);
 				return compDAO.showDetailComputer(idComp);
 			} catch (NotFoundException nfe) {
-				compProblems.add(Problems.createIDNotFoundProblem(id));
-				throw new InvalidEntryException(compProblems);
+				ArrayList<Problems> listProbs=new ArrayList<Problems>();
+				listProbs.add(Problems.createIDNotFoundProblem(id));
+				throw new InvalidEntryException(listProbs);
 			}
 		}
 		return Optional.empty();
@@ -86,7 +87,6 @@ public class ComputerService {
 		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
 		try {
 			verifServ.verifIDComputerInBDD(c.getID());
-			compDAO.updateComputer(c);
 		} catch (NotFoundException nfe) {
 			listProb.add(Problems.createIDNotFoundProblem(infoComp.getId()));
 		}
@@ -94,6 +94,7 @@ public class ComputerService {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
 		}
+		compDAO.updateComputer(c);
 		
 	}
 	
@@ -103,14 +104,16 @@ public class ComputerService {
 		try {
 			idComp=map.stringToID(id);
 		} catch(NumberFormatException nfe) {
-			compProblems.add(Problems.createNotAnIDProblem(id));
-			throw new InvalidEntryException(compProblems);
+			ArrayList<Problems> listProbs=new ArrayList<Problems>();
+			listProbs.add(Problems.createNotAnIDProblem(id));
+			throw new InvalidEntryException(listProbs);
 		}
 		try {
 			verifServ.verifIDComputerInBDD(idComp);
 		} catch(NotFoundException nfe) {
-			compProblems.add(Problems.createIDNotFoundProblem(id));
-			throw new InvalidEntryException(compProblems);
+			ArrayList<Problems> listProbs=new ArrayList<Problems>();
+			listProbs.add(Problems.createIDNotFoundProblem(id));
+			throw new InvalidEntryException(listProbs);
 		}
 		compDAO.deleteComputer(idComp);
 		
