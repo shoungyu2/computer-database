@@ -12,11 +12,11 @@ public class Page {
 		this.offset=Page.nbrElements*(this.numPage-1);
 	}
 	
-	public int getNbrElements() {
+	public static int getNbrElements() {
 		return nbrElements;
 	}
 	
-	public void setNbrElements(int nbrElements) {
+	public static void setNbrElements(int nbrElements) {
 		Page.nbrElements = nbrElements;
 	}
 	

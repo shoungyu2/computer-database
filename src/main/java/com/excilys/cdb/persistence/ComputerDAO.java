@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
@@ -34,7 +34,7 @@ public class ComputerDAO {
 	private final static String GET_NBR_COMPUTER="SELECT computer.id FROM computer"
 			+ " ORDER BY computer.id DESC";
 	
-	private static int getNbrComputer() {
+	public int getNbrComputer() {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try {
@@ -83,12 +83,12 @@ public class ComputerDAO {
 		
 	}
 	
-	private Companie getComputerCompanieFromBDD(ResultSet res) throws SQLException{
+	private Company getComputerCompanyFromBDD(ResultSet res) throws SQLException{
 		
 		int compID=res.getInt("company_id");
-		Companie company=
+		Company company=
 				compID==0?
-				null:new Companie(res.getString("company.name"),compID);
+				null:new Company(res.getString("company.name"),compID);
 		return company;
 	}
 	
@@ -100,12 +100,12 @@ public class ComputerDAO {
 		int id=getComputerIDFromBDD(res);
 		LocalDateTime introLDT=getComputerIntroDateFromBDD(res);
 		LocalDateTime discLDT=getComputerDiscDateFromBDD(res);
-		Companie company=getComputerCompanieFromBDD(res);
+		Company company=getComputerCompanyFromBDD(res);
 		
 		c=new Computer.ComputerBuilder(name,id)
 				.setIntroductDate(introLDT)
 				.setDiscontinueDate(discLDT)
-				.setEntreprise(company)
+				.setCompany(company)
 				.build();
 		
 		return c;
@@ -123,7 +123,7 @@ public class ComputerDAO {
 	
 	private int getCompanieIDFromComputer(Computer c) {
 		
-		return c.getEntreprise()==null?0:c.getEntreprise().getId();
+		return c.getCompany()==null?0:c.getCompany().getId();
 		
 	}
 	
@@ -132,7 +132,7 @@ public class ComputerDAO {
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		List<Computer> listComp=new ArrayList<>();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPUTER)){
-			pstmt.setInt(1, page.getNbrElements());
+			pstmt.setInt(1, Page.getNbrElements());
 			pstmt.setInt(2, page.getOffset());
 			ResultSet res=pstmt.executeQuery();
 			while(res.next()) {
@@ -181,7 +181,7 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		int max=getNbrComputer()/20+1;
+		int max=getNbrComputer()/Page.getNbrElements()+1;
 		if(max>Page.getNbrPages()) {
 			Page.setNbrPages(max);
 		}
@@ -218,6 +218,10 @@ public class ComputerDAO {
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		int min=getNbrComputer()/Page.getNbrElements()+1;
+		if(min<Page.getNbrPages()) {
+			Page.setNbrPages(min);
 		}
 		
 	}

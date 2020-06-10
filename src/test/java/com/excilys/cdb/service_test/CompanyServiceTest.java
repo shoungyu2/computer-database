@@ -14,17 +14,17 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.mapper.Mapper;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.persistence.CompanieDAO;
-import com.excilys.cdb.service.CompanieService;
+import com.excilys.cdb.persistence.CompanyDAO;
+import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.VerificationService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompanyServiceTest {
 
 	@Mock
-	CompanieDAO companyDAO;
+	CompanyDAO companyDAO;
 	
 	@Mock
 	Mapper map;
@@ -32,7 +32,7 @@ public class CompanyServiceTest {
 	@Mock
 	VerificationService verifService;
 	
-	CompanieService companyService= new CompanieService();
+	CompanyService companyService= new CompanyService();
 	
 	@Test
 	public void listCompanyServiceTest() {
@@ -41,9 +41,9 @@ public class CompanyServiceTest {
 		
 		Page page= new Page(1);
 		
-		Mockito.when(companyDAO.listCompanie(page)).thenReturn(new ArrayList<Companie>());
+		Mockito.when(companyDAO.listCompany(page)).thenReturn(new ArrayList<Company>());
 		
-		assertEquals(new ArrayList<Companie>(), companyService.listCompanieService(page));
+		assertEquals(new ArrayList<Company>(), companyService.listCompanyService(page));
 		
 	}
 
@@ -54,31 +54,31 @@ public class CompanyServiceTest {
 		companyService.setVerifServ(verifService);
 		companyService.setMap(map);
 		
-		Companie comp=new Companie("343 Industries", 343);
-		Optional<Companie> oComp= Optional.of(comp);
+		Company comp=new Company("343 Industries", 343);
+		Optional<Company> oComp= Optional.of(comp);
 		
 		Mockito.doThrow(new NotFoundException()).when(verifService).verifIDCompanieInBDD(0);
 		Mockito.when(map.stringToID("blablou")).thenThrow(new NumberFormatException());
 		Mockito.when(map.stringToID("-1")).thenReturn(-1);
 		Mockito.when(map.stringToID("343")).thenReturn(343);
-		Mockito.when(companyDAO.showDetailCompanie(343)).thenReturn(oComp);
+		Mockito.when(companyDAO.showDetailCompany(343)).thenReturn(oComp);
 		
 		try {
-			companyService.showDetailCompanieService("blablou");
+			companyService.showDetailCompanyService("blablou");
 			assert(false);
 		} catch (InvalidEntryException iee) {
 			assert(true);
 		}
 		
 		try {
-			companyService.showDetailCompanieService("0");
+			companyService.showDetailCompanyService("0");
 			assert(false);
 		} catch(InvalidEntryException iee) {
 			assert(true);
 		}
 		
-		assertEquals(Optional.empty(), companyService.showDetailCompanieService("-1"));
-		assertEquals(oComp, companyService.showDetailCompanieService("343"));
+		assertEquals(Optional.empty(), companyService.showDetailCompanyService("-1"));
+		assertEquals(oComp, companyService.showDetailCompanyService("343"));
 		
 	}
 	

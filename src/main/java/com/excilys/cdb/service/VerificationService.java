@@ -6,22 +6,22 @@ import java.util.Optional;
 
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.persistence.CompanieDAO;
+import com.excilys.cdb.persistence.CompanyDAO;
 import com.excilys.cdb.persistence.ComputerDAO;
 
 public class VerificationService {
 	
 	private ComputerDAO computerDAO;
-	private CompanieDAO companieDAO;
+	private CompanyDAO companyDAO;
 
 	public void setComputerDAO(ComputerDAO computerDAO) {
 		this.computerDAO = computerDAO;
 	}
 
-	public void setCompanieDAO(CompanieDAO companieDAO) {
-		this.companieDAO = companieDAO;
+	public void setCompanyDAO(CompanyDAO companyDAO) {
+		this.companyDAO = companyDAO;
 	}
 
 	public void verifDate(LocalDateTime introLDT, LocalDateTime discLDT, List<Problems> listProbs) {
@@ -51,7 +51,7 @@ public class VerificationService {
 	
 	public void verifIDCompanieInBDD(int id) throws NotFoundException{
 		
-		Optional<Companie> oc= companieDAO.showDetailCompanie(id);
+		Optional<Company> oc= companyDAO.showDetailCompany(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID not found");
 		}

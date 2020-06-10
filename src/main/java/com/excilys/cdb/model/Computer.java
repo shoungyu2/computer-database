@@ -9,14 +9,14 @@ public class Computer {
 	private final int id;
 	private final LocalDateTime introductDate;
 	private final LocalDateTime discontinueDate;
-	private final Companie entreprise;
+	private final Company company;
 	
 	public Computer(ComputerBuilder cb) {
 		this.name=cb.name;
 		this.id=cb.id;
 		this.introductDate=cb.introductDate;
 		this.discontinueDate=cb.discontinueDate;
-		this.entreprise=cb.entreprise;
+		this.company=cb.company;
 	}
 	
 	public String getName() {
@@ -35,8 +35,8 @@ public class Computer {
 		return discontinueDate;
 	}
 	
-	public Companie getEntreprise() {
-		return entreprise;
+	public Company getCompany() {
+		return company;
 	}
 	
 	@Override
@@ -54,21 +54,9 @@ public class Computer {
 		res+=this.discontinueDate==null?"non définie":this.discontinueDate;
 		
 		res+="\nID du Fabricant: ";
-		res+=this.entreprise==null?"non définie":this.entreprise.getId();
+		res+=this.company==null?"non définie":this.company.getId();
 		
 		return res;
-	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((discontinueDate == null) ? 0 : discontinueDate.hashCode());
-		result = prime * result + ((entreprise == null) ? 0 : entreprise.hashCode());
-		result = prime * result + id;
-		result = prime * result + ((introductDate == null) ? 0 : introductDate.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
 	}
 
 	@Override
@@ -83,10 +71,10 @@ public class Computer {
 				return false;
 		} else if (!discontinueDate.equals(other.discontinueDate))
 			return false;
-		if (entreprise == null) {
-			if (other.entreprise != null)
+		if (company == null) {
+			if (other.company != null)
 				return false;
-		} else if (!entreprise.equals(other.entreprise))
+		} else if (!company.equals(other.company))
 			return false;
 		if (id != other.id)
 			return false;
@@ -113,7 +101,7 @@ public class Computer {
 		private int id;
 		private LocalDateTime introductDate;
 		private LocalDateTime discontinueDate;
-		private Companie entreprise;
+		private Company company;
 
 		public ComputerBuilder(String name, int id) {
 			this.name=name;
@@ -140,8 +128,8 @@ public class Computer {
 			return this;
 		}
 
-		public ComputerBuilder setEntreprise(Companie entreprise) {
-			this.entreprise = entreprise;
+		public ComputerBuilder setCompany(Company company) {
+			this.company = company;
 			return this;
 		}
 

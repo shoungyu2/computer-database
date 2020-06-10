@@ -10,11 +10,10 @@ import org.junit.Test;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
-import com.excilys.cdb.exception.CompanyIsNullException;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.mapper.Mapper;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
 public class MapperTest {
@@ -66,16 +65,9 @@ public class MapperTest {
 	}
 
 	@Test
-	public void stringToCompanyTest() throws CompanyIsNullException {
+	public void stringToCompanyTest() {
 		
 		map.setParseProb(new ArrayList<Problems>());
-		
-		try {
-			map.stringToCompanie(null);
-			assert(false);
-		} catch (CompanyIsNullException cine) {
-			assert(true);
-		}
 		
 		CompanyDTO cDTOComplete= new CompanyDTO.CompanyDTOBuilder("343")
 				.setName("343 Industries").build();
@@ -92,19 +84,20 @@ public class MapperTest {
 		CompanyDTO cDTOempty=new CompanyDTO.CompanyDTOBuilder(null)
 				.setName(null).build();
 		
-		Companie compComplete= new Companie("343 Industries", 343);
-		Companie compWithoutName= new Companie(null, 343);
+		Company compComplete= new Company("343 Industries", 343);
+		Company compWithoutName= new Company(null, 343);
 		
-		assertEquals(Optional.of(compComplete), map.stringToCompanie(cDTOComplete));
-		assertEquals(Optional.empty(), map.stringToCompanie(cDTOwithIDNull));
-		assertEquals(Optional.empty(), map.stringToCompanie(cDTOwithIDEmpty));
-		assertEquals(Optional.of(compWithoutName), map.stringToCompanie(cDTOwithoutName));
-		assertEquals(Optional.empty(), map.stringToCompanie(cDTOempty));
+		assertEquals(Optional.empty(),map.stringToCompany(null));
+		assertEquals(Optional.of(compComplete), map.stringToCompany(cDTOComplete));
+		assertEquals(Optional.empty(), map.stringToCompany(cDTOwithIDNull));
+		assertEquals(Optional.empty(), map.stringToCompany(cDTOwithIDEmpty));
+		assertEquals(Optional.of(compWithoutName), map.stringToCompany(cDTOwithoutName));
+		assertEquals(Optional.empty(), map.stringToCompany(cDTOempty));
 		
 	}
 
 	@Test
-	public void stringToComputer() throws CompanyIsNullException, ComputerIsNullException {
+	public void stringToComputer() throws ComputerIsNullException {
 		
 		map.setParseProb(new ArrayList<Problems>());
 		
@@ -118,7 +111,7 @@ public class MapperTest {
 		CompanyDTO companyDTO=new CompanyDTO.CompanyDTOBuilder("343")
 				.setName("343 Industries").build();
 		
-		Companie company=new Companie("343 Industries", 343);
+		Company company=new Company("343 Industries", 343);
 		
 		ComputerDTO computerDTOComplete= new ComputerDTO.ComputerDTOBuilder("343", "XBox One")
 				.setIntroduced("02/02/2002")
@@ -129,7 +122,7 @@ public class MapperTest {
 		Computer computerComplete= new Computer.ComputerBuilder("XBox One", 343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
-				.setEntreprise(company).build();
+				.setCompany(company).build();
 		
 		assertEquals(computerComplete, map.stringToComputer(computerDTOComplete));
 		

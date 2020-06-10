@@ -9,14 +9,13 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.dto.ComputerDTO;
-import com.excilys.cdb.exception.CompanyIsNullException;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.service.CompanieService;
+import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
 public class OperationCLI {
@@ -26,7 +25,7 @@ public class OperationCLI {
 	private final static Scanner SC=new Scanner(System.in);
 	
 	private ComputerService computerServ;
-	private CompanieService companieServ;
+	private CompanyService companieServ;
 	private ReaderCLI rcli;
 	
 	public OperationCLI() {
@@ -45,7 +44,7 @@ public class OperationCLI {
 		this.computerServ = computerServ;
 	}
 
-	public void setCompanieServ(CompanieService companieServ) {
+	public void setCompanieServ(CompanyService companieServ) {
 		this.companieServ = companieServ;
 	}
 
@@ -66,12 +65,12 @@ public class OperationCLI {
 	
 	public void listCompanieCLI(Page page) {
 		
-		List<Companie> listComp=companieServ.listCompanieService(page);
+		List<Company> listComp=companieServ.listCompanyService(page);
 		System.out.println("Nombre de companies dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
 		if(rep.equals("o")) {
-			for (Companie c: listComp) {
+			for (Company c: listComp) {
 				System.out.println(c);
 				System.out.println();
 			}
@@ -96,7 +95,7 @@ public class OperationCLI {
 		
 		String id= rcli.choixID();
 		try {
-			System.out.println(companieServ.showDetailCompanieService(id).get());
+			System.out.println(companieServ.showDetailCompanyService(id).get());
 		} catch(InvalidEntryException iee) {
 			for(Problems p:iee.getListProb()) {
 				LOGGER.error(p);
@@ -120,8 +119,6 @@ public class OperationCLI {
 				}
 			} catch (ComputerIsNullException cine) {
 				LOGGER.error("Veuillez rentrer des informations valides");
-			} catch (CompanyIsNullException cine) {
-				LOGGER.error("Veuillez rentrer des informations valides");
 			}
 		}
 		
@@ -141,8 +138,6 @@ public class OperationCLI {
 					LOGGER.error(p);
 				}
 			} catch (ComputerIsNullException cine) {
-				LOGGER.error("Veuillez rentrer des informations valides");
-			} catch (CompanyIsNullException cine) {
 				LOGGER.error("Veuillez rentrer des informations valides");
 			}
 		}

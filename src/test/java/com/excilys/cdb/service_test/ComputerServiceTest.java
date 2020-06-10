@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.excilys.cdb.dto.ComputerDTO;
-import com.excilys.cdb.exception.CompanyIsNullException;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
@@ -62,7 +61,7 @@ public class ComputerServiceTest {
 		Computer comp=new Computer.ComputerBuilder("XBox One", 343)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
-				.setEntreprise(null)
+				.setCompany(null)
 				.build();
 		Optional<Computer> oComp=Optional.of(comp);
 		
@@ -91,7 +90,7 @@ public class ComputerServiceTest {
 	}
 
 	@Test
-	public void createComputerServiceTest() throws CompanyIsNullException, ComputerIsNullException {
+	public void createComputerServiceTest() throws ComputerIsNullException {
 		
 		compService.setMap(map);
 		compService.setVerifServ(verifService);
@@ -112,13 +111,13 @@ public class ComputerServiceTest {
 		Computer compEmpty=new Computer.ComputerBuilder(null, 0)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
-				.setEntreprise(null)
+				.setCompany(null)
 				.build();
 		
 		Computer comp= new Computer.ComputerBuilder("XBox One", 343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
-				.setEntreprise(null)
+				.setCompany(null)
 				.build();
 		
 		ArrayList<Problems> listProbs1=new ArrayList<Problems>();
@@ -145,7 +144,7 @@ public class ComputerServiceTest {
 	}
 
 	@Test
-	public void updateComputerServiceTest() throws CompanyIsNullException, ComputerIsNullException, NotFoundException {
+	public void updateComputerServiceTest() throws ComputerIsNullException, NotFoundException {
 		
 		compService.setMap(map);
 		compService.setVerifServ(verifService);
@@ -166,13 +165,13 @@ public class ComputerServiceTest {
 		Computer compEmpty=new Computer.ComputerBuilder(null, 0)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
-				.setEntreprise(null)
+				.setCompany(null)
 				.build();
 		
 		Computer comp= new Computer.ComputerBuilder("XBox One", 343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
-				.setEntreprise(null)
+				.setCompany(null)
 				.build();
 		
 		ArrayList<Problems> listProbs1=new ArrayList<Problems>();

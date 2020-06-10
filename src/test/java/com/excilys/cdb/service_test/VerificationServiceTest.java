@@ -15,9 +15,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
-import com.excilys.cdb.persistence.CompanieDAO;
+import com.excilys.cdb.persistence.CompanyDAO;
 import com.excilys.cdb.persistence.ComputerDAO;
 import com.excilys.cdb.service.VerificationService;
 
@@ -28,7 +28,7 @@ public class VerificationServiceTest {
 	ComputerDAO computerDAO;
 	
 	@Mock
-	CompanieDAO companyDAO;
+	CompanyDAO companyDAO;
 	
 	VerificationService verifService=new VerificationService();
 	
@@ -84,7 +84,7 @@ public class VerificationServiceTest {
 		Computer comp= new Computer.ComputerBuilder("XBox One", 343)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
-				.setEntreprise(null)
+				.setCompany(null)
 				.build();
 		Optional<Computer> oComp= Optional.of(comp);
 		
@@ -105,14 +105,14 @@ public class VerificationServiceTest {
 	@Test
 	public void verifCompanyIdInBDDTest() {
 		
-		verifService.setCompanieDAO(companyDAO);
+		verifService.setCompanyDAO(companyDAO);
 		
-		Optional<Companie> empty=Optional.empty();
-		Companie comp= new Companie("343 Industries", 343);
-		Optional<Companie> oComp=Optional.of(comp);
+		Optional<Company> empty=Optional.empty();
+		Company comp= new Company("343 Industries", 343);
+		Optional<Company> oComp=Optional.of(comp);
 		
-		Mockito.when(companyDAO.showDetailCompanie(0)).thenReturn(empty);
-		Mockito.when(companyDAO.showDetailCompanie(343)).thenReturn(oComp);
+		Mockito.when(companyDAO.showDetailCompany(0)).thenReturn(empty);
+		Mockito.when(companyDAO.showDetailCompany(343)).thenReturn(oComp);
 		
 		try {
 			verifService.verifIDCompanieInBDD(343);

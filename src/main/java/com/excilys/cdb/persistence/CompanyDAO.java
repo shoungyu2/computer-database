@@ -7,32 +7,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
 
-public class CompanieDAO {
+public class CompanyDAO {
 	
-	public final static	String SELECT_ALL_COMPANIE="SELECT id,name FROM company"
+	public final static	String SELECT_ALL_COMPANY="SELECT id,name FROM company"
 			+ " ORDER BY id LIMIT ? OFFSET ?";
-	public final static String SELECT_COMPANIE="SELECT id,name FROM company WHERE id=?";
+	public final static String SELECT_COMPANY="SELECT id,name FROM company WHERE id=?";
 	
-	public List<Companie> listCompanie(Page page){
+	public List<Company> listCompany(Page page){
 				
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
-		List<Companie> listComp=new ArrayList<>();
+		List<Company> listComp=new ArrayList<>();
 		
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPANIE)){
+		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPANY)){
 			
-			pstmt.setInt(0, page.getNbrElements());
+			pstmt.setInt(0, Page.getNbrElements());
 			pstmt.setInt(1, page.getOffset());
 			ResultSet res=pstmt.executeQuery();
 			
 			while(res.next()) {
-				Companie c;
+				Company c;
 				String name=res.getString("name");
 				int id=res.getInt("id");
-				c=new Companie(name,id);
+				c=new Company(name,id);
 				listComp.add(c);
 			}
 		
@@ -46,19 +46,19 @@ public class CompanieDAO {
 	
 	}
 	
-	public Optional<Companie> showDetailCompanie(int id) {
+	public Optional<Company> showDetailCompany(int id) {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
-		try(PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPANIE)){
+		try(PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPANY)){
 			
 			pstmt.setInt(1, id);
 			ResultSet res=pstmt.executeQuery();
-			Companie c;
+			Company c;
 			if(res.next()) {
 				int idComp=res.getInt("id");
 				String name=res.getString("name");
-				c=new Companie(name,idComp);
+				c=new Company(name,idComp);
 				return Optional.of(c);
 			}
 						

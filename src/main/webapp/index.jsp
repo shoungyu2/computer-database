@@ -1,5 +1,7 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<form method="post" action="ListComputerServlet">
+	<button type="submit">Go to dashboard</button>
+</form>
 </body>
 </html>

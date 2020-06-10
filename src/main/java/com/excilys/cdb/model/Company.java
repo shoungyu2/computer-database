@@ -2,12 +2,12 @@ package com.excilys.cdb.model;
 
 
 
-public class Companie {
+public class Company {
 	
 	private final String name;
 	private final int id;
 	
-	public Companie(String name,int id) {
+	public Company(String name,int id) {
 		this.name=name;
 		this.id=id;
 	}
@@ -33,9 +33,9 @@ public class Companie {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!(obj instanceof Companie))
+		if (!(obj instanceof Company))
 			return false;
-		Companie other = (Companie) obj;
+		Company other = (Company) obj;
 		if (id != other.id)
 			return false;
 		if (name == null) {

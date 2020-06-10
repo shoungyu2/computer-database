@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.excilys.cdb.dto.ComputerDTO;
-import com.excilys.cdb.exception.CompanyIsNullException;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
@@ -33,6 +32,10 @@ public class ComputerService {
 		this.map = map;
 	}
 
+	public int getNbrComputerService() {
+		return compDAO.getNbrComputer();
+	}
+	
 	public List<Computer> listComputerService(Page page){
 		
 		return compDAO.listComputer(page);		
@@ -63,7 +66,7 @@ public class ComputerService {
 		
 	}
 	
-	public void createComputerService(ComputerDTO infoComp) throws InvalidEntryException, CompanyIsNullException, ComputerIsNullException{
+	public void createComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException{
 		
 		Computer c=null;
 		c=map.stringToComputer(infoComp);
@@ -78,7 +81,7 @@ public class ComputerService {
 		
 	}
 	
-	public void updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, CompanyIsNullException, ComputerIsNullException {
+	public void updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException {
 		
 		Computer c=null;
 		c=map.stringToComputer(infoComp);

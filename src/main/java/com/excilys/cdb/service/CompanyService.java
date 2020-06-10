@@ -8,14 +8,14 @@ import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.mapper.Mapper;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.persistence.CompanieDAO;
+import com.excilys.cdb.persistence.CompanyDAO;
 
-public class CompanieService {
+public class CompanyService {
 	
 	private VerificationService verifServ;
-	private CompanieDAO compDAO;
+	private CompanyDAO compDAO;
 	private Mapper map;
 	private List<Problems> listProb=new ArrayList<>();
 	
@@ -23,7 +23,7 @@ public class CompanieService {
 		this.verifServ = verifServ;
 	}
 
-	public void setCompDAO(CompanieDAO compDAO) {
+	public void setCompDAO(CompanyDAO compDAO) {
 		this.compDAO = compDAO;
 	}
 	
@@ -31,13 +31,13 @@ public class CompanieService {
 		this.map=map;
 	}
 
-	public List<Companie> listCompanieService(Page page){
+	public List<Company> listCompanyService(Page page){
 		
-		return compDAO.listCompanie(page);
+		return compDAO.listCompany(page);
 		
 	}
 	
-	public Optional<Companie> showDetailCompanieService(String id) throws InvalidEntryException{
+	public Optional<Company> showDetailCompanyService(String id) throws InvalidEntryException{
 		
 		int idComp=-1;
 		try {
@@ -49,7 +49,7 @@ public class CompanieService {
 		if(idComp!=-1) {
 			try {
 				verifServ.verifIDCompanieInBDD(idComp);
-				return compDAO.showDetailCompanie(idComp);
+				return compDAO.showDetailCompany(idComp);
 			} catch (NotFoundException nfe) {
 				listProb.add(Problems.createIDNotFoundProblem(id));
 				throw new InvalidEntryException(listProb);

@@ -10,10 +10,9 @@ import java.util.Optional;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
-import com.excilys.cdb.exception.CompanyIsNullException;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.Problems;
-import com.excilys.cdb.model.Companie;
+import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
 
@@ -54,12 +53,12 @@ public class Mapper {
 		return ldt;
 	}
 	
-	public Optional<Companie> stringToCompanie(CompanyDTO cdto) throws CompanyIsNullException {
+	public Optional<Company> stringToCompany(CompanyDTO cdto) {
 		
 		if(cdto!=null) {
 			if(!(cdto.getId()==null || cdto.getId().isEmpty())) {
 				int idComp=stringToID(cdto.getId());
-				Companie comp= new Companie(cdto.getName(), idComp);
+				Company comp= new Company(cdto.getName(), idComp);
 				return Optional.of(comp);
 			}
 			else {
@@ -67,11 +66,12 @@ public class Mapper {
 			}
 		}
 		else {
-			throw new CompanyIsNullException();
+			return Optional.empty();
 		}
+		
 	}	
 	
-	public Computer stringToComputer(ComputerDTO infoComp) throws CompanyIsNullException, ComputerIsNullException {
+	public Computer stringToComputer(ComputerDTO infoComp) throws ComputerIsNullException {
 		
 		if(infoComp!=null) {
 			int idComputer=stringToID(infoComp.getId());
@@ -82,13 +82,13 @@ public class Mapper {
 			
 			LocalDateTime discDate=stringToDate(infoComp.getDiscontinued());
 			
-			Optional<Companie> oc=stringToCompanie(infoComp.getCompanyDTO());
-			Companie comp=oc.isEmpty()?
+			Optional<Company> oc=stringToCompany(infoComp.getCompanyDTO());
+			Company comp=oc.isEmpty()?
 					null:oc.get();
 			return new Computer.ComputerBuilder(name, idComputer)
 					.setIntroductDate(introDate)
 					.setDiscontinueDate(discDate)
-					.setEntreprise(comp)
+					.setCompany(comp)
 					.build();
 		}
 		else {
