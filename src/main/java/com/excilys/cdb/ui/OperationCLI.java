@@ -63,9 +63,9 @@ public class OperationCLI {
 		
 	}
 	
-	public void listCompanieCLI(Page page) {
+	public void listCompanieCLI() {
 		
-		List<Company> listComp=companieServ.listCompanyService(page);
+		List<Company> listComp=companieServ.listCompanyService();
 		System.out.println("Nombre de companies dans la BDD: "+listComp.size());
 		System.out.println("Voulez vous les afficher(o/n)?");
 		String rep=SC.nextLine();
@@ -74,7 +74,6 @@ public class OperationCLI {
 				System.out.println(c);
 				System.out.println();
 			}
-			System.out.println(page.getNumPage()+"/"+Page.getNbrPages());
 		}
 		
 	}

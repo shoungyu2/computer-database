@@ -162,7 +162,7 @@ public static void injectionDepdencies() {
 					break;
 				
 				case 2:
-					opCLI.listCompanieCLI(new Page(1));
+					opCLI.listCompanieCLI();
 					ok=revenirMenu();
 					break;
 					

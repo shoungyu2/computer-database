@@ -15,7 +15,6 @@ import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Company;
-import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.CompanyDAO;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.VerificationService;
@@ -38,12 +37,10 @@ public class CompanyServiceTest {
 	public void listCompanyServiceTest() {
 		
 		companyService.setCompDAO(companyDAO);
+				
+		Mockito.when(companyDAO.listCompany()).thenReturn(new ArrayList<Company>());
 		
-		Page page= new Page(1);
-		
-		Mockito.when(companyDAO.listCompany(page)).thenReturn(new ArrayList<Company>());
-		
-		assertEquals(new ArrayList<Company>(), companyService.listCompanyService(page));
+		assertEquals(new ArrayList<Company>(), companyService.listCompanyService());
 		
 	}
 
