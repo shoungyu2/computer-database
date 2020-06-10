@@ -192,7 +192,7 @@ public class ComputerDAO {
 		
 		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
-			pstmt.setInt(5, c.getID());
+			pstmt.setInt(5, c.getId());
 			pstmt.setString(1, c.getName());
 			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
 			pstmt.setTimestamp(2, introDate);

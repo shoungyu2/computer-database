@@ -16,18 +16,16 @@ import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
-import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.service.AllServices;
 
-@WebServlet("/AddComputerServlet")
-public class AddComputerServlet extends HttpServlet{
+@WebServlet("/EditComputerServlet")
+public class EditComputerServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 909640541027872558L;
-
+	private static final long serialVersionUID = 3345158907466408519L;
+	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		
 		ServletContext sc=getServletContext();
 		Object obj= sc.getAttribute("AllServices");
@@ -36,6 +34,7 @@ public class AddComputerServlet extends HttpServlet{
 			
 			AllServices allServices=(AllServices) obj;
 			
+			String computerId=request.getParameter("computerId");
 			String computerName=request.getParameter("computerName");
 			String introduced=request.getParameter("introduced");
 			String discontinued=request.getParameter("discontinued");
@@ -56,21 +55,17 @@ public class AddComputerServlet extends HttpServlet{
 					.setName(companyName).build();
 			
 			
-			ComputerDTO compDTO=new ComputerDTO.ComputerDTOBuilder("-1", computerName)
+			ComputerDTO compDTO=new ComputerDTO.ComputerDTOBuilder(computerId, computerName)
 					.setIntroduced(introduced)
 					.setDiscontinued(discontinued)
 					.setCompanyDTO(companyDTO)
 					.build();
 			
 			try {
-				allServices.getComputerService().createComputerService(compDTO);
+				allServices.getComputerService().updateComputerService(compDTO);
 			} catch (InvalidEntryException e) {
-				List<Problems> listProbs=e.getListProb();
-				String errorMessage="";
-				for(Problems pb:listProbs) {
-					errorMessage+=pb.toString()+"\n";
-				}
-				request.setAttribute("errors", errorMessage);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (ComputerIsNullException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -81,16 +76,18 @@ public class AddComputerServlet extends HttpServlet{
 		}
 		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/addComputer.jsp");
 		rd.forward(request, response);
-	
 		
 	}
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ServletContext sc=getServletContext();
+		String computerId=request.getParameter("computerId");
+		request.setAttribute("computerId", computerId);
+
 		
-		Object obj= sc.getAttribute("AllServices");
+		ServletContext sc=getServletContext();
+		Object obj=sc.getAttribute("AllServices");
 		if(obj instanceof AllServices) {
 			AllServices allServices=(AllServices) obj;
 			List<Company> listComp=allServices.getCompanyService().listCompanyService();
@@ -100,11 +97,9 @@ public class AddComputerServlet extends HttpServlet{
 			throw new ServletException("Bad context: the attribute \\\"AllServices\\\" is wrong");
 		}
 		
-		
-		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/addComputer.jsp");
+		RequestDispatcher rd= request.getRequestDispatcher("/WEB-INF/views/editComputer.jsp");
 		rd.forward(request, response);
-	
-			
+		
 	}
-	
+
 }

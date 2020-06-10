@@ -39,6 +39,17 @@ public class ComputerServiceTest {
 	ComputerService compService=new ComputerService();
 	
 	@Test
+	public void getNbrComputerServiceTest() {
+		
+		compService.setCompDAO(computerDAO);
+		
+		Mockito.when(computerDAO.getNbrComputer()).thenReturn(574);
+		
+		assertEquals(574, compService.getNbrComputerService());
+		
+	}
+	
+	@Test
 	public void listComputerTest() {
 		
 		compService.setCompDAO(computerDAO);

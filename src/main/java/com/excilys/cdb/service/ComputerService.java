@@ -68,7 +68,7 @@ public class ComputerService {
 	
 	public void createComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException{
 		
-		Computer c=null;
+		Computer c;
 		c=map.stringToComputer(infoComp);
 		List<Problems> listProb=map.getParseProb();
 		verifServ.verifNameIsNotNull(c.getName(), listProb);
@@ -89,7 +89,7 @@ public class ComputerService {
 		verifServ.verifNameIsNotNull(c.getName(), listProb);
 		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
 		try {
-			verifServ.verifIDComputerInBDD(c.getID());
+			verifServ.verifIDComputerInBDD(c.getId());
 		} catch (NotFoundException nfe) {
 			listProb.add(Problems.createIDNotFoundProblem(infoComp.getId()));
 		}

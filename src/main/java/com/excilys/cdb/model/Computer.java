@@ -23,7 +23,7 @@ public class Computer {
 		return name;
 	}
 
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 		
