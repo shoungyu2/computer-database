@@ -18,7 +18,7 @@ import com.excilys.cdb.model.Computer;
 
 public class Mapper {
 
-	private static final DateTimeFormatter DTF= DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private static final DateTimeFormatter DTF= DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private List<Problems> parseProb=new ArrayList<Problems>();
 	
 	public List<Problems> getParseProb() {

@@ -45,8 +45,8 @@ public class MapperTest {
 		
 		map.setParseProb(new ArrayList<Problems>());
 		
-		String validDate="07/06/2020";
-		String invalidDate="35/02/2002";
+		String validDate="2020-06-07";
+		String invalidDate="2002-02-35";
 		String invalidDateformat="06/02/98";
 		String invalidString="jklsfjk";
 		String empty="";
@@ -114,8 +114,8 @@ public class MapperTest {
 		Company company=new Company("343 Industries", 343);
 		
 		ComputerDTO computerDTOComplete= new ComputerDTO.ComputerDTOBuilder("343", "XBox One")
-				.setIntroduced("02/02/2002")
-				.setDiscontinued("03/03/2003")
+				.setIntroduced("2002-02-02")
+				.setDiscontinued("2003-03-03")
 				.setCompanyDTO(companyDTO).build();
 		
 		

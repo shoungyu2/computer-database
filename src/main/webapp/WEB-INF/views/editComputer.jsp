@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page isELIgnored="false"%>
 
 <!DOCTYPE html>
@@ -20,10 +21,16 @@
     </header>
     <section id="main">
         <div class="container">
+        <c:out value="${errors}"/>
+        <c:if test="${fn:length(errors)>0} ">
+        <div class="alert alert-danger">
+        	<c:out value="${errors}"/>
+        </div>
+        </c:if>
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <div class="label label-default pull-right">
-                        id: 0
+                        <c:out value="id:${computerId}"/>
                     </div>
                     <h1>Edit Computer</h1>
 

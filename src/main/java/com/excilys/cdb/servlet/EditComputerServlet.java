@@ -16,6 +16,7 @@ import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
+import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.service.AllServices;
 
@@ -64,8 +65,12 @@ public class EditComputerServlet extends HttpServlet {
 			try {
 				allServices.getComputerService().updateComputerService(compDTO);
 			} catch (InvalidEntryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				List<Problems> listProb=e.getListProb();
+				String errors="";
+				for(Problems pb: listProb) {
+					errors+=pb.toString()+"\n";
+				}
+				request.setAttribute("errors", errors);
 			} catch (ComputerIsNullException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -74,8 +79,10 @@ public class EditComputerServlet extends HttpServlet {
 		else {
 			throw new ServletException("Bad context: the attribute \\\"AllServices\\\" is wrong");
 		}
-		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/addComputer.jsp");
-		rd.forward(request, response);
+		
+		doGet(request,response);
+		//RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/editComputer.jsp");
+		//rd.forward(request, response);
 		
 	}
 	

@@ -114,8 +114,8 @@ public class ComputerServiceTest {
 				.build();
 		
 		ComputerDTO cdto=new ComputerDTO.ComputerDTOBuilder("343", "XBox One")
-				.setIntroduced("02/02/2002")
-				.setDiscontinued("03/03/2003")
+				.setIntroduced("2002-02-02")
+				.setDiscontinued("2003-03-03")
 				.setCompanyDTO(null)
 				.build();
 		
