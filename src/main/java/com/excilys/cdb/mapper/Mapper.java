@@ -53,6 +53,29 @@ public class Mapper {
 		return ldt;
 	}
 	
+	public String dateToString(LocalDateTime ldt) {
+		
+		if(ldt==null) {
+			return null;
+		}
+		else {
+			return ldt.format(DTF);
+		}
+		
+	}
+	
+	public CompanyDTO companyToString(Company comp) {
+		
+		if(comp==null) {
+			return null;
+		}
+		else {
+			return new CompanyDTO.CompanyDTOBuilder(String.valueOf(comp.getId()))
+					.setName(comp.getName()).build();
+		}
+		
+	}
+	
 	public Optional<Company> stringToCompany(CompanyDTO cdto) {
 		
 		if(cdto!=null) {

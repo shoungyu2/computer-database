@@ -1,9 +1,12 @@
 package com.excilys.cdb.service;
 
+import com.excilys.cdb.mapper.Mapper;
+
 public class AllServices {
 
 	private ComputerService computerService;
 	private CompanyService companyService;
+	private Mapper map;
 	
 	public ComputerService getComputerService() {
 		return computerService;
@@ -16,6 +19,12 @@ public class AllServices {
 	}
 	public void setCompanyService(CompanyService companyService) {
 		this.companyService = companyService;
+	}
+	public Mapper getMap() {
+		return map;
+	}
+	public void setMap(Mapper map) {
+		this.map = map;
 	}
 	
 }

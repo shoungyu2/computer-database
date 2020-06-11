@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ page isELIgnored="false"%>
 	
 <!DOCTYPE html>
@@ -22,6 +23,11 @@
 
     <section id="main">
         <div class="container">
+        	<c:if test="${fn:length(success)>0}">
+	        	<div class="alert alert-danger">
+	        		<c:out value="${success}"/>
+	        	</div>
+        	</c:if>	
             <h1 id="homeTitle">
                 <c:out value="${pcCount}"/> Computers found
             </h1>

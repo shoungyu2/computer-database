@@ -48,6 +48,7 @@ public class InjectionListener implements ServletContextListener{
 		
 		aService.setCompanyService(companyService);
 		aService.setComputerService(computerService);
+		aService.setMap(map);
 		
 		sc.setAttribute("AllServices", aService);
 		

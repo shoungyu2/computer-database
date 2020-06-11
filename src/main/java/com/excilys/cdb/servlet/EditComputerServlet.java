@@ -17,7 +17,9 @@ import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
+import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.AllServices;
 
 @WebServlet("/EditComputerServlet")
@@ -64,6 +66,7 @@ public class EditComputerServlet extends HttpServlet {
 			
 			try {
 				allServices.getComputerService().updateComputerService(compDTO);
+				request.setAttribute("success", "Computer successfully edited");
 			} catch (InvalidEntryException e) {
 				List<Problems> listProb=e.getListProb();
 				String errors="";
@@ -91,13 +94,29 @@ public class EditComputerServlet extends HttpServlet {
 		
 		String computerId=request.getParameter("computerId");
 		request.setAttribute("computerId", computerId);
-
 		
 		ServletContext sc=getServletContext();
 		Object obj=sc.getAttribute("AllServices");
 		if(obj instanceof AllServices) {
 			AllServices allServices=(AllServices) obj;
-			List<Company> listComp=allServices.getCompanyService().listCompanyService();
+			try {
+				Optional<Computer> oc=allServices.getComputerService().showDetailComputerService(computerId);
+				Mapper map=allServices.getMap();
+				Computer c=oc.isEmpty()?null : oc.get();
+				if(c!=null) {
+					request.setAttribute("computerName", c.getName());
+					request.setAttribute("introducedDate",map.dateToString(c.getIntroductDate()));
+					request.setAttribute("discontinuedDate",map.dateToString(c.getDiscontinueDate()));
+					CompanyDTO comp= map.companyToString(c.getCompany());
+					if(comp!=null) {
+						request.setAttribute("companyId", comp.getId());
+					}
+				}
+			}catch (InvalidEntryException e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+				List<Company> listComp=allServices.getCompanyService().listCompanyService();
 			request.setAttribute("listCompany", listComp);
 		}
 		else {

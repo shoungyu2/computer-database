@@ -22,6 +22,8 @@ public class ListComputerServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
+		request.setAttribute("success", request.getParameter("success"));
+		
 		doGet(request,response);
 		
 	}
