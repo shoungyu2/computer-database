@@ -64,6 +64,7 @@ public class AddComputerServlet extends HttpServlet{
 			
 			try {
 				allServices.getComputerService().createComputerService(compDTO);
+				request.setAttribute("success", "Computer successfully added");
 			} catch (InvalidEntryException e) {
 				List<Problems> listProbs=e.getListProb();
 				String errorMessage="";
@@ -79,9 +80,8 @@ public class AddComputerServlet extends HttpServlet{
 		else {
 			throw new ServletException("Bad context: the attribute \\\"AllServices\\\" is wrong");
 		}
-		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/addComputer.jsp");
-		rd.forward(request, response);
 	
+		doGet(request, response);
 		
 	}
 	

@@ -83,9 +83,13 @@ public class EditComputerServlet extends HttpServlet {
 			throw new ServletException("Bad context: the attribute \\\"AllServices\\\" is wrong");
 		}
 		
+		int numPage=Integer.parseInt(request.getParameter("numPage"));
+		int nbrPage=Integer.parseInt(request.getParameter("nbrPage"));
+		
+		request.setAttribute("numPage", numPage);
+		request.setAttribute("nbrPage", nbrPage);
+		
 		doGet(request,response);
-		//RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/editComputer.jsp");
-		//rd.forward(request, response);
 		
 	}
 	
@@ -94,6 +98,12 @@ public class EditComputerServlet extends HttpServlet {
 		
 		String computerId=request.getParameter("computerId");
 		request.setAttribute("computerId", computerId);
+		
+		int numPage=Integer.parseInt(request.getParameter("numPage"));
+		int nbrPage=Integer.parseInt(request.getParameter("nbrPage"));
+		
+		request.setAttribute("numPage", numPage);
+		request.setAttribute("nbrPage", nbrPage);
 		
 		ServletContext sc=getServletContext();
 		Object obj=sc.getAttribute("AllServices");

@@ -13,6 +13,8 @@
 <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="./css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="./css/main.css" rel="stylesheet" media="screen">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
@@ -91,7 +93,7 @@
                             <input type="checkbox" name="cb" class="cb" value="0">
                         </td>
                         <td>
-                            <a href="EditComputerServlet?computerId=${computer.id}" onclick="">
+                            <a href="EditComputerServlet?computerId=${computer.id}&numPage=${numPage}&nbrPage=${nbrPage}" onclick="">
                             	<c:out value="${computer.name}"/>
                             </a>
                         </td>
