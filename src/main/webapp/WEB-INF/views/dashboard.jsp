@@ -120,6 +120,10 @@
         <div class="container text-center">
             <ul class="pagination">
             <li>
+            	<c:if test="${numPage>nbrPage}">
+            		<form action="NotFoundServlet" id="page" method="POST"></form>
+            		<script>document.getElementById("page").submit()</script>
+            	</c:if>
             	<c:if test="${numPage!=1}">
 	            	<a href="ListComputerServlet?currentPage=${numPage-1}" aria-label="Previous">
 	                      <span aria-hidden="true">&laquo;</span>
@@ -130,7 +134,7 @@
             <c:when test="${nbrPage<=5 }">
             	<c:forEach var="i" begin="1" end="${nbrPage}">
             		<li><a href="ListComputerServlet?currentPage=${i}">
-            			<c:out value="${i}"></c:out>
+            			<c:out value="${i}"/>
             		</a></li>
             	</c:forEach>
             </c:when>
