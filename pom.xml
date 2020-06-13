@@ -17,6 +17,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <junit_version>4.11</junit_version>
+    <slf4j_version>2.0.0-alpha1</slf4j_version>
+    <jquery_version>3.3.1</jquery_version>
+    <mockito_version>3.3.3</mockito_version>
+    <mysql_version>8.0.20</mysql_version>
+    <dbunit_version>2.5.3</dbunit_version>
+    <h2_version>1.4.200</h2_version>
+    <javax_version>3.1.0</javax_version>
+    <jstl_version>1.2</jstl_version>
   </properties>
 
   <dependencies>
@@ -24,56 +33,56 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>${junit_version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
     	<groupId>org.slf4j</groupId>
     	<artifactId>slf4j-log4j12</artifactId>
-    	<version>2.0.0-alpha1</version>
+    	<version>${slf4j_version}</version>
     </dependency>
     
     <dependency>
 	    <groupId>org.webjars</groupId>
 	    <artifactId>jquery</artifactId>
-	    <version>3.3.1</version>
+	    <version>${jquery_version}</version>
 	</dependency>
     
     <dependency>
     	<groupId>org.mockito</groupId>
     	<artifactId>mockito-core</artifactId>
-    	<version>3.3.3</version>
+    	<version>${mockito_version}</version>
     	<scope>test</scope>
     </dependency>
     
     <dependency>
     	<groupId>mysql</groupId>
     	<artifactId>mysql-connector-java</artifactId>
-    	<version>8.0.20</version>
+    	<version>${mysql_version}</version>
     </dependency>
     
     <dependency>
     	<groupId>org.dbunit</groupId>
     	<artifactId>dbunit</artifactId>
-    	<version>2.5.3</version>
+    	<version>${dbunit_version}</version>
     	<scope>test</scope>
     </dependency>
     <dependency>
     	<groupId>com.h2database</groupId>
     	<artifactId>h2</artifactId>
-    	<version>1.4.200</version>
+    	<version>${h2_version}</version>
     </dependency>
     <dependency>
     	<groupId>javax.servlet</groupId>
     	<artifactId>javax.servlet-api</artifactId>
-    	<version>3.1.0</version>
+    	<version>${javax_version}</version>
     	<scope>provided</scope>
     </dependency>
     <dependency>
     	<groupId>jstl</groupId>
     	<artifactId>jstl</artifactId>
-    	<version>1.2</version>
+    	<version>${jstl_version}</version>
     </dependency>
   </dependencies>
 
