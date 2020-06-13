@@ -63,6 +63,19 @@ public class MapperTest {
 		assertEquals(3, map.getParseProb().size());
 		
 	}
+	
+	@Test
+	public void dateToStringTest() {
+		
+		map.setParseProb(new ArrayList<Problems>());
+		
+		LocalDateTime ldtValid=LocalDateTime.parse("2002-02-02T00:00");
+		String strValid="2002-02-02";
+		
+		assertEquals(strValid, map.dateToString(ldtValid));
+		assertEquals(null, map.dateToString(null));
+		
+	}
 
 	@Test
 	public void stringToCompanyTest() {
@@ -93,6 +106,21 @@ public class MapperTest {
 		assertEquals(Optional.empty(), map.stringToCompany(cDTOwithIDEmpty));
 		assertEquals(Optional.of(compWithoutName), map.stringToCompany(cDTOwithoutName));
 		assertEquals(Optional.empty(), map.stringToCompany(cDTOempty));
+		
+	}
+	
+	@Test
+	public void companyToStringTest() {
+		
+		map.setParseProb(new ArrayList<Problems>());
+		
+		Company comp=new Company("343 Industries", 343);
+		
+		CompanyDTO compDTO=new CompanyDTO.CompanyDTOBuilder("343")
+				.setName("343 Industries").build();
+		
+		assertEquals(compDTO, map.companyToString(comp));
+		assertEquals(null, map.companyToString(null));
 		
 	}
 

@@ -46,15 +46,17 @@ public class AddComputerServlet extends HttpServlet{
 			try {
 				oComp=allServices.getCompanyService().showDetailCompanyService(companyId);
 			} catch (InvalidEntryException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				String errorMessage="";
+				for(Problems pb : e1.getListProb()) {
+					errorMessage+=pb.toString()+"\n";
+				}
+				request.setAttribute("errors", errorMessage);
 			}
 			
-			Company comp=oComp.get();
-			String companyName=comp.getName();
-			CompanyDTO companyDTO=new CompanyDTO.CompanyDTOBuilder(companyId)
-					.setName(companyName).build();
-			
+			CompanyDTO companyDTO=null;
+			if (oComp.isPresent()) {
+				companyDTO=allServices.getMap().companyToString(oComp.get());
+			}
 			
 			ComputerDTO compDTO=new ComputerDTO.ComputerDTOBuilder("-1", computerName)
 					.setIntroduced(introduced)

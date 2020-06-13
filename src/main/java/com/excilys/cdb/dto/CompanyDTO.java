@@ -18,6 +18,26 @@ public class CompanyDTO {
 		return name;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof CompanyDTO))
+			return false;
+		CompanyDTO other = (CompanyDTO) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
 	public static class CompanyDTOBuilder{
 		
 		private String id;

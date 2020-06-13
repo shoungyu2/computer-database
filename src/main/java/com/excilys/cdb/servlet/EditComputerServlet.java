@@ -48,15 +48,17 @@ public class EditComputerServlet extends HttpServlet {
 			try {
 				oComp=allServices.getCompanyService().showDetailCompanyService(companyId);
 			} catch (InvalidEntryException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				String errors="";
+				for(Problems p: e1.getListProb()) {
+					errors+=p.toString()+"\n";
+				}
+				request.setAttribute("errors", errors);
 			}
 			
-			Company comp=oComp.get();
-			String companyName=comp.getName();
-			CompanyDTO companyDTO=new CompanyDTO.CompanyDTOBuilder(companyId)
-					.setName(companyName).build();
-			
+			CompanyDTO companyDTO=null;
+			if(oComp.isPresent()) {
+				companyDTO=allServices.getMap().companyToString(oComp.get());
+			}
 			
 			ComputerDTO compDTO=new ComputerDTO.ComputerDTOBuilder(computerId, computerName)
 					.setIntroduced(introduced)
