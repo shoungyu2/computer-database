@@ -31,9 +31,16 @@ public class ComputerDAO {
 	private final static String UPDATE_COMPUTER=
 			"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
-	
 	private final static String GET_NBR_COMPUTER="SELECT computer.id FROM computer"
 			+ " ORDER BY computer.id DESC";
+	private final static String SEARCH_COMPUTER=
+			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
+			+ " FROM computer LEFT JOIN company ON company_id=company.id"
+			+ " WHERE computer.name LIKE ? ORDER BY computer.id LIMIT ? OFFSET ?";
+	private final static String GET_NBR_COMPUTER_IN_SEARCH=
+			"SELECT COUNT(computer.id) FROM computer "
+			+ " WHERE computer.name LIKE ? ";
+
 	
 	public int getNbrComputer() {
 		
@@ -237,6 +244,54 @@ public class ComputerDAO {
 		if(min<Page.getNbrPages()) {
 			Page.setNbrPages(min);
 		}
+		
+	}
+	
+	public int getNbrComputerInSearch(String search) {
+		
+		try(
+				Connection dbc= DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(GET_NBR_COMPUTER_IN_SEARCH);
+			){
+
+			search=search.replace("%", "\\%");
+			pstmt.setString(1, "%"+search+"%");
+			ResultSet res= pstmt.executeQuery();
+			if(res.next()) {
+				return res.getInt(1);
+			}
+			
+		} catch(SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		return 0;
+		
+	}
+	
+	public List<Computer> searchComputer(String search, Page page){
+		
+		List<Computer> searchResult=new ArrayList<Computer>();
+		
+		try(
+				Connection dbc=DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(SEARCH_COMPUTER);
+			){
+			
+			search=search.replace("%", "\\%");
+			pstmt.setString(1, "%"+search+"%");
+			pstmt.setInt(2, Page.getNbrElements());
+			pstmt.setInt(3, page.getOffset());
+			ResultSet res=pstmt.executeQuery();
+			while(res.next()) {
+				Computer c=createComputerFromBDD(res);
+				searchResult.add(c);
+			}
+			
+		} catch(SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		
+		return searchResult;
 		
 	}
 	

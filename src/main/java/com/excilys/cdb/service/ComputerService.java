@@ -122,6 +122,18 @@ public class ComputerService {
 		
 	}
 	
+	public int getNbrComputerInSearchService(String search) {
+		
+		return compDAO.getNbrComputerInSearch(search);
+		
+	}
+	
+	public List<Computer> searchComputerService(String search, Page page){
+		
+		return compDAO.searchComputer(search, page);
+		
+	}
+	
 	
 	
 }

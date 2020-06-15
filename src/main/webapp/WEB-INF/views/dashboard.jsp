@@ -35,7 +35,7 @@
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
-                    <form id="searchForm" action="#" method="GET" class="form-inline">
+                    <form id="searchForm" action="SearchComputerServlet" method="GET" class="form-inline">
 
                         <input type="search" id="searchbox" name="search" class="form-control" placeholder="Search name" />
                         <input type="submit" id="searchsubmit" value="Filter by name"
@@ -69,18 +69,26 @@
                             </span>
                         </th>
                         <th>
+                        	<a href="OrderByServlet" id="orderBy">
                             Computer name
+                            </a>
                         </th>
                         <th>
+                        	<a href="OrderByServlet" id="orderBy">
                             Introduced date
+                        	</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
+                        	<a href="OrderByServlet" id="orderBy">
                             Discontinued date
+                            </a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
+                        	<a href="OrderByServlet" id="orderBy">
                             Company
+                            </a>
                         </th>
 
                     </tr>
