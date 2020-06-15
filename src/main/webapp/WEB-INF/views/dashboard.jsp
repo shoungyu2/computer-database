@@ -44,12 +44,12 @@
                 </div>
                 <div class="pull-right">
                     <a class="btn btn-success" id="addComputer" href="AddComputerServlet">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="EditComputerServlet" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="DeleteComputerServlet" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
@@ -90,7 +90,7 @@
                 <c:forEach var="computer" items="${pcList}">
                     <tr>
                         <td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="0">
+                            <input type="checkbox" name="cb" class="cb" value="${computer.id}">
                         </td>
                         <td>
                             <a href="EditComputerServlet?computerId=${computer.id}&numPage=${numPage}&nbrPage=${nbrPage}" onclick="">

@@ -207,7 +207,12 @@ public class ComputerDAO {
 			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
 			pstmt.setTimestamp(3, discDate);
 			int companyID=getCompanieIDFromComputer(c);
-			pstmt.setInt(4, companyID);
+			if(companyID==0) {
+				pstmt.setNull(4, Types.BIGINT);
+			}
+			else {
+				pstmt.setInt(4, companyID);
+			}
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
