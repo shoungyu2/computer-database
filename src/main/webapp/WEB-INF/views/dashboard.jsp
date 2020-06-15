@@ -69,24 +69,24 @@
                             </span>
                         </th>
                         <th>
-                        	<a href="OrderByServlet" id="orderBy">
+                        	<a href="OrderByServlet?order=name" id="orderBy">
                             Computer name
                             </a>
                         </th>
                         <th>
-                        	<a href="OrderByServlet" id="orderBy">
+                        	<a href="OrderByServlet?order=introduced" id="orderBy">
                             Introduced date
                         	</a>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                        	<a href="OrderByServlet" id="orderBy">
+                        	<a href="OrderByServlet?order=discontinued" id="orderBy">
                             Discontinued date
                             </a>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                        	<a href="OrderByServlet" id="orderBy">
+                        	<a href="OrderByServlet?order=company" id="orderBy">
                             Company
                             </a>
                         </th>
@@ -101,7 +101,7 @@
                             <input type="checkbox" name="cb" class="cb" value="${computer.id}">
                         </td>
                         <td>
-                            <a href="EditComputerServlet?computerId=${computer.id}&numPage=${numPage}&nbrPage=${nbrPage}" onclick="">
+                            <a href="EditComputerServlet?computerId=${computer.id}&numPage=${numPage}&nbrPage=${nbrPage}">
                             	<c:out value="${computer.name}"/>
                             </a>
                         </td>

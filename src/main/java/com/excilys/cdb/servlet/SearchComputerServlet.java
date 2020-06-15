@@ -47,6 +47,7 @@ public class SearchComputerServlet extends HttpServlet {
 			request.setAttribute("pcCount", nbrComputer);
 			request.setAttribute("pcList", allServices.getComputerService().searchComputerService(search, page));
 			request.setAttribute("nbrPage", Page.getNbrPages());
+			request.setAttribute("numPage", 1);
 			
 		}
 		else {
