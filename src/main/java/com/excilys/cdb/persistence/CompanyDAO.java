@@ -1,5 +1,6 @@
 package com.excilys.cdb.persistence;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,12 +17,13 @@ public class CompanyDAO {
 	public final static String SELECT_COMPANY="SELECT id,name FROM company WHERE id=?";
 	
 	public List<Company> listCompany(){
-				
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		
 		List<Company> listComp=new ArrayList<>();
 		
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPANY)){
+		try (
+				Connection dbc= DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(SELECT_ALL_COMPANY)
+			){
 			
 			ResultSet res=pstmt.executeQuery();
 			
@@ -45,9 +47,10 @@ public class CompanyDAO {
 	
 	public Optional<Company> showDetailCompany(int id) {
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		
-		try(PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPANY)){
+		try(
+				Connection dbc= DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(SELECT_COMPANY)
+			){
 			
 			pstmt.setInt(1, id);
 			ResultSet res=pstmt.executeQuery();

@@ -1,5 +1,6 @@
 package com.excilys.cdb.persistence;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,9 +37,8 @@ public class ComputerDAO {
 	
 	public int getNbrComputer() {
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		try {
-			ResultSet res=dbc.query(GET_NBR_COMPUTER);
+		try (Connection dbc=DataSourceConnection.getConnection()){
+			ResultSet res=dbc.createStatement().executeQuery(GET_NBR_COMPUTER);
 			if(res.next()) {
 				return res.getInt("computer.id");
 			}
@@ -129,9 +129,11 @@ public class ComputerDAO {
 	
 	public List<Computer> listComputer(Page page){
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
 		List<Computer> listComp=new ArrayList<>();
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_ALL_COMPUTER)){
+		try (
+				Connection dbc=DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(SELECT_ALL_COMPUTER)
+			){
 			pstmt.setInt(1, Page.getNbrElements());
 			pstmt.setInt(2, page.getOffset());
 			ResultSet res=pstmt.executeQuery();
@@ -147,8 +149,10 @@ public class ComputerDAO {
 	
 	public Optional<Computer> showDetailComputer(int id) {
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(SELECT_COMPUTER)){
+		try (
+				Connection dbc=DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(SELECT_COMPUTER)
+			){
 			pstmt.setInt(1, id);
 			ResultSet res=pstmt.executeQuery();
 			if(res.next()) {
@@ -163,8 +167,10 @@ public class ComputerDAO {
 	
 	public void createComputer(Computer c) {
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(INSERT_COMPUTER)){
+		try (
+				Connection dbc=DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(INSERT_COMPUTER)
+			){
 			pstmt.setString(1, c.getName());
 			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
 			pstmt.setTimestamp(2, introDate);
@@ -190,8 +196,10 @@ public class ComputerDAO {
 	
 	public void updateComputer(Computer c) {
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(UPDATE_COMPUTER)){			
+		try (
+				Connection dbc=DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(UPDATE_COMPUTER)
+			){			
 			pstmt.setInt(5, c.getId());
 			pstmt.setString(1, c.getName());
 			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
@@ -209,9 +217,10 @@ public class ComputerDAO {
 	
 	public void deleteComputer(int id) {
 		
-		DataBaseConnection dbc=DataBaseConnection.getDbCon();
-		
-		try (PreparedStatement pstmt=dbc.getPreparedStatement(DELETE_COMPUTER)){
+		try (
+				Connection dbc=DataSourceConnection.getConnection();
+				PreparedStatement pstmt=dbc.prepareStatement(DELETE_COMPUTER)
+			){
 			
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
