@@ -84,7 +84,11 @@ public class DeleteComputerServlet extends HttpServlet {
 			AllServices allServices= (AllServices) obj;
 			ComputerService computerService= allServices.getComputerService();
 			int nbrComputer= computerService.getNbrComputerService();
-			Page.setNbrPages(nbrComputer/Page.getNbrElements()+1);
+			int nbrPages=nbrComputer/Page.getNbrElements();
+			if(nbrComputer%Page.getNbrElements()!=0) {
+				nbrPages++;
+			}
+			Page.setNbrPages(nbrPages);
 			request.setAttribute("pcCount", nbrComputer);
 			request.setAttribute("pcList", computerService.listComputerService(page));
 			request.setAttribute("nbrPage", Page.getNbrPages());
