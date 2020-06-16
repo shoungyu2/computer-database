@@ -13,7 +13,9 @@ import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.AllServices;
+import com.excilys.cdb.service.ComputerService;
 
 public class MethodServlet {
 
@@ -64,6 +66,56 @@ public class MethodServlet {
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO)
 				.build();	
+		
+	}
+	
+	public static void setNbrElementsInPage(HttpServletRequest request) {
+		
+		String nbrElementStr=request.getParameter("nbrElement");
+		if(nbrElementStr!=null) {
+			int nbrElement=Integer.parseInt(nbrElementStr);
+			Page.setNbrElements(nbrElement);
+		}
+		
+	}
+	
+	public static Page setNumPage(HttpServletRequest request) {
+		
+		Page page;
+		String numPageStr=request.getParameter("currentPage");
+		
+		if(numPageStr!=null) {
+			int numPage=Integer.parseInt(numPageStr);
+			page=new Page(numPage);
+			request.setAttribute("numPage", numPage);
+		}
+		else {
+			page=new Page(1);
+			request.setAttribute("numPage", 1);
+		}
+		
+		return page;
+		
+	}
+	
+	public static void setNbrPages(int nbrComputer) {
+		
+		int nbrPages= nbrComputer/Page.getNbrElements();
+		if(nbrComputer%Page.getNbrElements()!=0) {
+			nbrPages++;
+		}
+		Page.setNbrPages(nbrPages);
+	
+	}
+	
+	public static int setNbrComputer(ComputerService computerService, String search) {
+		
+		if(search!=null && !search.isEmpty()) {
+			return computerService.getNbrComputerInSearchService(search);			
+		}
+		else {
+			return computerService.getNbrComputerService();
+		}
 		
 	}
 	

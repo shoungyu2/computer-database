@@ -3,7 +3,6 @@ package com.excilys.cdb.servlet;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,39 +17,33 @@ import com.excilys.cdb.service.ComputerService;
 
 @WebServlet("/DeleteComputerServlet")
 public class DeleteComputerServlet extends HttpServlet {
-	
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = -5703698584643227969L;
+
+	private void deleteListComputer(HttpServletRequest request, AllServices allServices, String[] idSelected) {
+		
+		for(String id:idSelected) {
+			try {
+				allServices.getComputerService().deleteComputerService(id);
+			} catch(InvalidEntryException ie) {
+				String errorMessage="";
+				for(Problems pb:ie.getListProb()) {
+					errorMessage+=pb.toString()+"\n";
+				}
+				request.setAttribute("errors", errorMessage);
+			}
+		}
+		
+	}
+	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ServletContext sc=request.getServletContext();
-		Object obj =sc.getAttribute("AllServices");
+		AllServices allServices=MethodServlet.getAllServices(request);
+		String selected=request.getParameter("selection");
+		String[] idSelected=selected.split(",");
 		
-		if(obj instanceof AllServices) {
-			
-			AllServices allServices=(AllServices) obj;
-			
-			String selected=request.getParameter("selection");
-			String[] idSelected=selected.split(",");
-			
-			for(String id:idSelected) {
-				
-				try {
-					allServices.getComputerService().deleteComputerService(id);
-				} catch(InvalidEntryException ie) {
-					String errorMessage="";
-					for(Problems pb:ie.getListProb()) {
-						errorMessage+=pb.toString()+"\n";
-					}
-					request.setAttribute("errors", errorMessage);
-				}
-				
-			}
-		}
-		else {
-			throw new ServletException("Bad context, the attribute \"AllServices\" is wrong");
-		}
+		deleteListComputer(request, allServices, idSelected);
 		
 		doGet(request, response);
 		
@@ -58,44 +51,18 @@ public class DeleteComputerServlet extends HttpServlet {
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		AllServices allServices=MethodServlet.getAllServices(request);
+		ComputerService computerService= allServices.getComputerService();
+
+		Page page=MethodServlet.setNumPage(request);
+		MethodServlet.setNbrElementsInPage(request);
+		int nbrComputer= MethodServlet.setNbrComputer(computerService, null);
+		MethodServlet.setNbrPages(nbrComputer);
 		
-		Page page;
-		String numPageStr=request.getParameter("currentPage");
-		
-		if(numPageStr!=null) {
-			int numPage=Integer.parseInt(numPageStr);
-			page=new Page(numPage);
-			request.setAttribute("numPage", numPage);
-		}
-		else {
-			page=new Page(1);
-			request.setAttribute("numPage", 1);
-		}
-		
-		String nbrElementStr=request.getParameter("nbrElement");
-		if(nbrElementStr!=null) {
-			int nbrElement=Integer.parseInt(nbrElementStr);
-			Page.setNbrElements(nbrElement);
-		}
-		
-		ServletContext sc= getServletContext();
-		Object obj=sc.getAttribute("AllServices");
-		if(obj instanceof AllServices) {
-			AllServices allServices= (AllServices) obj;
-			ComputerService computerService= allServices.getComputerService();
-			int nbrComputer= computerService.getNbrComputerService();
-			int nbrPages=nbrComputer/Page.getNbrElements();
-			if(nbrComputer%Page.getNbrElements()!=0) {
-				nbrPages++;
-			}
-			Page.setNbrPages(nbrPages);
-			request.setAttribute("pcCount", nbrComputer);
-			request.setAttribute("pcList", computerService.listComputerService(page));
-			request.setAttribute("nbrPage", Page.getNbrPages());
-		}
-		else {
-			throw new ServletException("Bad context: the attribute \"AllServices\" is wrong");
-		}
+		request.setAttribute("pcCount", nbrComputer);
+		request.setAttribute("pcList", computerService.listComputerService(page));
+		request.setAttribute("nbrPage", Page.getNbrPages());
 		
 		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/dashboard.jsp");
 		rd.forward(request, response);
