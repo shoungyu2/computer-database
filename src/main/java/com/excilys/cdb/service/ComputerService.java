@@ -134,6 +134,12 @@ public class ComputerService {
 		
 	}
 	
+	public List<Computer> orderByService(String order, String search, String direction, Page page){
+		
+		return compDAO.orderBy(order, search, direction, page);
+		
+	}
+	
 	
 	
 }
