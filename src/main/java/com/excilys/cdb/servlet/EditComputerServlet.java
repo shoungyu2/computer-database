@@ -14,9 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
-import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
-import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -30,61 +28,14 @@ public class EditComputerServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		ServletContext sc=getServletContext();
-		Object obj= sc.getAttribute("AllServices");
+		AllServices allServices=MethodServlet.getAllServices(request);
 		
-		if(obj instanceof AllServices) {
+		CompanyDTO companyDTO=MethodServlet.getCompanyDTOFromRequest(request, allServices);
+		String computerId=request.getParameter("computerId");
+		ComputerDTO computerDTO=MethodServlet.getComputerDTOFromRequest(request, computerId, companyDTO);		
 			
-			AllServices allServices=(AllServices) obj;
-			
-			String computerId=request.getParameter("computerId");
-			String computerName=request.getParameter("computerName");
-			String introduced=request.getParameter("introduced");
-			String discontinued=request.getParameter("discontinued");
-			String companyId=request.getParameter("companyId");
-			
-			Optional<Company> oComp=Optional.empty();
-			
-			try {
-				oComp=allServices.getCompanyService().showDetailCompanyService(companyId);
-			} catch (InvalidEntryException e1) {
-				String errors="";
-				for(Problems p: e1.getListProb()) {
-					errors+=p.toString()+"\n";
-				}
-				request.setAttribute("errors", errors);
-			}
-			
-			CompanyDTO companyDTO=null;
-			if(oComp.isPresent()) {
-				companyDTO=allServices.getMap().companyToString(oComp.get());
-			}
-			
-			ComputerDTO compDTO=new ComputerDTO.ComputerDTOBuilder(computerId, computerName)
-					.setIntroduced(introduced)
-					.setDiscontinued(discontinued)
-					.setCompanyDTO(companyDTO)
-					.build();
-			
-			try {
-				allServices.getComputerService().updateComputerService(compDTO);
-				request.setAttribute("success", "Computer successfully edited");
-			} catch (InvalidEntryException e) {
-				List<Problems> listProb=e.getListProb();
-				String errors="";
-				for(Problems pb: listProb) {
-					errors+=pb.toString()+"\n";
-				}
-				request.setAttribute("errors", errors);
-			} catch (ComputerIsNullException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else {
-			throw new ServletException("Bad context: the attribute \\\"AllServices\\\" is wrong");
-		}
-		
+		MethodServlet.createOrUpdateComputer(request, allServices, computerDTO, false);
+	
 		int numPage=Integer.parseInt(request.getParameter("numPage"));
 		int nbrPage=Integer.parseInt(request.getParameter("nbrPage"));
 		
