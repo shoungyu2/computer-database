@@ -316,8 +316,9 @@ public class ComputerDAO {
 				Connection dbc= DataSourceConnection.getConnection();
 				PreparedStatement pstmt=dbc.prepareStatement(GET_NBR_COMPUTER_IN_SEARCH);
 			){
-
-			search=search.replace("%", "\\%");
+			if(search!=null) {
+				search=search.replace("%", "\\%");
+			}
 			pstmt.setString(1, "%"+search+"%");
 			ResultSet res= pstmt.executeQuery();
 			if(res.next()) {
@@ -339,9 +340,13 @@ public class ComputerDAO {
 				Connection dbc=DataSourceConnection.getConnection();
 				PreparedStatement pstmt=dbc.prepareStatement(SEARCH_COMPUTER);
 			){
-			
-			search=search.replace("%", "\\%");
-			pstmt.setString(1, "%"+search+"%");
+			if(search!=null) {
+				search=search.replace("%", "\\%");
+				pstmt.setString(1, "%"+search+"%");
+			}
+			else {
+				pstmt.setString(1, "%");
+			}
 			pstmt.setInt(2, Page.getNbrElements());
 			pstmt.setInt(3, page.getOffset());
 			ResultSet res=pstmt.executeQuery();
