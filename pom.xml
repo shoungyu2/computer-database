@@ -27,6 +27,7 @@
     <javax_version>3.1.0</javax_version>
     <jstl_version>1.2</jstl_version>
     <hikari_version>2.6.1</hikari_version>
+    <spring_version>5.2.5.RELEASE</spring_version>
   </properties>
 
   <dependencies>
@@ -94,6 +95,29 @@
     	<artifactId>HikariCP</artifactId>
     	<version>${hikari_version}</version>
     </dependency>
+
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-context</artifactId>
+    	<version>${spring_version}</version>
+    	<scope>runtime</scope>
+    </dependency>
+ 
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-core</artifactId>
+    	<version>${spring_version}</version>
+    	<scope>runtime</scope>
+    </dependency>
+    
+    <dependency>
+    	<groupId>org.springframework</groupId>
+    	<artifactId>spring-orm</artifactId>
+    	<version>${spring_version}</version>
+    	<scope>runtime</scope>
+    </dependency>
+ 
+ 
     
   </dependencies>
 
