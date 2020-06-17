@@ -241,4 +241,22 @@ public class ComputerServiceTest {
 		
 	}
 	
+	@Test
+	public void searchComputerServiceTest() {
+		
+		compService.setCompDAO(computerDAO);
+		
+		assertEquals(new ArrayList<Computer>(), compService.searchComputerService("", new Page(1)));
+		
+	}
+	
+	@Test
+	public void orderByServiceTest() {
+		
+		compService.setCompDAO(computerDAO);
+		
+		assertEquals(new ArrayList<Computer>(), compService.orderByService("", "", "", new Page(1)));
+		
+	}
+	
 }
