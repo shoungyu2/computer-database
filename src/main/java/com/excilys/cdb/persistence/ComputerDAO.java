@@ -184,9 +184,8 @@ public class ComputerDAO {
 	
 	private Timestamp getDateFromComputer(LocalDateTime ldt) {
 		
-		Timestamp date=
-				ldt==null ? 
-				null : Timestamp.valueOf(ldt);
+		Timestamp date=	
+				ldt==null ? null : Timestamp.valueOf(ldt);
 		return date;
 		
 	}
@@ -363,39 +362,13 @@ public class ComputerDAO {
 		
 	}
 	
-	
-	public List<Computer> orderByComputerWithSearchDesc(String search, Page page){
+	private List<Computer> orderByWithoutSearch(Page page, String query){
 		
 		List<Computer> resOrder=new ArrayList<Computer>();
 		
 		try(
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByComputerDesc(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPUTER_NAME_DESC);
+				PreparedStatement pstmt=dbc.prepareStatement(query);
 			){
 			
 			pstmt.setInt(1, Page.getNbrElements());
@@ -413,13 +386,13 @@ public class ComputerDAO {
 		
 	}
 	
-	public List<Computer> orderByIntroducedWithSearchDesc(String search, Page page){
+	private List<Computer> orderByWithSearch(Page page, String query, String search){
 		
 		List<Computer> resOrder=new ArrayList<Computer>();
 		
 		try(
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_INTRODUCED_WITH_SEARCH_DESC);
+				PreparedStatement pstmt=dbc.prepareStatement(query);
 			){
 			search=search.replace("%","\\%");
 			pstmt.setString(1, "%"+search+"%");
@@ -437,325 +410,6 @@ public class ComputerDAO {
 		return resOrder;
 		
 	}
-	
-	public List<Computer> orderByIntroducedDesc(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_INTRODUCED_DESC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByDiscontinuedWithSearchDesc(String search, Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByDiscontinuedDesc(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_DISCONTINUED_DESC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByCompanyWithSearchDesc(String search, Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByCompanyDesc(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPANY_NAME_DESC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-public List<Computer> orderByComputerWithSearch(String search, Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByComputer(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPUTER_NAME_ASC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByIntroducedWithSearch(String search, Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_INTRODUCED_WITH_SEARCH_ASC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByIntroduced(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_INTRODUCED_ASC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByDiscontinuedWithSearch(String search, Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByDiscontinued(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_DISCONTINUED_ASC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByCompanyWithSearch(String search, Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC);
-			){
-			search=search.replace("%","\\%");
-			pstmt.setString(1, "%"+search+"%");
-			pstmt.setInt(2, Page.getNbrElements());
-			pstmt.setInt(3, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
-	public List<Computer> orderByCompany(Page page){
-		
-		List<Computer> resOrder=new ArrayList<Computer>();
-		
-		try(
-				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(ORDER_BY_COMPANY_NAME_ASC);
-			){
-			
-			pstmt.setInt(1, Page.getNbrElements());
-			pstmt.setInt(2, page.getOffset());
-			ResultSet rs=pstmt.executeQuery();
-			while(rs.next()) {
-				resOrder.add(createComputerFromBDD(rs));
-			}
-			
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		return resOrder;
-		
-	}
-	
 	
 	public List<Computer> orderBy(String order, String search, String direction, Page page){
 		
@@ -767,18 +421,18 @@ public List<Computer> orderByComputerWithSearch(String search, Page page){
 		case "name":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByComputerDesc(page);
+					res=orderByWithoutSearch(page, ORDER_BY_COMPUTER_NAME_DESC);
 				}
 				else {
-					res=orderByComputerWithSearchDesc(search, page);
+					res=orderByWithSearch(page, ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC, search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByComputer(page);
+					res=orderByWithoutSearch(page, ORDER_BY_COMPUTER_NAME_ASC);
 				}
 				else {
-					res=orderByComputerWithSearch(search, page);
+					res=orderByWithSearch(page, ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC, search);
 				}
 			}
 			break;
@@ -786,38 +440,37 @@ public List<Computer> orderByComputerWithSearch(String search, Page page){
 		case "introduced":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByIntroducedDesc(page);
+					res=orderByWithoutSearch(page, ORDER_BY_INTRODUCED_DESC);
 				}
 				else {
-					res=orderByIntroducedWithSearchDesc(search, page);
+					res=orderByWithSearch(page, ORDER_BY_INTRODUCED_WITH_SEARCH_DESC, search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByIntroduced(page);
+					res=orderByWithoutSearch(page, ORDER_BY_INTRODUCED_ASC);
 				}
 				else {
-					res=orderByIntroducedWithSearch(search, page);
+					res=orderByWithSearch(page, ORDER_BY_INTRODUCED_WITH_SEARCH_ASC, search);
 				}
 			}
 			break;
 			
-			
 		case "discontinued":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByDiscontinued(page);
+					res=orderByWithoutSearch(page, ORDER_BY_DISCONTINUED_DESC);
 				}
 				else {
-					res=orderByDiscontinuedWithSearch(search, page);
+					res=orderByWithSearch(page, ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC, search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByDiscontinuedDesc(page);
+					res=orderByWithoutSearch(page, ORDER_BY_DISCONTINUED_ASC);
 				}
 				else {
-					res=orderByDiscontinuedWithSearchDesc(search, page);
+					res=orderByWithSearch(page, ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC, search);
 				}
 			}
 			break;
@@ -825,18 +478,18 @@ public List<Computer> orderByComputerWithSearch(String search, Page page){
 		case "company":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByCompany(page);
+					res=orderByWithoutSearch(page, ORDER_BY_COMPANY_NAME_DESC);
 				}
 				else {
-					res=orderByCompanyWithSearch(search, page);
+					res=orderByWithSearch(page, ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC, search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByCompanyDesc(page);
+					res=orderByWithoutSearch(page, ORDER_BY_COMPANY_NAME_ASC);
 				}
 				else {
-					res=orderByCompanyWithSearchDesc(search, page);
+					res=orderByWithSearch(page, ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC, search);
 				}
 			}
 			break;
