@@ -32,8 +32,8 @@ public class ComputerService {
 		this.map = map;
 	}
 	
-	public int getNbrComputerService() {
-		return compDAO.getNbrComputer();
+	public int getNbrComputerService(String search) {
+		return compDAO.getNbrComputer(search);
 	}
 	
 	public List<Computer> listComputerService(Page page){
@@ -130,12 +130,6 @@ public class ComputerService {
 			throw new InvalidEntryException(listProbs);
 		}
 		compDAO.deleteComputer(idComp);
-		
-	}
-	
-	public int getNbrComputerInSearchService(String search) {
-		
-		return compDAO.getNbrComputerInSearch(search);
 		
 	}
 	

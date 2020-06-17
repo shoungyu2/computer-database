@@ -32,7 +32,7 @@ public class LauncherCLI {
 		
 	}
 	
-public static void injectionDepdencies() {
+	public static void injectionDepdencies() {
 		
 		
 		ReaderCLI rCLI=new ReaderCLI();
@@ -75,7 +75,8 @@ public static void injectionDepdencies() {
 		System.out.println("4.Créer un ordinateur");
 		System.out.println("5.Mettre à jour un ordinateur");
 		System.out.println("6.Supprimer un ordinateur");
-		System.out.println("7.Quitter");
+		System.out.println("7.Supprimer une companie");
+		System.out.println("8.Quitter");
 	}
 	
 	private static boolean revenirMenu() {
@@ -187,6 +188,11 @@ public static void injectionDepdencies() {
 					break;
 					
 				case 7:
+					opCLI.deleteCompanyCLI();
+					ok=revenirMenu();
+					break;
+					
+				case 8:
 					System.out.println("Au revoir");
 					ok=true;
 					

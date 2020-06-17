@@ -110,13 +110,8 @@ public class MethodServlet {
 	
 	public static int setNbrComputer(ComputerService computerService, String search) {
 		
-		if(search!=null && !search.isEmpty()) {
-			return computerService.getNbrComputerInSearchService(search);			
-		}
-		else {
-			return computerService.getNbrComputerService();
-		}
-		
+			return computerService.getNbrComputerService(search);
+			
 	}
 	
 	public static void createOrUpdateComputer(HttpServletRequest request, AllServices allServices, ComputerDTO computerDTO, boolean action) {

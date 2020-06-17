@@ -15,6 +15,8 @@ public class CompanyDAO {
 	public final static	String SELECT_ALL_COMPANY="SELECT id,name FROM company"
 			+ " ORDER BY id";
 	public final static String SELECT_COMPANY="SELECT id,name FROM company WHERE id=?";
+	public final static String DELETE_COMPANY="DELETE FROM company WHERE id=?";
+	public final static String DELETE_ALL_COMPUTER_WITH_COMPANY="DELETE FROM computer WHERE company_id=?";
 	
 	public List<Company> listCompany(){
 		
@@ -67,6 +69,41 @@ public class CompanyDAO {
 		}
 		
 		return Optional.empty();
+	}
+	
+	public void deleteCompany(int id) {
+		
+		Connection dbc=null;
+		try{
+
+			dbc = DataSourceConnection.getConnection();
+			PreparedStatement pstmt_del_company=dbc.prepareStatement(DELETE_COMPANY);
+			PreparedStatement pstmt_del_computer=dbc.prepareStatement(DELETE_ALL_COMPUTER_WITH_COMPANY);
+					
+			dbc.setAutoCommit(false);
+			pstmt_del_computer.setInt(1, id);
+			pstmt_del_company.setInt(1, id);
+			pstmt_del_computer.executeUpdate();
+			pstmt_del_company.executeUpdate();
+			dbc.commit();
+			dbc.setAutoCommit(true);
+			
+		} catch(SQLException sqle) {
+			try {
+				dbc.rollback();
+			} catch (SQLException sqle2) {
+				sqle2.printStackTrace();
+			}
+			sqle.printStackTrace();
+		}
+		finally {
+			try {
+				dbc.close();
+			} catch(SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		
 	}
 	
 }

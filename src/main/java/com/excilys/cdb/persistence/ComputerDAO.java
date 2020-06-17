@@ -31,14 +31,12 @@ public class ComputerDAO {
 	private final static String UPDATE_COMPUTER=
 			"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
 	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
-	private final static String GET_NBR_COMPUTER="SELECT computer.id FROM computer"
-			+ " ORDER BY computer.id DESC";
 	private final static String SEARCH_COMPUTER=
 			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
 			+ " FROM computer LEFT JOIN company ON company_id=company.id"
 			+ " WHERE computer.name LIKE ? ORDER BY computer.id LIMIT ? OFFSET ?";
 	private final static String GET_NBR_COMPUTER_IN_SEARCH=
-			"SELECT COUNT(computer.id) FROM computer "
+			"SELECT COUNT(*) FROM computer "
 			+ " WHERE computer.name LIKE ? ";
 	private final static String ORDER_BY_COMPUTER_NAME_ASC=
 			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
@@ -104,20 +102,6 @@ public class ComputerDAO {
 			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
 			+ " FROM computer LEFT JOIN company ON company_id=company.id"
 			+ " WHERE computer.name LIKE ? ORDER BY company.name DESC LIMIT ? OFFSET ?";
-	
-	public int getNbrComputer() {
-		
-		try (Connection dbc=DataSourceConnection.getConnection()){
-			ResultSet res=dbc.createStatement().executeQuery(GET_NBR_COMPUTER);
-			if(res.next()) {
-				return res.getInt("computer.id");
-			}
-		} catch(SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		return 0;
-		
-	}
 	
 	private String getComputerNameFromBDD(ResultSet res) throws SQLException{
 		
@@ -256,7 +240,7 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		int max=getNbrComputer()/Page.getNbrElements()+1;
+		int max=getNbrComputer("")/Page.getNbrElements()+1;
 		if(max>Page.getNbrPages()) {
 			Page.setNbrPages(max);
 		}
@@ -302,14 +286,14 @@ public class ComputerDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		int min=getNbrComputer()/Page.getNbrElements()+1;
+		int min=getNbrComputer("")/Page.getNbrElements()+1;
 		if(min<Page.getNbrPages()) {
 			Page.setNbrPages(min);
 		}
 		
 	}
 	
-	public int getNbrComputerInSearch(String search) {
+	public int getNbrComputer(String search) {
 		
 		try(
 				Connection dbc= DataSourceConnection.getConnection();
@@ -317,6 +301,9 @@ public class ComputerDAO {
 			){
 			if(search!=null) {
 				search=search.replace("%", "\\%");
+			}
+			if(search==null) {
+				search="";
 			}
 			pstmt.setString(1, "%"+search+"%");
 			ResultSet res= pstmt.executeQuery();

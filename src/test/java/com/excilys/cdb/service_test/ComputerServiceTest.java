@@ -43,9 +43,9 @@ public class ComputerServiceTest {
 		
 		compService.setCompDAO(computerDAO);
 		
-		Mockito.when(computerDAO.getNbrComputer()).thenReturn(574);
+		Mockito.when(computerDAO.getNbrComputer("")).thenReturn(574);
 		
-		assertEquals(574, compService.getNbrComputerService());
+		assertEquals(574, compService.getNbrComputerService(""));
 		
 	}
 	

@@ -70,4 +70,18 @@ public class CompanyService {
 		
 	}
 	
+	public void deleteCompanyService(String id) throws InvalidEntryException {
+		
+		int idComp=getIDFromString(id);
+		try {
+			verifServ.verifIDCompanieInBDD(idComp);
+			compDAO.deleteCompany(idComp);
+		} catch (NotFoundException nfe) {
+			List<Problems> listProb=new ArrayList<Problems>();
+			listProb.add(Problems.createIDNotFoundProblem(id));
+			throw new InvalidEntryException(listProb);
+		}
+		
+	}
+	
 }
