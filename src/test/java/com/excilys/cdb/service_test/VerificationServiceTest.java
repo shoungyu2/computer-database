@@ -39,20 +39,29 @@ public class VerificationServiceTest {
 		List<Problems> listProbs2=new ArrayList<Problems>();
 		List<Problems> listProbs3=new ArrayList<Problems>();
 		List<Problems> listProbs4=new ArrayList<Problems>();
-		
+		List<Problems> listProbs5=new ArrayList<Problems>();
+		List<Problems> listProbs6=new ArrayList<Problems>();
+		List<Problems> listProbs7=new ArrayList<Problems>();
 		
 		LocalDateTime ldt1=LocalDateTime.parse("2002-02-02T00:00:00");
 		LocalDateTime ldt2=LocalDateTime.parse("2003-03-03T00:00:00");
+		LocalDateTime ldt3=LocalDateTime.parse("2101-12-12T00:00");
 		
 		verifService.verifDate(ldt1, ldt2, listProbs1);
 		verifService.verifDate(ldt2, ldt1, listProbs2);
 		verifService.verifDate(ldt1, null, listProbs3);
 		verifService.verifDate(null, ldt2, listProbs4);
+		verifService.verifDate(ldt3, ldt2, listProbs5);
+		verifService.verifDate(null, ldt3, listProbs6);
+		verifService.verifDate(ldt3, ldt3, listProbs7);
 
 		assertEquals(0, listProbs1.size());
 		assertEquals(1, listProbs2.size());
 		assertEquals(0, listProbs3.size());
 		assertEquals(0, listProbs4.size());
+		assertEquals(2, listProbs5.size());
+		assertEquals(1, listProbs6.size());
+		assertEquals(2, listProbs7.size());
 		
 	}
 	
