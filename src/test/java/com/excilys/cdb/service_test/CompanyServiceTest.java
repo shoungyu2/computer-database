@@ -79,4 +79,36 @@ public class CompanyServiceTest {
 		
 	}
 	
+	@Test
+	public void deleteCompanyService() throws NotFoundException {
+		
+		companyService.setCompDAO(companyDAO);
+		companyService.setVerifServ(verifService);
+		companyService.setMap(map);
+		
+		Mockito.when(map.stringToID("blablou")).thenThrow(new NumberFormatException());
+		Mockito.when(map.stringToID("-1")).thenReturn(-1);
+		Mockito.when(map.stringToID("1")).thenReturn(1);
+		Mockito.doThrow(new NotFoundException()).when(verifService).verifIDCompanieInBDD(-1);
+		Mockito.doNothing().when(verifService).verifIDCompanieInBDD(1);
+		Mockito.doNothing().when(companyDAO).deleteCompany(1);
+		
+		try {
+			companyService.deleteCompanyService("1");
+			assert(true);
+			companyService.deleteCompanyService("blablou");
+			assert(false);
+		} catch(InvalidEntryException iee) {
+			assertEquals(1, iee.getListProb().size());
+		}
+		
+		try {
+			companyService.deleteCompanyService("-1");
+			assert(false);
+		} catch(InvalidEntryException iee) {
+			assertEquals(1, iee.getListProb().size());
+		}
+		
+	}
+	
 }

@@ -157,4 +157,17 @@ public class OperationCLI {
 		
 	}
 	
+	public void deleteCompanyCLI() {
+		
+		String id=rcli.choixID();
+		try {
+			companieServ.deleteCompanyService(id);
+			LOGGER.info("Supression de la companie d'id: "+id+" et de tous les ordinateurs qui lui sont rattachés");
+		} catch(InvalidEntryException iee) {
+			for(Problems p: iee.getListProb()) {
+				LOGGER.error(p);
+			}
+		}
+		
+	}
 }

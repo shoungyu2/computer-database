@@ -19,6 +19,11 @@ public class CompanyDTO {
 	}
 	
 	@Override
+	public String toString() {
+		return "CompanyDTO [id=" + id + ", name=" + name + "]";
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;

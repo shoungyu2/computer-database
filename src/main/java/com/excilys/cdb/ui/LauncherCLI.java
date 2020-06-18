@@ -3,13 +3,9 @@ package com.excilys.cdb.ui;
 import java.util.Scanner;
 import org.apache.log4j.Logger;
 
-import com.excilys.cdb.mapper.Mapper;
+import com.excilys.cdb.injection.InjectionCLI;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.persistence.CompanyDAO;
-import com.excilys.cdb.persistence.ComputerDAO;
-import com.excilys.cdb.service.CompanyService;
-import com.excilys.cdb.service.ComputerService;
-import com.excilys.cdb.service.VerificationService;
+
 
 public class LauncherCLI {
 	
@@ -26,46 +22,12 @@ public class LauncherCLI {
 	
 	public static void main(String[] args) {
 	
-		injectionDepdencies();
+		InjectionCLI.injectionDepdencies();
 		Page.setNbrPages(573/20+1);
 		LauncherCLI.faitesVotreChoix();
 		
 	}
 	
-public static void injectionDepdencies() {
-		
-		
-		ReaderCLI rCLI=new ReaderCLI();
-		OperationCLI opCLI=new OperationCLI();
-		
-		ComputerService computerService=new ComputerService();
-		CompanyService companyService=new CompanyService();
-		VerificationService verifService=new VerificationService();
-		
-		Mapper map=new Mapper();
-
-		ComputerDAO computerDAO= new ComputerDAO();
-		CompanyDAO companyDAO= new CompanyDAO();
-		
-		verifService.setComputerDAO(computerDAO);
-		verifService.setCompanyDAO(companyDAO);
-		
-		computerService.setCompDAO(computerDAO);
-		computerService.setVerifServ(verifService);
-		computerService.setMap(map);
-		
-		companyService.setCompDAO(companyDAO);
-		companyService.setVerifServ(verifService);
-		companyService.setMap(map);
-		
-		opCLI.setCompanieServ(companyService);
-		opCLI.setComputerServ(computerService);
-		opCLI.setRcli(rCLI);
-		
-		LauncherCLI.setOpCLI(opCLI);
-		
-	}
-
 	private static void afficheMenu() {
 		System.out.println("Choisissez l'une des options suivantes");
 		System.out.println();
@@ -75,7 +37,8 @@ public static void injectionDepdencies() {
 		System.out.println("4.Créer un ordinateur");
 		System.out.println("5.Mettre à jour un ordinateur");
 		System.out.println("6.Supprimer un ordinateur");
-		System.out.println("7.Quitter");
+		System.out.println("7.Supprimer une companie");
+		System.out.println("8.Quitter");
 	}
 	
 	private static boolean revenirMenu() {
@@ -187,6 +150,11 @@ public static void injectionDepdencies() {
 					break;
 					
 				case 7:
+					opCLI.deleteCompanyCLI();
+					ok=revenirMenu();
+					break;
+					
+				case 8:
 					System.out.println("Au revoir");
 					ok=true;
 					

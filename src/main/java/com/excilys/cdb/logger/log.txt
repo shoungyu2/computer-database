@@ -2,3 +2,9 @@
 
 2020-06-03 14:24:28,973 [INFO] (OperationCLI.java : createComputerCLI : 131) Ajout d'un nouvel ordinateur la base de donnée:
 
+2020-06-17 10:49:52,884 [INFO] Supression de la companie d'id: 1 et de tous les ordinateurs qui lui sont rattachés
+2020-06-17 10:56:14,650 [INFO] Supression de la companie d'id: 1 et de tous les ordinateurs qui lui sont rattachés
+2020-06-17 10:58:52,877 [INFO] Supression de la companie d'id: 2 et de tous les ordinateurs qui lui sont rattachés
+2020-06-17 11:03:16,777 [INFO] Supression de la companie d'id: 3 et de tous les ordinateurs qui lui sont rattachés
+2020-06-17 11:30:58,610 [INFO] Supression de la companie d'id: 4 et de tous les ordinateurs qui lui sont rattachés
+2020-06-17 11:31:56,239 [INFO] Supression de la companie d'id: 27 et de tous les ordinateurs qui lui sont rattachés

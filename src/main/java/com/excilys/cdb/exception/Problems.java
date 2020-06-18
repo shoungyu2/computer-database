@@ -6,6 +6,7 @@ public class Problems {
 		NOT_A_DATE("Not a date"), 
 		NOT_AN_ID("Not an ID"),
 		INVALID_DATES("Intro Date must be before disc Date"),
+		OUT_OF_BOUND_DATES("This date is either too low or too high"),
 		NAME_IS_NULL("Name can't be null"),
 		ID_NOT_FOUND("ID not found");
 		
@@ -67,6 +68,12 @@ public class Problems {
 	public static Problems createIDNotFoundProblem(String origin) {
 		
 		return new Problems(origin, dataProblems.ID_NOT_FOUND);
+		
+	}
+	
+	public static Problems createDateOutOfBoundsProblem(String origin) {
+		
+		return new Problems(origin, dataProblems.OUT_OF_BOUND_DATES);
 		
 	}
 	

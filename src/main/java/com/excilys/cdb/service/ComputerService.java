@@ -31,9 +31,9 @@ public class ComputerService {
 	public void setMap(Mapper map) {
 		this.map = map;
 	}
-
-	public int getNbrComputerService() {
-		return compDAO.getNbrComputer();
+	
+	public int getNbrComputerService(String search) {
+		return compDAO.getNbrComputer(search);
 	}
 	
 	public List<Computer> listComputerService(Page page){
@@ -42,27 +42,38 @@ public class ComputerService {
 	
 	}
 	
-	public Optional<Computer> showDetailComputerService(String id) throws InvalidEntryException {
+	private int getIDFromString(String id) throws InvalidEntryException {
 		
-		int idComp=-1;
 		try {
-			idComp=map.stringToID(id);
-		} catch(NumberFormatException nfe) {
-			ArrayList<Problems> listProbs=new ArrayList<Problems>();
-			listProbs.add(Problems.createNotAnIDProblem(id));
-			throw new InvalidEntryException(listProbs);
+			return map.stringToID(id);
+		} catch (NumberFormatException nfe) {
+			List<Problems> listProb=new ArrayList<Problems>();
+			listProb.add(Problems.createNotAnIDProblem(id));
+			throw new InvalidEntryException(listProb);
 		}
+		
+	}
+	
+	private Optional<Computer> getComputerFromId(String id, int idComp) throws InvalidEntryException{
+		
 		if(idComp!=-1) {
 			try {
 				verifServ.verifIDComputerInBDD(idComp);
 				return compDAO.showDetailComputer(idComp);
 			} catch (NotFoundException nfe) {
-				ArrayList<Problems> listProbs=new ArrayList<Problems>();
-				listProbs.add(Problems.createIDNotFoundProblem(id));
-				throw new InvalidEntryException(listProbs);
+				List<Problems> listProb=new ArrayList<Problems>();
+				listProb.add(Problems.createIDNotFoundProblem(id));
+				throw new InvalidEntryException(listProb);
 			}
 		}
 		return Optional.empty();
+		
+	}
+	
+	public Optional<Computer> showDetailComputerService(String id) throws InvalidEntryException {
+		
+		int idComp=getIDFromString(id);
+		return getComputerFromId(id, idComp);
 		
 	}
 	
@@ -81,11 +92,9 @@ public class ComputerService {
 		
 	}
 	
-	public void updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException {
+	private List<Problems> generateProblems(ComputerDTO infoComp, Computer c, List<Problems> listProb){
 		
-		Computer c=null;
-		c=map.stringToComputer(infoComp);
-		List<Problems> listProb=map.getParseProb();
+		listProb=map.getParseProb();
 		verifServ.verifNameIsNotNull(c.getName(), listProb);
 		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
 		try {
@@ -93,6 +102,15 @@ public class ComputerService {
 		} catch (NotFoundException nfe) {
 			listProb.add(Problems.createIDNotFoundProblem(infoComp.getId()));
 		}
+		return listProb;
+		
+	}
+	
+	public void updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException {
+		
+		Computer c=null;
+		c=map.stringToComputer(infoComp);
+		List<Problems> listProb=generateProblems(infoComp, c, map.getParseProb());
 		if(listProb.size()!=0) {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
@@ -103,14 +121,7 @@ public class ComputerService {
 	
 	public void deleteComputerService(String id) throws InvalidEntryException{
 		
-		int idComp=0;
-		try {
-			idComp=map.stringToID(id);
-		} catch(NumberFormatException nfe) {
-			ArrayList<Problems> listProbs=new ArrayList<Problems>();
-			listProbs.add(Problems.createNotAnIDProblem(id));
-			throw new InvalidEntryException(listProbs);
-		}
+		int idComp=getIDFromString(id);
 		try {
 			verifServ.verifIDComputerInBDD(idComp);
 		} catch(NotFoundException nfe) {
@@ -119,6 +130,18 @@ public class ComputerService {
 			throw new InvalidEntryException(listProbs);
 		}
 		compDAO.deleteComputer(idComp);
+		
+	}
+	
+	public List<Computer> searchComputerService(String search, Page page){
+		
+		return compDAO.searchComputer(search, page);
+		
+	}
+	
+	public List<Computer> orderByService(String order, String search, String direction, Page page){
+		
+		return compDAO.orderBy(order, search, direction, page);
 		
 	}
 	

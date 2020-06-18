@@ -43,9 +43,9 @@ public class ComputerServiceTest {
 		
 		compService.setCompDAO(computerDAO);
 		
-		Mockito.when(computerDAO.getNbrComputer()).thenReturn(574);
+		Mockito.when(computerDAO.getNbrComputer("")).thenReturn(574);
 		
-		assertEquals(574, compService.getNbrComputerService());
+		assertEquals(574, compService.getNbrComputerService(""));
 		
 	}
 	
@@ -238,6 +238,24 @@ public class ComputerServiceTest {
 		} catch(InvalidEntryException iee) {
 			assertEquals(1, iee.getListProb().size());
 		}
+		
+	}
+	
+	@Test
+	public void searchComputerServiceTest() {
+		
+		compService.setCompDAO(computerDAO);
+		
+		assertEquals(new ArrayList<Computer>(), compService.searchComputerService("", new Page(1)));
+		
+	}
+	
+	@Test
+	public void orderByServiceTest() {
+		
+		compService.setCompDAO(computerDAO);
+		
+		assertEquals(new ArrayList<Computer>(), compService.orderByService("", "", "", new Page(1)));
 		
 	}
 	

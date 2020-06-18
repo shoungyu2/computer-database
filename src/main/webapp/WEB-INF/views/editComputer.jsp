@@ -13,8 +13,6 @@
 <link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="./css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="./css/main.css" rel="stylesheet" media="screen">
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 </head>
 <body>
@@ -48,7 +46,7 @@
 					</div>
 					<h1>Edit Computer</h1>
 
-					<form action="EditComputerServlet" method="POST">
+					<form action="EditComputerServlet" id="formEditComputer" method="POST">
 						<input type="hidden" value="${numPage}" name="numPage" /> <input
 							type="hidden" value="${nbrPage}" name="nbrPage" /> <input
 							type="hidden" value="${computerId}" id="id" name="computerId" />
