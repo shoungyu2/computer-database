@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
@@ -24,15 +22,6 @@ public class DeleteComputerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -5703698584643227969L;
 	private static final Logger LOGGER=org.apache.log4j.Logger.getLogger(DeleteComputerServlet.class);
-	static {
-		try {
-			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
-					"src/main/java/com/excilys/cdb/logger/log.txt");
-			LOGGER.addAppender(fa);
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
 	
 	private void deleteListComputer(HttpServletRequest request, AllServices allServices, String[] idSelected) {
 		

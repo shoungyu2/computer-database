@@ -40,8 +40,9 @@ public class ComputerDTO {
 	
 	@Override
 	public String toString() {
+		String companyDTOString=companyDTO==null?"":companyDTO.toString();
 		return "ComputerDTO [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
-				+ discontinued + ", companyDTO=" + companyDTO.toString() + "]";
+				+ discontinued + ", companyDTO=" + companyDTOString + "]";
 	}
 
 	public static class ComputerDTOBuilder{

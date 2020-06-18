@@ -1,6 +1,5 @@
 package com.excilys.cdb.persistence;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
@@ -24,15 +21,6 @@ import com.excilys.cdb.model.Page;
 public class ComputerDAO {
 	
 	private final static Logger LOGGER=Logger.getLogger(ComputerDAO.class);
-	static {
-		try {
-			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
-					"src/main/java/com/excilys/cdb/logger/log.txt");
-			LOGGER.addAppender(fa);
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
 	
 	private String loggingQuery(String query, String...params) {
 		
@@ -505,7 +493,7 @@ public class ComputerDAO {
 			break;
 	
 		case "company":
-			orderByCompany(search, direction, page);
+			res=orderByCompany(search, direction, page);
 			break;
 	
 		default:

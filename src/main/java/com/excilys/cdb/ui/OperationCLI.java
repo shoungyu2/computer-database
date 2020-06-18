@@ -1,12 +1,9 @@
 package com.excilys.cdb.ui;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
@@ -27,18 +24,6 @@ public class OperationCLI {
 	private ComputerService computerServ;
 	private CompanyService companieServ;
 	private ReaderCLI rcli;
-	
-	public OperationCLI() {
-		
-		try {
-			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
-					"src/main/java/com/excilys/cdb/logger/log.txt");
-			LOGGER.addAppender(fa);
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
-		
-	}
 	
 	public void setComputerServ(ComputerService computerServ) {
 		this.computerServ = computerServ;

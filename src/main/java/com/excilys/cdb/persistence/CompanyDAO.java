@@ -1,6 +1,5 @@
 package com.excilys.cdb.persistence;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,24 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.model.Company;
 
 public class CompanyDAO {
 	
 	private final static Logger LOGGER=Logger.getLogger(CompanyDAO.class);
-	static {
-		try {
-			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
-					"src/main/java/com/excilys/cdb/logger/log.txt");
-			LOGGER.addAppender(fa);
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
 	
 	public final static	String SELECT_ALL_COMPANY="SELECT id,name FROM company"
 			+ " ORDER BY id";
