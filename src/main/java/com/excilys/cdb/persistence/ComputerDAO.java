@@ -310,6 +310,7 @@ public class ComputerDAO {
 				pstmt.setString(1, "%"+search+"%");
 			}
 			else {
+				search="";
 				pstmt.setString(1, "%");
 			}
 			pstmt.setInt(2, Page.getNbrElements());
