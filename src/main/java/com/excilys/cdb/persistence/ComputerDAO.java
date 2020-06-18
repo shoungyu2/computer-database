@@ -142,10 +142,12 @@ public class ComputerDAO {
 				listComp.add(c);
 			}
 			
-			LOGGER.info("Requête effectuée: "+loggingQuery(selectAllComputer));
+			LOGGER.info("Requête effectuée: "+loggingQuery(selectAllComputer,
+					String.valueOf(Page.getNbrElements()), String.valueOf(page.getOffset())));
 			
 		} catch (SQLException e) {
-			LOGGER.error("Tentative de requête: "+loggingQuery(selectAllComputer)+" échouée", e);
+			LOGGER.error("Tentative de requête: "+loggingQuery(selectAllComputer,
+					String.valueOf(Page.getNbrElements()), String.valueOf(page.getOffset()))+" échouée", e);
 		}
 		
 		return listComp;
@@ -399,87 +401,111 @@ public class ComputerDAO {
 		
 	}
 	
+	private List<Computer> orderByName(String search, String direction, Page page){
+		
+		if(direction!=null && direction.equals("desc")) {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_DESC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC.getQuery(), search);
+			}
+		}
+		else {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_ASC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC.getQuery(), search);
+			}
+		}
+		
+	}
+	
+	private List<Computer> orderByIntroduced(String search, String direction, Page page){
+		
+		if(direction!=null && direction.equals("desc")) {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_DESC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_WITH_SEARCH_DESC.getQuery(), search);
+			}
+		}
+		else {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_ASC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_WITH_SEARCH_ASC.getQuery(), search);
+			}
+		}
+		
+	}
+	
+	private List<Computer> orderByDiscontinued(String search, String direction, Page page){
+		
+		if(direction!=null && direction.equals("desc")) {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_DESC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC.getQuery(), search);
+			}
+		}
+		else {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_ASC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC.getQuery(), search);
+			}
+		}
+		
+	}
+	
+	private List<Computer> orderByCompany(String search, String direction, Page page){
+		
+		if(direction!=null && direction.equals("desc")) {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_DESC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC.getQuery(), search);
+			}
+		}
+		else {
+			if(search==null || search.isEmpty()) {
+				return orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_ASC.getQuery());
+			}
+			else {
+				return orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC.getQuery(), search);
+			}
+		}
+		
+	}
+
+	
 	public List<Computer> orderBy(String order, String search, String direction, Page page){
 		
 		List<Computer> res=new ArrayList<Computer>();
 		
 		switch (order) {
 		
-		
 		case "name":
-			if(direction!=null && direction.equals("desc")) {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_DESC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC.getQuery(), search);
-				}
-			}
-			else {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_ASC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC.getQuery(), search);
-				}
-			}
+			res=orderByName(search, direction, page);
 			break;
 			
 		case "introduced":
-			if(direction!=null && direction.equals("desc")) {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_DESC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_WITH_SEARCH_DESC.getQuery(), search);
-				}
-			}
-			else {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_ASC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_WITH_SEARCH_ASC.getQuery(), search);
-				}
-			}
+			res=orderByIntroduced(search, direction, page);
 			break;
 			
 		case "discontinued":
-			if(direction!=null && direction.equals("desc")) {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_DESC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC.getQuery(), search);
-				}
-			}
-			else {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_ASC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC.getQuery(), search);
-				}
-			}
+			res=orderByDiscontinued(search, direction, page);
 			break;
 	
 		case "company":
-			if(direction!=null && direction.equals("desc")) {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_DESC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC.getQuery(), search);
-				}
-			}
-			else {
-				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_ASC.getQuery());
-				}
-				else {
-					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC.getQuery(), search);
-				}
-			}
+			orderByCompany(search, direction, page);
 			break;
 	
 		default:

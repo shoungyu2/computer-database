@@ -36,7 +36,7 @@ public class CompanyDAO {
 	
 	private String loggingQuery(String query, String...params) {
 		
-		String[] str=query.split("?");
+		String[] str=query.split("\\?");
 		String finalQuery="";
 		
 		for(int i=0;i<str.length-1;i++) {
