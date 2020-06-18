@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Page;
@@ -19,9 +23,20 @@ import com.excilys.cdb.service.ComputerService;
 public class DeleteComputerServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -5703698584643227969L;
-
+	private static final Logger LOGGER=org.apache.log4j.Logger.getLogger(DeleteComputerServlet.class);
+	static {
+		try {
+			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
+					"src/main/java/com/excilys/cdb/logger/log.txt");
+			LOGGER.addAppender(fa);
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	
 	private void deleteListComputer(HttpServletRequest request, AllServices allServices, String[] idSelected) {
 		
+		String messageLogger="";
 		for(String id:idSelected) {
 			try {
 				allServices.getComputerService().deleteComputerService(id);
@@ -30,9 +45,13 @@ public class DeleteComputerServlet extends HttpServlet {
 				for(Problems pb:ie.getListProb()) {
 					errorMessage+=pb.toString()+"\n";
 				}
+				LOGGER.error(ie.getStackTrace());
 				request.setAttribute("errors", errorMessage);
 			}
+			messageLogger+=id+",";
 		}
+		
+		LOGGER.info("Commputers deleted from database: "+messageLogger);
 		
 	}
 	

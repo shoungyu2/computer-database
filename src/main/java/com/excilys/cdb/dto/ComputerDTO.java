@@ -38,6 +38,12 @@ public class ComputerDTO {
 		return companyDTO;
 	}
 	
+	@Override
+	public String toString() {
+		return "ComputerDTO [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
+				+ discontinued + ", companyDTO=" + companyDTO.toString() + "]";
+	}
+
 	public static class ComputerDTOBuilder{
 		
 		private String id;

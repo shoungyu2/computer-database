@@ -1,11 +1,16 @@
 package com.excilys.cdb.servlet;
 
-import java.rmi.ServerException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
@@ -19,7 +24,18 @@ import com.excilys.cdb.service.ComputerService;
 
 public class MethodServlet {
 
-	public static AllServices getAllServices(HttpServletRequest request) throws ServerException {
+	private static final Logger LOGGER=Logger.getLogger(MethodServlet.class);
+	static {
+		try {
+			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
+					"src/main/java/com/excilys/cdb/logger/log.txt");
+			LOGGER.addAppender(fa);
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	
+	public static AllServices getAllServices(HttpServletRequest request) throws ServletException {
 		
 		ServletContext context=request.getServletContext();
 		Object obj= context.getAttribute("AllServices");
@@ -27,7 +43,8 @@ public class MethodServlet {
 			return (AllServices) obj;
 		}
 		else {
-			throw new ServerException("Bad context, the attribute \"AllServices\" is wrong");
+			LOGGER.error("Bad context, the attribute \"AllServices\" is wrong");
+			throw new ServletException();
 		}
 	}
 	
@@ -119,10 +136,12 @@ public class MethodServlet {
 		try {
 			if(action) {
 				allServices.getComputerService().createComputerService(computerDTO);
+				LOGGER.info("Computer added in the database:\n"+computerDTO.toString());
 				request.setAttribute("success", "Computer successfully added");
 			}
 			else {
 				allServices.getComputerService().updateComputerService(computerDTO);
+				LOGGER.info("Computer updated in the database:\n"+computerDTO.toString());
 				request.setAttribute("success", "Computer successfully edited");
 			}
 		} catch (InvalidEntryException e) {
@@ -131,9 +150,11 @@ public class MethodServlet {
 			for(Problems pb:listProbs) {
 				errorMessage+=pb.toString()+"\n";
 			}
+			LOGGER.error(errorMessage,e);
 			request.setAttribute("errors", errorMessage);
 		} catch (ComputerIsNullException e) {
 			// TODO Auto-generated catch block
+			LOGGER.error(e.getStackTrace());
 			e.printStackTrace();
 		}
 		

@@ -1,5 +1,6 @@
 package com.excilys.cdb.persistence;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
@@ -18,91 +23,31 @@ import com.excilys.cdb.model.Page;
 
 public class ComputerDAO {
 	
-	private final static String INSERT_COMPUTER="INSERT INTO computer "
-			+ "(name,introduced,discontinued, company_id) VALUES (?,?,?,?)";
-	private final static String SELECT_ALL_COMPUTER=
-			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.id LIMIT ? OFFSET ?" ;
-	private final static String SELECT_COMPUTER=
-			"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.id=?";
-	private final static String UPDATE_COMPUTER=
-			"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?";
-	private final static String DELETE_COMPUTER="DELETE FROM computer WHERE id=?";
-	private final static String SEARCH_COMPUTER=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.id LIMIT ? OFFSET ?";
-	private final static String GET_NBR_COMPUTER_IN_SEARCH=
-			"SELECT COUNT(*) FROM computer "
-			+ " WHERE computer.name LIKE ? ";
-	private final static String ORDER_BY_COMPUTER_NAME_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.name LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPUTER_NAME_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.name DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPANY_NAME_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY company.name LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPANY_NAME_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY company.name DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_INTRODUCED_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.introduced LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_INTRODUCED_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.introduced DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_DISCONTINUED_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.discontinued LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_DISCONTINUED_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " ORDER BY computer.discontinued DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.name LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.name DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_INTRODUCED_WITH_SEARCH_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.introduced LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_INTRODUCED_WITH_SEARCH_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.introduced DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.discontinued LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY computer.discontinued DESC LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY company.name LIMIT ? OFFSET ?";
-	private final static String ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC=
-			"SELECT computer.id, computer.name, introduced, discontinued, company_id, company.name"
-			+ " FROM computer LEFT JOIN company ON company_id=company.id"
-			+ " WHERE computer.name LIKE ? ORDER BY company.name DESC LIMIT ? OFFSET ?";
+	private final static Logger LOGGER=Logger.getLogger(ComputerDAO.class);
+	static {
+		try {
+			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
+					"src/main/java/com/excilys/cdb/logger/log.txt");
+			LOGGER.addAppender(fa);
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 	
+	private String loggingQuery(String query, String...params) {
+		
+		String[] str=query.split("\\?");
+		String finalQuery="";
+		
+		for(int i=0;i<str.length-1;i++) {
+			finalQuery+=str[i]+params[i];
+		}
+		
+		return finalQuery+str[str.length-1];
+		
+	}
+	
+		
 	private String getComputerNameFromBDD(ResultSet res) throws SQLException{
 		
 		return res.getString("computer.name");
@@ -182,10 +127,12 @@ public class ComputerDAO {
 	
 	public List<Computer> listComputer(Page page){
 		
+		String selectAllComputer=AllComputerQuery.SELECT_ALL_COMPUTER.getQuery();
+		
 		List<Computer> listComp=new ArrayList<>();
 		try (
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(SELECT_ALL_COMPUTER)
+				PreparedStatement pstmt=dbc.prepareStatement(selectAllComputer)
 			){
 			pstmt.setInt(1, Page.getNbrElements());
 			pstmt.setInt(2, page.getOffset());
@@ -193,18 +140,25 @@ public class ComputerDAO {
 			while(res.next()) {
 				Computer c=createComputerFromBDD(res);
 				listComp.add(c);
-			}	
+			}
+			
+			LOGGER.info("Requête effectuée: "+loggingQuery(selectAllComputer));
+			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error("Tentative de requête: "+loggingQuery(selectAllComputer)+" échouée", e);
 		}
+		
 		return listComp;
+		
 	}
 	
 	public Optional<Computer> showDetailComputer(int id) {
 		
+		String selectComputer=AllComputerQuery.SELECT_COMPUTER.getQuery();
+		
 		try (
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(SELECT_COMPUTER)
+				PreparedStatement pstmt=dbc.prepareStatement(selectComputer)
 			){
 			pstmt.setInt(1, id);
 			ResultSet res=pstmt.executeQuery();
@@ -212,24 +166,31 @@ public class ComputerDAO {
 				Computer c=createComputerFromBDD(res);
 				return Optional.of(c);
 			}
+
+			LOGGER.info("Requête effectuée: "+loggingQuery(selectComputer, String.valueOf(id)));
+			
 		} catch (SQLException e) {
-			e.printStackTrace();
+
+			LOGGER.error("Tentative de requête : "+loggingQuery(selectComputer)+" échouée");
 		}		
 		return Optional.empty();
 	}
 	
 	public void createComputer(Computer c) {
 		
+		String insertComputer=AllComputerQuery.INSERT_COMPUTER.getQuery();
+		
+		Timestamp introDate=getDateFromComputer(c.getIntroductDate());
+		Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
+		int companyID=getCompanieIDFromComputer(c);
+		
 		try (
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(INSERT_COMPUTER)
+				PreparedStatement pstmt=dbc.prepareStatement(insertComputer)
 			){
 			pstmt.setString(1, c.getName());
-			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
 			pstmt.setTimestamp(2, introDate);
-			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
 			pstmt.setTimestamp(3, discDate);			
-			int companyID=getCompanieIDFromComputer(c);
 			if(companyID==0) {
 				pstmt.setNull(4, Types.BIGINT);
 			}
@@ -237,9 +198,18 @@ public class ComputerDAO {
 				pstmt.setInt(4, companyID);
 			}
 			pstmt.executeUpdate();
+			
+			LOGGER.info("Requête effectuée: "+
+			loggingQuery(insertComputer, c.getName(), 
+					introDate.toString(),discDate.toString(),String.valueOf(companyID)));
+			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.info("Tentative de requête: "+
+			loggingQuery(insertComputer, c.getName(), 
+					introDate.toString(),discDate.toString(),String.valueOf(companyID))+" échouée", e);
+					
 		}
+		
 		int max=getNbrComputer("")/Page.getNbrElements()+1;
 		if(max>Page.getNbrPages()) {
 			Page.setNbrPages(max);
@@ -249,17 +219,20 @@ public class ComputerDAO {
 	
 	public void updateComputer(Computer c) {
 		
+		String updateComputer=AllComputerQuery.UPDATE_COMPUTER.getQuery();
+		
+		Timestamp introDate=getDateFromComputer(c.getIntroductDate());
+		Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
+		int companyID=getCompanieIDFromComputer(c);
+
 		try (
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(UPDATE_COMPUTER)
+				PreparedStatement pstmt=dbc.prepareStatement(updateComputer)
 			){			
 			pstmt.setInt(5, c.getId());
 			pstmt.setString(1, c.getName());
-			Timestamp introDate=getDateFromComputer(c.getIntroductDate());
 			pstmt.setTimestamp(2, introDate);
-			Timestamp discDate=getDateFromComputer(c.getDiscontinueDate());
 			pstmt.setTimestamp(3, discDate);
-			int companyID=getCompanieIDFromComputer(c);
 			if(companyID==0) {
 				pstmt.setNull(4, Types.BIGINT);
 			}
@@ -267,24 +240,35 @@ public class ComputerDAO {
 				pstmt.setInt(4, companyID);
 			}
 			pstmt.executeUpdate();
+			
+			LOGGER.info("Requête effectuée: "+
+					loggingQuery(updateComputer, String.valueOf(c.getId()), c.getName(), 
+					introDate.toString(),discDate.toString(),String.valueOf(companyID)));
+					
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error("Tentative de requête: "+
+					loggingQuery(updateComputer, String.valueOf(c.getId()), c.getName(), 
+					introDate.toString(),discDate.toString(),String.valueOf(companyID))+" échouée",e);
 		}
 		
 	}
 	
 	public void deleteComputer(int id) {
 		
+		String deleteComputer= AllComputerQuery.DELETE_COMPUTER.getQuery();
+		
 		try (
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(DELETE_COMPUTER)
+				PreparedStatement pstmt=dbc.prepareStatement(deleteComputer)
 			){
 			
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
+			
+			LOGGER.info("Requête effectuée: "+loggingQuery(deleteComputer, String.valueOf(id)));
 		
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error("Tentative de requête: "+loggingQuery(deleteComputer, String.valueOf(id))+" échouée",e);
 		}
 		int min=getNbrComputer("")/Page.getNbrElements()+1;
 		if(min<Page.getNbrPages()) {
@@ -295,24 +279,28 @@ public class ComputerDAO {
 	
 	public int getNbrComputer(String search) {
 		
+		String getNbrComputer=AllComputerQuery.GET_NBR_COMPUTER.getQuery();
+		
 		try(
 				Connection dbc= DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(GET_NBR_COMPUTER_IN_SEARCH);
+				PreparedStatement pstmt=dbc.prepareStatement(getNbrComputer);
 			){
 			if(search!=null) {
 				search=search.replace("%", "\\%");
+				pstmt.setString(1, "%"+search+"%");
 			}
-			if(search==null) {
-				search="";
+			else {
+				pstmt.setString(1, "%");
 			}
-			pstmt.setString(1, "%"+search+"%");
 			ResultSet res= pstmt.executeQuery();
 			if(res.next()) {
 				return res.getInt(1);
 			}
 			
+			LOGGER.info("Requête effectuée: "+loggingQuery(getNbrComputer, "%"+search+"%"));
+
 		} catch(SQLException sqle) {
-			sqle.printStackTrace();
+			LOGGER.error("Tentative de requête: "+loggingQuery(getNbrComputer, "%"+search+"%")+" échouée",sqle);
 		}
 		return 0;
 		
@@ -321,10 +309,11 @@ public class ComputerDAO {
 	public List<Computer> searchComputer(String search, Page page){
 		
 		List<Computer> searchResult=new ArrayList<Computer>();
+		String searchComputer=AllComputerQuery.SEARCH_COMPUTER.getQuery();
 		
 		try(
 				Connection dbc=DataSourceConnection.getConnection();
-				PreparedStatement pstmt=dbc.prepareStatement(SEARCH_COMPUTER);
+				PreparedStatement pstmt=dbc.prepareStatement(searchComputer);
 			){
 			if(search!=null) {
 				search=search.replace("%", "\\%");
@@ -341,8 +330,12 @@ public class ComputerDAO {
 				searchResult.add(c);
 			}
 			
+			LOGGER.info("Requête effectuée: "+loggingQuery(searchComputer, "%"+search+"%",
+					String.valueOf(Page.getNbrElements()),String.valueOf(page.getOffset())));
+			
 		} catch(SQLException sqle) {
-			sqle.printStackTrace();
+			LOGGER.error("Tentative de requête: "+loggingQuery(searchComputer, "%"+search+"%",
+					String.valueOf(Page.getNbrElements()),String.valueOf(page.getOffset()))+" échouée",sqle);
 		}
 		
 		return searchResult;
@@ -365,8 +358,12 @@ public class ComputerDAO {
 				resOrder.add(createComputerFromBDD(rs));
 			}
 			
+			LOGGER.info("Requête effectuée: "+loggingQuery(query, 
+					String.valueOf(Page.getNbrElements()),String.valueOf(page.getOffset())));
+			
 		} catch(SQLException sqle) {
-			sqle.printStackTrace();
+			LOGGER.error("Tentative de requête: "+loggingQuery(query,
+					String.valueOf(Page.getNbrElements()),String.valueOf(page.getOffset()))+" échouée",sqle);		
 		}
 		
 		return resOrder;
@@ -390,8 +387,12 @@ public class ComputerDAO {
 				resOrder.add(createComputerFromBDD(rs));
 			}
 			
+			LOGGER.info("Requête effectuée: "+loggingQuery(query, "%"+search+"%",
+					String.valueOf(Page.getNbrElements()),String.valueOf(page.getOffset())));
+			
 		} catch(SQLException sqle) {
-			sqle.printStackTrace();
+			LOGGER.error("Tentative de requête: "+loggingQuery(query, "%"+search+"%",
+					String.valueOf(Page.getNbrElements()),String.valueOf(page.getOffset()))+" échouée",sqle);
 		}
 		
 		return resOrder;
@@ -408,18 +409,18 @@ public class ComputerDAO {
 		case "name":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_COMPUTER_NAME_DESC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_DESC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_WITH_SEARCH_DESC.getQuery(), search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_COMPUTER_NAME_ASC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_ASC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPUTER_NAME_WITH_SEARCH_ASC.getQuery(), search);
 				}
 			}
 			break;
@@ -427,18 +428,18 @@ public class ComputerDAO {
 		case "introduced":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_INTRODUCED_DESC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_DESC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_INTRODUCED_WITH_SEARCH_DESC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_WITH_SEARCH_DESC.getQuery(), search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_INTRODUCED_ASC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_ASC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_INTRODUCED_WITH_SEARCH_ASC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_INTRODUCED_WITH_SEARCH_ASC.getQuery(), search);
 				}
 			}
 			break;
@@ -446,18 +447,18 @@ public class ComputerDAO {
 		case "discontinued":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_DISCONTINUED_DESC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_DESC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_WITH_SEARCH_DESC.getQuery(), search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_DISCONTINUED_ASC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_ASC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_DISCONTINUED_WITH_SEARCH_ASC.getQuery(), search);
 				}
 			}
 			break;
@@ -465,18 +466,18 @@ public class ComputerDAO {
 		case "company":
 			if(direction!=null && direction.equals("desc")) {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_COMPANY_NAME_DESC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_DESC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_WITH_SEARCH_DESC.getQuery(), search);
 				}
 			}
 			else {
 				if(search==null || search.isEmpty()) {
-					res=orderByWithoutSearch(page, ORDER_BY_COMPANY_NAME_ASC);
+					res=orderByWithoutSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_ASC.getQuery());
 				}
 				else {
-					res=orderByWithSearch(page, ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC, search);
+					res=orderByWithSearch(page, AllComputerQuery.ORDER_BY_COMPANY_NAME_WITH_SEARCH_ASC.getQuery(), search);
 				}
 			}
 			break;
