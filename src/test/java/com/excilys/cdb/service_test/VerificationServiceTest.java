@@ -90,15 +90,15 @@ public class VerificationServiceTest {
 		verifService.setComputerDAO(computerDAO);
 		
 		Optional<Computer> empty=Optional.empty();
-		Computer comp= new Computer.ComputerBuilder("XBox One", 343)
+		Computer comp= new Computer.Builder("XBox One", 343)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
 				.build();
 		Optional<Computer> oComp= Optional.of(comp);
 		
-		Mockito.when(computerDAO.showDetailComputer(0)).thenReturn(empty);
-		Mockito.when(computerDAO.showDetailComputer(343)).thenReturn(oComp);
+		Mockito.when(computerDAO.getComputerFromId(0)).thenReturn(empty);
+		Mockito.when(computerDAO.getComputerFromId(343)).thenReturn(oComp);
 		
 		try {
 			verifService.verifIDComputerInBDD(343);
@@ -117,7 +117,7 @@ public class VerificationServiceTest {
 		verifService.setCompanyDAO(companyDAO);
 		
 		Optional<Company> empty=Optional.empty();
-		Company comp= new Company("343 Industries", 343);
+		Company comp= new Company.Builder(343).setName("343 Industries").build();
 		Optional<Company> oComp=Optional.of(comp);
 		
 		Mockito.when(companyDAO.showDetailCompany(0)).thenReturn(empty);

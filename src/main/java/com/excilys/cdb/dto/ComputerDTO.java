@@ -1,6 +1,6 @@
 package com.excilys.cdb.dto;
 
-public class ComputerDTO {
+public final class ComputerDTO {
 	
 	private final String id;
 	private final String name;
@@ -8,7 +8,7 @@ public class ComputerDTO {
 	private final String discontinued;
 	private final CompanyDTO companyDTO;
 	
-	public ComputerDTO(ComputerDTOBuilder cdtob) {
+	private ComputerDTO(Builder cdtob) {
 		
 		this.id=cdtob.id;
 		this.name=cdtob.name;
@@ -45,42 +45,32 @@ public class ComputerDTO {
 				+ discontinued + ", companyDTO=" + companyDTOString + "]";
 	}
 
-	public static class ComputerDTOBuilder{
+	public static class Builder{
 		
-		private String id;
-		private String name;
+		private final String id;
+		private final String name;
 		private String introduced;
 		private String discontinued;
 		private CompanyDTO companyDTO;
 		
-		public ComputerDTOBuilder(String id, String name) {
+		public Builder(String id, String name) {
 			
 			this.id=id;
 			this.name=name;
 			
 		}
 		
-		public ComputerDTOBuilder setID(String id) {
-			this.id=id;
-			return this;
-		}
-		
-		public ComputerDTOBuilder setName(String name) {
-			this.name=name;
-			return this;
-		}
-		
-		public ComputerDTOBuilder setIntroduced(String introduced) {
+		public Builder setIntroduced(String introduced) {
 			this.introduced=introduced;
 			return this;
 		}
 		
-		public ComputerDTOBuilder setDiscontinued(String discontinued) {
+		public Builder setDiscontinued(String discontinued) {
 			this.discontinued=discontinued;
 			return this;
 		}
 		
-		public ComputerDTOBuilder setCompanyDTO(CompanyDTO cdto) {
+		public Builder setCompanyDTO(CompanyDTO cdto) {
 			this.companyDTO=cdto;
 			return this;
 		}

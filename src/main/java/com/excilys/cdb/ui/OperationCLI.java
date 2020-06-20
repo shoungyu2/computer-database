@@ -39,7 +39,7 @@ public class OperationCLI {
 
 	public void listComputerCLI(Page page) {
 			
-		List<Computer> listComp=computerServ.listComputerService(page);
+		List<Computer> listComp=computerServ.getComputersService("", "", "", page);
 		for(Computer c: listComp) {
 			System.out.println(c);
 			System.out.println();
@@ -67,7 +67,7 @@ public class OperationCLI {
 		
 		String id= rcli.choixID();
 		try {
-			System.out.println(computerServ.showDetailComputerService(id).get());
+			System.out.println(computerServ.getComputerFromIdService(id).get());
 		} catch (InvalidEntryException iee) {
 			for(Problems p: iee.getListProb()) {
 				LOGGER.error(p);

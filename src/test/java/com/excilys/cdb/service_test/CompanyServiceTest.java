@@ -51,7 +51,7 @@ public class CompanyServiceTest {
 		companyService.setVerifServ(verifService);
 		companyService.setMap(map);
 		
-		Company comp=new Company("343 Industries", 343);
+		Company comp=new Company.Builder(343).setName("343 Industries").build();
 		Optional<Company> oComp= Optional.of(comp);
 		
 		Mockito.doThrow(new NotFoundException()).when(verifService).verifIDCompanieInBDD(0);

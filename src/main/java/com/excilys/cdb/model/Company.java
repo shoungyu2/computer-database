@@ -2,14 +2,14 @@ package com.excilys.cdb.model;
 
 
 
-public class Company {
+public final class Company {
 	
 	private final String name;
 	private final int id;
 	
-	public Company(String name,int id) {
-		this.name=name;
-		this.id=id;
+	private Company(Builder build) {
+		this.name=build.name;
+		this.id=build.id;
 	}
 	
 	public String getName() {
@@ -20,15 +20,6 @@ public class Company {
 		return this.id;
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -49,5 +40,25 @@ public class Company {
 	@Override
 	public String toString() {
 		return "ID: "+id+" Nom: "+name;
+	}
+	
+	public static class Builder{
+		
+		private final int id;
+		private String name;
+		
+		public Builder(int id) {
+			this.id=id;
+		}
+		
+		public Builder setName(String name) {
+			this.name=name;
+			return this;
+		}
+		
+		public Company build() {
+			return new Company(this);
+		}
+		
 	}
 }

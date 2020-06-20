@@ -50,7 +50,7 @@ public class VerificationService {
 	
 	public void verifIDComputerInBDD(int id) throws NotFoundException{
 		
-		Optional<Computer> oc= computerDAO.showDetailComputer(id);
+		Optional<Computer> oc= computerDAO.getComputerFromId(id);
 		if(oc.isEmpty()) {
 			throw new NotFoundException("ID Not Found");
 		}

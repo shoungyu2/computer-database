@@ -3,7 +3,7 @@ package com.excilys.cdb.model;
 import java.time.LocalDateTime;
 
 
-public class Computer {
+public final class Computer {
 	
 	private final String name;
 	private final int id;
@@ -11,7 +11,7 @@ public class Computer {
 	private final LocalDateTime discontinueDate;
 	private final Company company;
 	
-	public Computer(ComputerBuilder cb) {
+	private Computer(Builder cb) {
 		this.name=cb.name;
 		this.id=cb.id;
 		this.introductDate=cb.introductDate;
@@ -91,44 +91,30 @@ public class Computer {
 		return true;
 	}
 
-	
-	
-	
-	
-	public static class ComputerBuilder{
+	public static class Builder{
 		
-		private String name;
-		private int id;
+		private final String name;
+		private final int id;
 		private LocalDateTime introductDate;
 		private LocalDateTime discontinueDate;
 		private Company company;
 
-		public ComputerBuilder(String name, int id) {
+		public Builder(String name, int id) {
 			this.name=name;
 			this.id=id;
 		}
 
-		public ComputerBuilder setName(String name) {
-			this.name = name;
-			return this;
-		}
-
-		public ComputerBuilder setId(int id) {
-			this.id = id;
-			return this;
-		}
-
-		public ComputerBuilder setIntroductDate(LocalDateTime introductDate) {
+		public Builder setIntroductDate(LocalDateTime introductDate) {
 			this.introductDate = introductDate;
 			return this;
 		}
 
-		public ComputerBuilder setDiscontinueDate(LocalDateTime discontinueDate) {
+		public Builder setDiscontinueDate(LocalDateTime discontinueDate) {
 			this.discontinueDate = discontinueDate;
 			return this;
 		}
 
-		public ComputerBuilder setCompany(Company company) {
+		public Builder setCompany(Company company) {
 			this.company = company;
 			return this;
 		}
@@ -139,10 +125,4 @@ public class Computer {
 		
 	}
 
-
-
-
-	
-	
-	
 }

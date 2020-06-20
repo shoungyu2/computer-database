@@ -97,8 +97,8 @@ public class MapperTest {
 		CompanyDTO cDTOempty=new CompanyDTO.CompanyDTOBuilder(null)
 				.setName(null).build();
 		
-		Company compComplete= new Company("343 Industries", 343);
-		Company compWithoutName= new Company(null, 343);
+		Company compComplete= new Company.Builder(343).setName("343 Industries").build();
+		Company compWithoutName= new Company.Builder(343).setName(null).build();
 		
 		assertEquals(Optional.empty(),map.stringToCompany(null));
 		assertEquals(Optional.of(compComplete), map.stringToCompany(cDTOComplete));
@@ -114,7 +114,7 @@ public class MapperTest {
 		
 		map.setParseProb(new ArrayList<Problems>());
 		
-		Company comp=new Company("343 Industries", 343);
+		Company comp=new Company.Builder(343).setName("343 Industries").build();
 		
 		CompanyDTO compDTO=new CompanyDTO.CompanyDTOBuilder("343")
 				.setName("343 Industries").build();
@@ -139,15 +139,15 @@ public class MapperTest {
 		CompanyDTO companyDTO=new CompanyDTO.CompanyDTOBuilder("343")
 				.setName("343 Industries").build();
 		
-		Company company=new Company("343 Industries", 343);
+		Company company=new Company.Builder(343).setName("343 Industries").build();
 		
-		ComputerDTO computerDTOComplete= new ComputerDTO.ComputerDTOBuilder("343", "XBox One")
+		ComputerDTO computerDTOComplete= new ComputerDTO.Builder("343", "XBox One")
 				.setIntroduced("2002-02-02")
 				.setDiscontinued("2003-03-03")
 				.setCompanyDTO(companyDTO).build();
 		
 		
-		Computer computerComplete= new Computer.ComputerBuilder("XBox One", 343)
+		Computer computerComplete= new Computer.Builder("XBox One", 343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
 				.setCompany(company).build();

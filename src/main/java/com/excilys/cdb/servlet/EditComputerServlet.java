@@ -74,7 +74,7 @@ public class EditComputerServlet extends HttpServlet {
 		String computerId=setAllAttribute(request, allServices);
 		
 		try {
-			Optional<Computer> oc=allServices.getComputerService().showDetailComputerService(computerId);
+			Optional<Computer> oc=allServices.getComputerService().getComputerFromIdService(computerId);
 			Computer c=oc.isEmpty()?null : oc.get();
 			setComputerInRequest(request, allServices, c);
 		} catch (InvalidEntryException e) {

@@ -66,7 +66,7 @@ public class MethodServlet {
 		String introduced=request.getParameter("introduced");
 		String discontinued=request.getParameter("discontinued");
 								
-		return new ComputerDTO.ComputerDTOBuilder(id, computerName)
+		return new ComputerDTO.Builder(id, computerName)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO)

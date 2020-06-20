@@ -49,7 +49,7 @@ public class ReaderCLI {
 		System.out.println("Date de retrait");
 		String discontinued=choixDate();
 		CompanyDTO companyDTO=choixCompanie();
-		cdto=new ComputerDTO.ComputerDTOBuilder(id, name)
+		cdto=new ComputerDTO.Builder(id, name)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO)
@@ -68,7 +68,7 @@ public class ReaderCLI {
 		System.out.println("Date de retrait");
 		String discontinued=choixDate();
 		CompanyDTO companyDTO=choixCompanie();
-		cdto=new ComputerDTO.ComputerDTOBuilder("-1", name)
+		cdto=new ComputerDTO.Builder("-1", name)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO)

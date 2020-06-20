@@ -69,7 +69,7 @@ public class DeleteComputerServlet extends HttpServlet {
 		MethodServlet.setNbrPages(nbrComputer);
 		
 		request.setAttribute("pcCount", nbrComputer);
-		request.setAttribute("pcList", computerService.listComputerService(page));
+		request.setAttribute("pcList", computerService.getComputersService("", "", "", page));
 		request.setAttribute("nbrPage", Page.getNbrPages());
 		
 		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/dashboard.jsp");

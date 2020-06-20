@@ -96,9 +96,9 @@
 						</th>
 						<!-- Table header for Company -->
 						<th>Company <a
-							href="ListComputerServlet?order=company&search=${search}&direction=asc"
+							href="ListComputerServlet?order=company_id&search=${search}&direction=asc"
 							id="orderBy" style="font-size: xx-large"> &uarr; </a> <a
-							href="ListComputerServlet?order=company&search=${search}&direction=desc"
+							href="ListComputerServlet?order=company_id&search=${search}&direction=desc"
 							id="orderBy" style="font-size: xx-large"> &darr; </a>
 						</th>
 					</tr>
