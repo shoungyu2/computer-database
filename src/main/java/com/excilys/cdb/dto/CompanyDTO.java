@@ -1,11 +1,11 @@
 package com.excilys.cdb.dto;
 
-public class CompanyDTO {
+public final class CompanyDTO {
 
 	private final String id;
 	private final String name;
 	
-	public CompanyDTO(CompanyDTOBuilder cdtob) {
+	private CompanyDTO(CompanyDTOBuilder cdtob) {
 		this.id=cdtob.id;
 		this.name=cdtob.name;
 	}
@@ -45,7 +45,7 @@ public class CompanyDTO {
 
 	public static class CompanyDTOBuilder{
 		
-		private String id;
+		private final String id;
 		private String name;
 		
 		public CompanyDTOBuilder(String id) {

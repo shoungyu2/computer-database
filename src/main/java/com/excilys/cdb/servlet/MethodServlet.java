@@ -1,6 +1,5 @@
 package com.excilys.cdb.servlet;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,9 +7,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
@@ -25,16 +22,7 @@ import com.excilys.cdb.service.ComputerService;
 public class MethodServlet {
 
 	private static final Logger LOGGER=Logger.getLogger(MethodServlet.class);
-	static {
-		try {
-			FileAppender fa= new FileAppender(new PatternLayout("%d [%p] %m%n"), 
-					"src/main/java/com/excilys/cdb/logger/log.txt");
-			LOGGER.addAppender(fa);
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
-	
+		
 	public static AllServices getAllServices(HttpServletRequest request) throws ServletException {
 		
 		ServletContext context=request.getServletContext();
@@ -78,7 +66,7 @@ public class MethodServlet {
 		String introduced=request.getParameter("introduced");
 		String discontinued=request.getParameter("discontinued");
 								
-		return new ComputerDTO.ComputerDTOBuilder(id, computerName)
+		return new ComputerDTO.Builder(id, computerName)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO)

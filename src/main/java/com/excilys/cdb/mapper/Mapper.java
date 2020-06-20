@@ -81,7 +81,8 @@ public class Mapper {
 		if(cdto!=null) {
 			if(!(cdto.getId()==null || cdto.getId().isEmpty())) {
 				int idComp=stringToID(cdto.getId());
-				Company comp= new Company(cdto.getName(), idComp);
+				Company comp= new Company.Builder(idComp)
+						.setName(cdto.getName()).build();
 				return Optional.of(comp);
 			}
 			else {
@@ -108,7 +109,7 @@ public class Mapper {
 			Optional<Company> oc=stringToCompany(infoComp.getCompanyDTO());
 			Company comp=oc.isEmpty()?
 					null:oc.get();
-			return new Computer.ComputerBuilder(name, idComputer)
+			return new Computer.Builder(name, idComputer)
 					.setIntroductDate(introDate)
 					.setDiscontinueDate(discDate)
 					.setCompany(comp)

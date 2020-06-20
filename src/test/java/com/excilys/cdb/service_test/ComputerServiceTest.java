@@ -56,9 +56,9 @@ public class ComputerServiceTest {
 		
 		Page page= new Page(343);
 		
-		Mockito.when(computerDAO.listComputer(page)).thenReturn(new ArrayList<Computer>());
+		Mockito.when(computerDAO.getComputers("","","",page)).thenReturn(new ArrayList<Computer>());
 		
-		assertEquals(new ArrayList<Computer>(),compService.listComputerService(page));
+		assertEquals(new ArrayList<Computer>(),compService.getComputersService("","","",page));
 		
 	}
 	
@@ -69,7 +69,7 @@ public class ComputerServiceTest {
 		compService.setVerifServ(verifService);
 		compService.setCompDAO(computerDAO);
 		
-		Computer comp=new Computer.ComputerBuilder("XBox One", 343)
+		Computer comp=new Computer.Builder("XBox One", 343)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
@@ -81,22 +81,22 @@ public class ComputerServiceTest {
 		Mockito.when(map.stringToID("0")).thenReturn(0);
 		Mockito.when(map.stringToID("343")).thenReturn(343);
 		Mockito.doThrow(new NotFoundException()).when(verifService).verifIDComputerInBDD(0);
-		Mockito.when(computerDAO.showDetailComputer(343)).thenReturn(oComp);
+		Mockito.when(computerDAO.getComputerFromId(343)).thenReturn(oComp);
 		
-		assertEquals(Optional.empty(), compService.showDetailComputerService("-1"));
+		assertEquals(Optional.empty(), compService.getComputerFromIdService("-1"));
 		try {
-			compService.showDetailComputerService("blablou");
+			compService.getComputerFromIdService("blablou");
 			assert(false);
 		} catch(InvalidEntryException iee) {
 			assert(true);
 		}
 		try {
-			compService.showDetailComputerService("0");
+			compService.getComputerFromIdService("0");
 			assert(false);
 		} catch(InvalidEntryException iee) {
 			assert(true);
 		}
-		assertEquals(oComp, compService.showDetailComputerService("343"));
+		assertEquals(oComp, compService.getComputerFromIdService("343"));
 		
 	}
 
@@ -107,25 +107,25 @@ public class ComputerServiceTest {
 		compService.setVerifServ(verifService);
 		compService.setCompDAO(computerDAO);
 		
-		ComputerDTO cdtoEmpty=new ComputerDTO.ComputerDTOBuilder("0", null)
+		ComputerDTO cdtoEmpty=new ComputerDTO.Builder("0", null)
 				.setIntroduced(null)
 				.setDiscontinued(null)
 				.setCompanyDTO(null)
 				.build();
 		
-		ComputerDTO cdto=new ComputerDTO.ComputerDTOBuilder("343", "XBox One")
+		ComputerDTO cdto=new ComputerDTO.Builder("343", "XBox One")
 				.setIntroduced("2002-02-02")
 				.setDiscontinued("2003-03-03")
 				.setCompanyDTO(null)
 				.build();
 		
-		Computer compEmpty=new Computer.ComputerBuilder(null, 0)
+		Computer compEmpty=new Computer.Builder(null, 0)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
 				.build();
 		
-		Computer comp= new Computer.ComputerBuilder("XBox One", 343)
+		Computer comp= new Computer.Builder("XBox One", 343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
 				.setCompany(null)
@@ -161,25 +161,25 @@ public class ComputerServiceTest {
 		compService.setVerifServ(verifService);
 		compService.setCompDAO(computerDAO);
 		
-		ComputerDTO cdtoEmpty=new ComputerDTO.ComputerDTOBuilder("0", null)
+		ComputerDTO cdtoEmpty=new ComputerDTO.Builder("0", null)
 				.setIntroduced(null)
 				.setDiscontinued(null)
 				.setCompanyDTO(null)
 				.build();
 		
-		ComputerDTO cdto=new ComputerDTO.ComputerDTOBuilder("343", "XBox One")
+		ComputerDTO cdto=new ComputerDTO.Builder("343", "XBox One")
 				.setIntroduced("02/02/2002")
 				.setDiscontinued("03/03/2003")
 				.setCompanyDTO(null)
 				.build();
 		
-		Computer compEmpty=new Computer.ComputerBuilder(null, 0)
+		Computer compEmpty=new Computer.Builder(null, 0)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
 				.build();
 		
-		Computer comp= new Computer.ComputerBuilder("XBox One", 343)
+		Computer comp= new Computer.Builder("XBox One", 343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
 				.setCompany(null)
@@ -246,16 +246,9 @@ public class ComputerServiceTest {
 		
 		compService.setCompDAO(computerDAO);
 		
-		assertEquals(new ArrayList<Computer>(), compService.searchComputerService("", new Page(1)));
+		Mockito.when(computerDAO.getComputers("", "", "", new Page(1))).thenReturn(new ArrayList<Computer>());
 		
-	}
-	
-	@Test
-	public void orderByServiceTest() {
-		
-		compService.setCompDAO(computerDAO);
-		
-		assertEquals(new ArrayList<Computer>(), compService.orderByService("", "", "", new Page(1)));
+		assertEquals(new ArrayList<Computer>(), compService.getComputersService("", "", "",new Page(1)));
 		
 	}
 	

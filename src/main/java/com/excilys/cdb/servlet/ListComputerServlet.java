@@ -29,14 +29,9 @@ public class ListComputerServlet extends HttpServlet{
 		
 	}
 	
-	private List<Computer> getPcList(ComputerService computerService, String order, String search, String direction, Page page){
+	private List<Computer> getPcList(ComputerService computerService, String filter, String search, String order, Page page){
 		
-		if(order!=null && !order.isEmpty()) {
-			return computerService.orderByService(order, search, direction, page);
-		}
-		else {
-			return computerService.searchComputerService(search, page);
-		}
+		return computerService.getComputersService(search, filter,  order, page);
 		
 	}
 	

@@ -36,12 +36,6 @@ public class ComputerService {
 		return compDAO.getNbrComputer(search);
 	}
 	
-	public List<Computer> listComputerService(Page page){
-		
-		return compDAO.listComputer(page);		
-	
-	}
-	
 	private int getIDFromString(String id) throws InvalidEntryException {
 		
 		try {
@@ -59,18 +53,19 @@ public class ComputerService {
 		if(idComp!=-1) {
 			try {
 				verifServ.verifIDComputerInBDD(idComp);
-				return compDAO.showDetailComputer(idComp);
+				return compDAO.getComputerFromId(idComp);
 			} catch (NotFoundException nfe) {
 				List<Problems> listProb=new ArrayList<Problems>();
 				listProb.add(Problems.createIDNotFoundProblem(id));
 				throw new InvalidEntryException(listProb);
 			}
 		}
+		
 		return Optional.empty();
 		
 	}
 	
-	public Optional<Computer> showDetailComputerService(String id) throws InvalidEntryException {
+	public Optional<Computer> getComputerFromIdService(String id) throws InvalidEntryException {
 		
 		int idComp=getIDFromString(id);
 		return getComputerFromId(id, idComp);
@@ -133,18 +128,10 @@ public class ComputerService {
 		
 	}
 	
-	public List<Computer> searchComputerService(String search, Page page){
+	public List<Computer> getComputersService(String search, String filter, String order, Page page){
 		
-		return compDAO.searchComputer(search, page);
-		
-	}
-	
-	public List<Computer> orderByService(String order, String search, String direction, Page page){
-		
-		return compDAO.orderBy(order, search, direction, page);
+		return compDAO.getComputers(search, filter, order, page);
 		
 	}
-	
-	
 	
 }

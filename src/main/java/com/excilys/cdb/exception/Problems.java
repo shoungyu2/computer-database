@@ -2,7 +2,7 @@ package com.excilys.cdb.exception;
 
 public class Problems {
 
-	public enum dataProblems{
+	public enum DataProblems{
 		NOT_A_DATE("Not a date"), 
 		NOT_AN_ID("Not an ID"),
 		INVALID_DATES("Intro Date must be before disc Date"),
@@ -12,7 +12,7 @@ public class Problems {
 		
 		private String message;
 		
-		private dataProblems(String message) {
+		private DataProblems(String message) {
 			this.message=message;
 		}
 		
@@ -23,17 +23,17 @@ public class Problems {
 		
 	};
 	
-	private dataProblems dp;
+	private DataProblems dp;
 	private String origin;
 	
-	private Problems(String origin, dataProblems dp) {
+	private Problems(String origin, DataProblems dp) {
 		
 		this.dp=dp;
 		this.origin=origin;
 	
 	}
 	
-	public dataProblems getDP() {
+	public DataProblems getDP() {
 		return this.dp;
 	}
 	
@@ -43,37 +43,37 @@ public class Problems {
 	
 	public static Problems createNotADateProblem(String origin) {
 	
-		return new Problems(origin, dataProblems.NOT_A_DATE);
+		return new Problems(origin, DataProblems.NOT_A_DATE);
 	
 	}
 	
 	public static Problems createNotAnIDProblem(String origin) {
 		
-		return new Problems(origin, dataProblems.NOT_AN_ID);
+		return new Problems(origin, DataProblems.NOT_AN_ID);
 	
 	}
 	
 	public static Problems createInvalidDatesProblem(String origin) {
 		
-		return new Problems(origin, dataProblems.INVALID_DATES);
+		return new Problems(origin, DataProblems.INVALID_DATES);
 		
 	}
 	
 	public static Problems createNameIsNullProblem(String origin) {
 		
-		return new Problems(origin, dataProblems.NAME_IS_NULL);
+		return new Problems(origin, DataProblems.NAME_IS_NULL);
 		
 	}
 	
 	public static Problems createIDNotFoundProblem(String origin) {
 		
-		return new Problems(origin, dataProblems.ID_NOT_FOUND);
+		return new Problems(origin, DataProblems.ID_NOT_FOUND);
 		
 	}
 	
 	public static Problems createDateOutOfBoundsProblem(String origin) {
 		
-		return new Problems(origin, dataProblems.OUT_OF_BOUND_DATES);
+		return new Problems(origin, DataProblems.OUT_OF_BOUND_DATES);
 		
 	}
 	
