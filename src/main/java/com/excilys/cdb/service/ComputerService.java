@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
@@ -14,10 +17,14 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.persistence.ComputerDAO;
 
+@Service
 public class ComputerService {
 
+	@Autowired
 	private VerificationService verifServ;
+	@Autowired
 	private ComputerDAO compDAO;
+	@Autowired
 	private Mapper map;
 	
 	public void setVerifServ(VerificationService verifServ) {
@@ -72,7 +79,7 @@ public class ComputerService {
 		
 	}
 	
-	public void createComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException{
+	public boolean createComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException{
 		
 		Computer c;
 		c=map.stringToComputer(infoComp);
@@ -83,7 +90,7 @@ public class ComputerService {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
 		}
-		compDAO.createComputer(c);
+		return compDAO.createComputer(c);
 		
 	}
 	
@@ -101,7 +108,7 @@ public class ComputerService {
 		
 	}
 	
-	public void updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException {
+	public boolean updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException {
 		
 		Computer c=null;
 		c=map.stringToComputer(infoComp);
@@ -110,11 +117,12 @@ public class ComputerService {
 			map.setParseProb(new ArrayList<Problems>());
 			throw new InvalidEntryException(listProb);
 		}
-		compDAO.updateComputer(c);
+		
+		return compDAO.updateComputer(c);
 		
 	}
 	
-	public void deleteComputerService(String id) throws InvalidEntryException{
+	public boolean deleteComputerService(String id) throws InvalidEntryException{
 		
 		int idComp=getIDFromString(id);
 		try {
@@ -124,7 +132,7 @@ public class ComputerService {
 			listProbs.add(Problems.createIDNotFoundProblem(id));
 			throw new InvalidEntryException(listProbs);
 		}
-		compDAO.deleteComputer(idComp);
+		return compDAO.deleteComputer(idComp);
 		
 	}
 	

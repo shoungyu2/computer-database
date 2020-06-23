@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.service.AllServices;
+import com.excilys.cdb.spring.SpringConfiguration;
 import com.excilys.cdb.service.ComputerService;
 
 @WebServlet("/DeleteComputerServlet")
@@ -23,12 +24,18 @@ public class DeleteComputerServlet extends HttpServlet {
 	private static final long serialVersionUID = -5703698584643227969L;
 	private static final Logger LOGGER=org.apache.log4j.Logger.getLogger(DeleteComputerServlet.class);
 	
-	private void deleteListComputer(HttpServletRequest request, AllServices allServices, String[] idSelected) {
+	private static AnnotationConfigApplicationContext context=SpringConfiguration.getContext();
+	
+	private ComputerService computerService=context.getBean(ComputerService.class);
+	
+	private boolean deleteListComputer(HttpServletRequest request, String[] idSelected) {
 		
 		String messageLogger="";
 		for(String id:idSelected) {
 			try {
-				allServices.getComputerService().deleteComputerService(id);
+				if(!computerService.deleteComputerService(id)) {
+					return false;
+				}
 			} catch(InvalidEntryException ie) {
 				String errorMessage="";
 				for(Problems pb:ie.getListProb()) {
@@ -41,27 +48,28 @@ public class DeleteComputerServlet extends HttpServlet {
 		}
 		
 		LOGGER.info("Commputers deleted from database: "+messageLogger);
+		return true;
 		
 	}
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		AllServices allServices=MethodServlet.getAllServices(request);
 		String selected=request.getParameter("selection");
 		String[] idSelected=selected.split(",");
 		
-		deleteListComputer(request, allServices, idSelected);
-		
-		doGet(request, response);
+		if(deleteListComputer(request, idSelected)) {
+			doGet(request, response);
+		}
+		else {
+			RequestDispatcher rd=request.getRequestDispatcher("/ErrorServlet");
+			rd.forward(request, response);
+		}
 		
 	}
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		AllServices allServices=MethodServlet.getAllServices(request);
-		ComputerService computerService= allServices.getComputerService();
 
 		Page page=MethodServlet.setNumPage(request);
 		MethodServlet.setNbrElementsInPage(request);

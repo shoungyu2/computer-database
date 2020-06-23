@@ -9,19 +9,32 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Company;
 
+@Repository
 public class CompanyDAO {
 	
 	private final static Logger LOGGER = Logger.getLogger(CompanyDAO.class);
 	
-	public final static	String SELECT_ALL_COMPANY = "SELECT id,name FROM company"
-			 +  " ORDER BY id";
-	public final static String SELECT_COMPANY = "SELECT id,name FROM company WHERE id = ?";
-	public final static String DELETE_COMPANY = "DELETE FROM company WHERE id = ?";
-	public final static String DELETE_ALL_COMPUTER_WITH_COMPANY = "DELETE FROM computer WHERE company_id = ?";
+	private enum AllCompanyQuery{
+		SELECT_ALL_COMPANY("SELECT id,name FROM company ORDER BY id"),
+		SELECT_COMPANY("SELECT id,name FROM company WHERE id = ?"),
+		DELETE_COMPANY("DELETE FROM company WHERE id = ?"),
+		DELETE_ALL_COMPUTER_WITH_COMPANY("DELETE FROM computer WHERE company_id = ?");
 	
+		private final String query;
+		
+		private AllCompanyQuery(String query) {
+			this.query=query;
+		}
+		
+		public String getQuery() {
+			return this.query;
+		}
+	
+	}
 	private String loggingQuery(String query, String...params) {
 		
 		String[] str = query.split("\\?");
@@ -38,10 +51,11 @@ public class CompanyDAO {
 	public List<Company> listCompany(){
 		
 		List<Company> listComp = new ArrayList<>();
+		String selectAllCompany = AllCompanyQuery.SELECT_ALL_COMPANY.getQuery();
 		
 		try (
 				Connection dbc = DataSourceConnection.getConnection();
-				PreparedStatement pstmt = dbc.prepareStatement(SELECT_ALL_COMPANY)
+				PreparedStatement pstmt = dbc.prepareStatement(selectAllCompany)
 			){
 			
 			ResultSet res = pstmt.executeQuery();
@@ -54,11 +68,10 @@ public class CompanyDAO {
 					.setName(name).build();
 				listComp.add(c);
 			}
-			LOGGER.info("Requête effectuée: " + loggingQuery(SELECT_ALL_COMPANY));
+			LOGGER.debug("Requête effectuée: " + loggingQuery(selectAllCompany));
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			LOGGER.error("Tentative de requête: " + loggingQuery(SELECT_ALL_COMPANY) + " échouée", e);
+			LOGGER.error("Tentative de requête: " + loggingQuery(selectAllCompany) + " échouée", e);
 		}
 		
 		return listComp;
@@ -67,25 +80,27 @@ public class CompanyDAO {
 	
 	public Optional<Company> showDetailCompany(int id) {
 		
+		String selectCompany = AllCompanyQuery.SELECT_COMPANY.getQuery();
+		
 		try(
-				Connection dbc  =  DataSourceConnection.getConnection();
-				PreparedStatement pstmt  =  dbc.prepareStatement(SELECT_COMPANY)
+				Connection dbc = DataSourceConnection.getConnection();
+				PreparedStatement pstmt = dbc.prepareStatement(selectCompany)
 			){
 			
 			pstmt.setInt(1, id);
-			ResultSet res  =  pstmt.executeQuery();
+			ResultSet res = pstmt.executeQuery();
 			Company c;
 			if(res.next()) {
-				int idComp  =  res.getInt("id");
-				String name  =  res.getString("name");
+				int idComp = res.getInt("id");
+				String name = res.getString("name");
 				c = new Company.Builder(idComp)
 						.setName(name).build();
 				return Optional.of(c);
 			}
-			LOGGER.info("Requête effectuée: " + loggingQuery(SELECT_COMPANY, String.valueOf(id)));
+			LOGGER.debug("Requête effectuée: " + loggingQuery(selectCompany, String.valueOf(id)));
 						
 		} catch(SQLException sqle) {
-			LOGGER.error("Tentative de requête: " + loggingQuery(SELECT_COMPANY, String.valueOf(id)) + " échouée", sqle);
+			LOGGER.error("Tentative de requête: " + loggingQuery(selectCompany, String.valueOf(id)) + " échouée", sqle);
 		}
 		
 		return Optional.empty();
@@ -93,12 +108,15 @@ public class CompanyDAO {
 	
 	public void deleteCompany(int id) {
 		
+		String deleteCompany = AllCompanyQuery.DELETE_COMPANY.getQuery();
+		String deleteAllComputerWithCompany = AllCompanyQuery.DELETE_ALL_COMPUTER_WITH_COMPANY.getQuery();
 		Connection dbc = null;
+		
 		try{
 
-			dbc  =  DataSourceConnection.getConnection();
-			PreparedStatement pstmt_del_company = dbc.prepareStatement(DELETE_COMPANY);
-			PreparedStatement pstmt_del_computer = dbc.prepareStatement(DELETE_ALL_COMPUTER_WITH_COMPANY);
+			dbc = DataSourceConnection.getConnection();
+			PreparedStatement pstmt_del_company = dbc.prepareStatement(deleteCompany);
+			PreparedStatement pstmt_del_computer = dbc.prepareStatement(deleteAllComputerWithCompany);
 					
 			dbc.setAutoCommit(false);
 			
@@ -111,14 +129,14 @@ public class CompanyDAO {
 			dbc.commit();
 			dbc.setAutoCommit(true);
 			
-			LOGGER.info("Requêtes effectuées: \n" + loggingQuery(DELETE_COMPANY, String.valueOf(id))
-			 + "\n" + loggingQuery(DELETE_ALL_COMPUTER_WITH_COMPANY, String.valueOf(id)));
+			LOGGER.debug("Requêtes effectuées: \n" + loggingQuery(deleteCompany, String.valueOf(id))
+			 + "\n" + loggingQuery(deleteAllComputerWithCompany, String.valueOf(id)));
 			
 		} catch(SQLException sqle) {
 			try {
 				dbc.rollback();
-				LOGGER.error("Tentatives de requête:\n" + loggingQuery(DELETE_COMPANY, String.valueOf(id))
-				 + "\n" + loggingQuery(DELETE_ALL_COMPUTER_WITH_COMPANY, String.valueOf(id)), sqle);
+				LOGGER.error("Tentatives de requête:\n" + loggingQuery(deleteCompany, String.valueOf(id))
+				 + "\n" + loggingQuery(deleteAllComputerWithCompany, String.valueOf(id)), sqle);
 			} catch (SQLException sqle2) {
 				sqle2.printStackTrace();
 			}

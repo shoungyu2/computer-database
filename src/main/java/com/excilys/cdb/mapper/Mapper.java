@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
@@ -15,7 +17,7 @@ import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
-
+@Component
 public class Mapper {
 
 	private static final DateTimeFormatter DTF= DateTimeFormatter.ofPattern("yyyy-MM-dd");

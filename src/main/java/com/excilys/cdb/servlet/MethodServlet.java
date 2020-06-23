@@ -3,8 +3,6 @@ package com.excilys.cdb.servlet;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -14,35 +12,23 @@ import com.excilys.cdb.dto.ComputerDTO;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
+import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.service.AllServices;
+import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
 public class MethodServlet {
 
 	private static final Logger LOGGER=Logger.getLogger(MethodServlet.class);
 		
-	public static AllServices getAllServices(HttpServletRequest request) throws ServletException {
-		
-		ServletContext context=request.getServletContext();
-		Object obj= context.getAttribute("AllServices");
-		if (obj instanceof AllServices) {
-			return (AllServices) obj;
-		}
-		else {
-			LOGGER.error("Bad context, the attribute \"AllServices\" is wrong");
-			throw new ServletException();
-		}
-	}
-	
-	public static CompanyDTO getCompanyDTOFromRequest(HttpServletRequest request, AllServices allServices) {
+	public static CompanyDTO getCompanyDTOFromRequest(HttpServletRequest request, CompanyService companyService, Mapper map) {
 		
 		String companyId=request.getParameter("companyId");
 		Optional<Company> oComp=Optional.empty();
 		
 		try {
-			oComp=allServices.getCompanyService().showDetailCompanyService(companyId);
+			oComp=companyService.showDetailCompanyService(companyId);
 		} catch (InvalidEntryException e1) {
 			String errorMessage="";
 			for(Problems pb : e1.getListProb()) {
@@ -53,7 +39,7 @@ public class MethodServlet {
 		
 		CompanyDTO companyDTO=null;
 		if (oComp.isPresent()) {
-			companyDTO=allServices.getMap().companyToString(oComp.get());
+			companyDTO=map.companyToString(oComp.get());
 		}
 		
 		return companyDTO;
@@ -119,18 +105,38 @@ public class MethodServlet {
 			
 	}
 	
-	public static void createOrUpdateComputer(HttpServletRequest request, AllServices allServices, ComputerDTO computerDTO, boolean action) {
+	/**
+	 * Fonction permettant la création ou la mise à jour d'un PC
+	 * @param request la requête HTTP qui sera renvoyée
+	 * @param serviceContainer 
+	 * @param computerDTO les informations de l'ordinateur à créer/mettre à jour
+	 * @param action true->créer un ordinateur/false->mettre à jour un ordinateur
+	 * @return un booléen indiquant si l'action a entraîné un problème dans la bdd ou non
+	 */
+	public static boolean createOrUpdateComputer(HttpServletRequest request, ComputerService computerService, ComputerDTO computerDTO, boolean action) {
 	
 		try {
 			if(action) {
-				allServices.getComputerService().createComputerService(computerDTO);
-				LOGGER.info("Computer added in the database:\n"+computerDTO.toString());
-				request.setAttribute("success", "Computer successfully added");
+				boolean success=computerService.createComputerService(computerDTO);
+				if(success) {
+					LOGGER.info("Computer added in the database:\n"+computerDTO.toString());
+					request.setAttribute("success", "Computer successfully added");
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
-				allServices.getComputerService().updateComputerService(computerDTO);
-				LOGGER.info("Computer updated in the database:\n"+computerDTO.toString());
-				request.setAttribute("success", "Computer successfully edited");
+				boolean success=computerService.updateComputerService(computerDTO);
+				if(success) {
+					LOGGER.info("Computer updated in the database:\n"+computerDTO.toString());
+					request.setAttribute("success", "Computer successfully edited");
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 		} catch (InvalidEntryException e) {
 			List<Problems> listProbs=e.getListProb();
@@ -140,10 +146,12 @@ public class MethodServlet {
 			}
 			LOGGER.error(errorMessage,e);
 			request.setAttribute("errors", errorMessage);
+			return true;
 		} catch (ComputerIsNullException e) {
 			// TODO Auto-generated catch block
 			LOGGER.error(e.getStackTrace());
 			e.printStackTrace();
+			return true;
 		}
 		
 	}

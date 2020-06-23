@@ -17,17 +17,17 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <junit_version>4.11</junit_version>
-    <slf4j_version>2.0.0-alpha1</slf4j_version>
-    <jquery_version>3.3.1</jquery_version>
-    <mockito_version>3.3.3</mockito_version>
-    <mysql_version>8.0.20</mysql_version>
-    <dbunit_version>2.5.3</dbunit_version>
-    <h2_version>1.4.200</h2_version>
-    <javax_version>3.1.0</javax_version>
-    <jstl_version>1.2</jstl_version>
-    <hikari_version>2.6.1</hikari_version>
-    <spring_version>5.2.5.RELEASE</spring_version>
+    <junit.version>4.11</junit.version>
+    <slf4j.version>2.0.0-alpha1</slf4j.version>
+    <jquery.version>3.3.1</jquery.version>
+    <mockito.version>3.3.3</mockito.version>
+    <mysql.version>8.0.20</mysql.version>
+    <dbunit.version>2.5.3</dbunit.version>
+    <h2.version>1.4.200</h2.version>
+    <javax.version>3.1.0</javax.version>
+    <jstl.version>1.2</jstl.version>
+    <hikari.version>2.6.1</hikari.version>
+    <spring.version>5.2.5.RELEASE</spring.version>
   </properties>
 
   <dependencies>
@@ -35,86 +35,83 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit_version}</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
     	<groupId>org.slf4j</groupId>
     	<artifactId>slf4j-log4j12</artifactId>
-    	<version>${slf4j_version}</version>
+    	<version>${slf4j.version}</version>
     </dependency>
     
     <dependency>
 	    <groupId>org.webjars</groupId>
 	    <artifactId>jquery</artifactId>
-	    <version>${jquery_version}</version>
+	    <version>${jquery.version}</version>
 	</dependency>
     
     <dependency>
     	<groupId>org.mockito</groupId>
     	<artifactId>mockito-core</artifactId>
-    	<version>${mockito_version}</version>
+    	<version>${mockito.version}</version>
     	<scope>test</scope>
     </dependency>
     
     <dependency>
     	<groupId>mysql</groupId>
     	<artifactId>mysql-connector-java</artifactId>
-    	<version>${mysql_version}</version>
+    	<version>${mysql.version}</version>
     </dependency>
     
     <dependency>
     	<groupId>org.dbunit</groupId>
     	<artifactId>dbunit</artifactId>
-    	<version>${dbunit_version}</version>
+    	<version>${dbunit.version}</version>
     	<scope>test</scope>
     </dependency>
     
     <dependency>
     	<groupId>com.h2database</groupId>
     	<artifactId>h2</artifactId>
-    	<version>${h2_version}</version>
+    	<version>${h2.version}</version>
     </dependency>
     
     <dependency>
     	<groupId>javax.servlet</groupId>
     	<artifactId>javax.servlet-api</artifactId>
-    	<version>${javax_version}</version>
+    	<version>${javax.version}</version>
     	<scope>provided</scope>
     </dependency>
     
     <dependency>
     	<groupId>jstl</groupId>
     	<artifactId>jstl</artifactId>
-    	<version>${jstl_version}</version>
+    	<version>${jstl.version}</version>
     </dependency>
     
     <dependency>
     	<groupId>com.zaxxer</groupId>
     	<artifactId>HikariCP</artifactId>
-    	<version>${hikari_version}</version>
+    	<version>${hikari.version}</version>
     </dependency>
 
     <dependency>
     	<groupId>org.springframework</groupId>
-    	<artifactId>spring-context</artifactId>
-    	<version>${spring_version}</version>
-    	<scope>runtime</scope>
+    	<artifactId>spring-core</artifactId>
+    	<version>${spring.version}</version>
     </dependency>
- 
+    
     <dependency>
     	<groupId>org.springframework</groupId>
-    	<artifactId>spring-core</artifactId>
-    	<version>${spring_version}</version>
-    	<scope>runtime</scope>
+    	<artifactId>spring-context</artifactId>
+    	<version>${spring.version}</version>
     </dependency>
     
     <dependency>
     	<groupId>org.springframework</groupId>
     	<artifactId>spring-orm</artifactId>
-    	<version>${spring_version}</version>
-    	<scope>runtime</scope>
+    	<version>${spring.version}</version>
     </dependency>
  
  

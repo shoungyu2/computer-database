@@ -140,7 +140,7 @@ public class ComputerServiceTest {
 		Mockito.doCallRealMethod().when(map).setParseProb(new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifNameIsNotNull(null, new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifDate(null, null, listProbs1);
-		Mockito.doNothing().when(computerDAO).createComputer(comp);
+		Mockito.when(computerDAO.createComputer(comp)).thenReturn(true);
 		
 		try {
 			compService.createComputerService(cdto);
@@ -195,7 +195,7 @@ public class ComputerServiceTest {
 		Mockito.doCallRealMethod().when(verifService).verifNameIsNotNull(null, new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifDate(null, null, listProbs1);
 		Mockito.doThrow(new NotFoundException()).when(verifService).verifIDComputerInBDD(0);
-		Mockito.doNothing().when(computerDAO).updateComputer(comp);
+		Mockito.when(computerDAO.updateComputer(comp)).thenReturn(true);
 		
 		try {
 			compService.updateComputerService(cdto);
@@ -220,8 +220,7 @@ public class ComputerServiceTest {
 		Mockito.when(map.stringToID("343")).thenReturn(343);
 		Mockito.doThrow(new NotFoundException()).when(verifService).verifIDComputerInBDD(0);
 		Mockito.doNothing().when(verifService).verifIDComputerInBDD(343);
-		Mockito.doNothing().when(computerDAO).deleteComputer(343);
-		
+		Mockito.when(computerDAO.deleteComputer(343)).thenReturn(true);
 		
 		try {
 			compService.deleteComputerService("343");
@@ -245,9 +244,7 @@ public class ComputerServiceTest {
 	public void searchComputerServiceTest() {
 		
 		compService.setCompDAO(computerDAO);
-		
-		Mockito.when(computerDAO.getComputers("", "", "", new Page(1))).thenReturn(new ArrayList<Computer>());
-		
+				
 		assertEquals(new ArrayList<Computer>(), compService.getComputersService("", "", "",new Page(1)));
 		
 	}

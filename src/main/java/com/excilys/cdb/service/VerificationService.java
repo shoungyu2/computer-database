@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Company;
@@ -11,9 +14,12 @@ import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.persistence.CompanyDAO;
 import com.excilys.cdb.persistence.ComputerDAO;
 
+@Service
 public class VerificationService {
 	
+	@Autowired
 	private ComputerDAO computerDAO;
+	@Autowired
 	private CompanyDAO companyDAO;
 
 	public void setComputerDAO(ComputerDAO computerDAO) {

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.NotFoundException;
 import com.excilys.cdb.exception.Problems;
@@ -11,10 +14,14 @@ import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.persistence.CompanyDAO;
 
+@Service
 public class CompanyService {
 	
+	@Autowired
 	private VerificationService verifServ;
+	@Autowired
 	private CompanyDAO compDAO;
+	@Autowired
 	private Mapper map;
 	
 	public void setVerifServ(VerificationService verifServ) {

@@ -11,10 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
+@Repository
 public class ComputerDAO {
 	
 	private enum AllComputerQuery {
@@ -27,7 +29,7 @@ public class ComputerDAO {
 				+ " searchParameter filterParameter LIMIT ? OFFSET ?" ) ,
 		SELECT_COMPUTER(
 				"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
-				+ " FROM computer LEFT JOIN company ON company_id(company.id"
+				+ " FROM computer LEFT JOIN company ON company_id=company.id"
 				+ " WHERE computer.id=?") ,
 		UPDATE_COMPUTER(
 				"UPDATE computer SET name=?, introduced=?, discontinued=?, company_id=? WHERE id=?") ,

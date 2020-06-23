@@ -10,15 +10,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.service.AllServices;
+import com.excilys.cdb.spring.SpringConfiguration;
 import com.excilys.cdb.service.ComputerService;
 
 @WebServlet("/ListComputerServlet")
 public class ListComputerServlet extends HttpServlet{
 
 	private static final long serialVersionUID = -3655410377159367069L;
+	
+	private static AnnotationConfigApplicationContext context=SpringConfiguration.getContext();
+	
+	private ComputerService computerService=context.getBean(ComputerService.class);
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -45,8 +51,6 @@ public class ListComputerServlet extends HttpServlet{
 		
 		Page page=MethodServlet.setNumPage(request);
 		MethodServlet.setNbrElementsInPage(request);
-		AllServices allServices=MethodServlet.getAllServices(request);
-		ComputerService computerService= allServices.getComputerService();
 		int nbrComputer=MethodServlet.setNbrComputer(computerService, search);
 		MethodServlet.setNbrPages(nbrComputer);
 		List<Computer> pcList=getPcList(computerService, order, search, direction, page);
