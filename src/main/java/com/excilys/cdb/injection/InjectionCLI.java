@@ -29,10 +29,6 @@ public class InjectionCLI {
 		verifService.setComputerDAO(computerDAO);
 		verifService.setCompanyDAO(companyDAO);
 		
-		computerService.setCompDAO(computerDAO);
-		computerService.setVerifServ(verifService);
-		computerService.setMap(map);
-		
 		companyService.setCompDAO(companyDAO);
 		companyService.setVerifServ(verifService);
 		companyService.setMap(map);

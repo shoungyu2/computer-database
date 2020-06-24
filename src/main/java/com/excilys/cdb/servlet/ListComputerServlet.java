@@ -35,7 +35,7 @@ public class ListComputerServlet extends HttpServlet{
 		
 	}
 	
-	private List<Computer> getPcList(ComputerService computerService, String filter, String search, String order, Page page){
+	private List<Computer> getPcList(String filter, String search, String order, Page page){
 		
 		return computerService.getComputersService(search, filter,  order, page);
 		
@@ -53,7 +53,7 @@ public class ListComputerServlet extends HttpServlet{
 		MethodServlet.setNbrElementsInPage(request);
 		int nbrComputer=MethodServlet.setNbrComputer(computerService, search);
 		MethodServlet.setNbrPages(nbrComputer);
-		List<Computer> pcList=getPcList(computerService, order, search, direction, page);
+		List<Computer> pcList=getPcList(order, search, direction, page);
 			
 		request.setAttribute("search", search);
 		request.setAttribute("order", order);

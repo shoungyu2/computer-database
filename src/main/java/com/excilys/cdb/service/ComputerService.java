@@ -27,18 +27,6 @@ public class ComputerService {
 	@Autowired
 	private Mapper map;
 	
-	public void setVerifServ(VerificationService verifServ) {
-		this.verifServ = verifServ;
-	}
-
-	public void setCompDAO(ComputerDAO compDAO) {
-		this.compDAO = compDAO;
-	}
-
-	public void setMap(Mapper map) {
-		this.map = map;
-	}
-	
 	public int getNbrComputerService(String search) {
 		return compDAO.getNbrComputer(search);
 	}
