@@ -2,6 +2,7 @@ package com.excilys.cdb.persistence;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -14,11 +15,14 @@ public class ComputerRowMapper implements RowMapper<Computer> {
 	public Computer mapRow(ResultSet res, int rowNum) throws SQLException{
 		
 		Company company=new Company.Builder(res.getInt("computer.company_id"))
-				.setName(res.getString("company.id")).build();
+				.setName(res.getString("company.name")).build();
+		
+		LocalDateTime introLdt=RawMapper.getComputerIntroDateFromBDD(res);
+		LocalDateTime discLdt=RawMapper.getComputerDiscDateFromBDD(res);
 		
 		return new Computer.Builder(res.getString("computer.name"), res.getInt("computer.id"))
-				.setIntroductDate(res.getTimestamp("computer.introduced").toLocalDateTime())
-				.setDiscontinueDate(res.getTimestamp("computer.discontinued").toLocalDateTime())
+				.setIntroductDate(introLdt)
+				.setDiscontinueDate(discLdt)
 				.setCompany(company).build();
 		
 	}
