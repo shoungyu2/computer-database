@@ -1,4 +1,4 @@
-package com.excilys.cdb.persistence;
+package com.excilys.cdb.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
-public class RawMapper {
+public class DAOMapper {
 
 	public static String getComputerNameFromBDD(ResultSet res) throws SQLException{
 		

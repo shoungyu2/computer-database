@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import com.excilys.cdb.mapper.ComputerRowMapper;
+import com.excilys.cdb.mapper.DAOMapper;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 
@@ -58,9 +60,9 @@ public class ComputerDAO {
 	
 	private SqlParameterSource setParameterSourceForComputer(Computer c){
 		
-		Timestamp introDate = RawMapper.getDateFromComputer(c.getIntroductDate());
-		Timestamp discDate = RawMapper.getDateFromComputer(c.getDiscontinueDate());
-		int companyID = RawMapper.getCompanieIDFromComputer(c);	
+		Timestamp introDate = DAOMapper.getDateFromComputer(c.getIntroductDate());
+		Timestamp discDate = DAOMapper.getDateFromComputer(c.getDiscontinueDate());
+		int companyID = DAOMapper.getCompanieIDFromComputer(c);	
 		
 		return new MapSqlParameterSource()
 				.addValue("id", c.getId())

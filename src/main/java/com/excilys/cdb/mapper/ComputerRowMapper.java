@@ -1,4 +1,4 @@
-package com.excilys.cdb.persistence;
+package com.excilys.cdb.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +17,8 @@ public class ComputerRowMapper implements RowMapper<Computer> {
 		Company company=new Company.Builder(res.getInt("computer.company_id"))
 				.setName(res.getString("company.name")).build();
 		
-		LocalDateTime introLdt=RawMapper.getComputerIntroDateFromBDD(res);
-		LocalDateTime discLdt=RawMapper.getComputerDiscDateFromBDD(res);
+		LocalDateTime introLdt=DAOMapper.getComputerIntroDateFromBDD(res);
+		LocalDateTime discLdt=DAOMapper.getComputerDiscDateFromBDD(res);
 		
 		return new Computer.Builder(res.getString("computer.name"), res.getInt("computer.id"))
 				.setIntroductDate(introLdt)
