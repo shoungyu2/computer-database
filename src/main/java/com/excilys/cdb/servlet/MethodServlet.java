@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
@@ -22,9 +23,8 @@ public class MethodServlet {
 
 	private static final Logger LOGGER=Logger.getLogger(MethodServlet.class);
 		
-	public static CompanyDTO getCompanyDTOFromRequest(HttpServletRequest request, CompanyService companyService, Mapper map) {
+	public static CompanyDTO getCompanyDTOFromRequest(ModelAndView modelAndView, CompanyService companyService, Mapper map, String companyId) {
 		
-		String companyId=request.getParameter("companyId");
 		Optional<Company> oComp=Optional.empty();
 		
 		try {
@@ -34,7 +34,7 @@ public class MethodServlet {
 			for(Problems pb : e1.getListProb()) {
 				errorMessage+=pb.toString()+"\n";
 			}
-			request.setAttribute("errors", errorMessage);
+			modelAndView.addObject("errors", errorMessage);
 		}
 		
 		CompanyDTO companyDTO=null;
@@ -60,9 +60,8 @@ public class MethodServlet {
 		
 	}
 	
-	public static void setNbrElementsInPage(HttpServletRequest request) {
+	public static void setNbrElementsInPage(String nbrElementStr) {
 		
-		String nbrElementStr=request.getParameter("nbrElement");
 		if(nbrElementStr!=null) {
 			int nbrElement=Integer.parseInt(nbrElementStr);
 			Page.setNbrElements(nbrElement);
@@ -70,19 +69,18 @@ public class MethodServlet {
 		
 	}
 	
-	public static Page setNumPage(HttpServletRequest request) {
+	public static Page setNumPage(ModelAndView modelAndView, String numPageStr) {
 		
 		Page page;
-		String numPageStr=request.getParameter("currentPage");
 		
 		if(numPageStr!=null) {
 			int numPage=Integer.parseInt(numPageStr);
 			page=new Page(numPage);
-			request.setAttribute("numPage", numPage);
+			modelAndView.addObject("numPage", numPage);
 		}
 		else {
 			page=new Page(1);
-			request.setAttribute("numPage", 1);
+			modelAndView.addObject("numPage", 1);
 		}
 		
 		return page;
@@ -113,14 +111,14 @@ public class MethodServlet {
 	 * @param action true->créer un ordinateur/false->mettre à jour un ordinateur
 	 * @return un booléen indiquant si l'action a entraîné un problème dans la bdd ou non
 	 */
-	public static boolean createOrUpdateComputer(HttpServletRequest request, ComputerService computerService, ComputerDTO computerDTO, boolean action) {
+	public static boolean createOrUpdateComputer(ModelAndView modelAndView, ComputerService computerService, ComputerDTO computerDTO, boolean action) {
 	
 		try {
 			if(action) {
 				boolean success=computerService.createComputerService(computerDTO);
 				if(success) {
 					LOGGER.info("Computer added in the database:\n"+computerDTO.toString());
-					request.setAttribute("success", "Computer successfully added");
+					modelAndView.addObject("success", "Computer successfully added");
 					return true;
 				}
 				else {
@@ -131,7 +129,7 @@ public class MethodServlet {
 				boolean success=computerService.updateComputerService(computerDTO);
 				if(success) {
 					LOGGER.info("Computer updated in the database:\n"+computerDTO.toString());
-					request.setAttribute("success", "Computer successfully edited");
+					modelAndView.addObject("success", "Computer successfully edited");
 					return true;
 				}
 				else {
@@ -145,7 +143,7 @@ public class MethodServlet {
 				errorMessage+=pb.toString()+"\n";
 			}
 			LOGGER.error(errorMessage,e);
-			request.setAttribute("errors", errorMessage);
+			modelAndView.addObject("errors", errorMessage);
 			return true;
 		} catch (ComputerIsNullException e) {
 			// TODO Auto-generated catch block

@@ -1,34 +1,30 @@
 package com.excilys.cdb.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Page;
-import com.excilys.cdb.spring.SpringConfiguration;
 import com.excilys.cdb.service.ComputerService;
 
-@WebServlet("/DeleteComputerServlet")
-public class DeleteComputerServlet extends HttpServlet {
+@Controller
+public class DeleteComputerServlet{
 
-	private static final long serialVersionUID = -5703698584643227969L;
 	private static final Logger LOGGER=org.apache.log4j.Logger.getLogger(DeleteComputerServlet.class);
+		
+	@Autowired
+	private ComputerService computerService;
 	
-	private static AnnotationConfigApplicationContext context=SpringConfiguration.getContext();
+	@RequestMapping("/DeleteComputerServlet")
 	
-	private ComputerService computerService=context.getBean(ComputerService.class);
-	
-	private boolean deleteListComputer(HttpServletRequest request, String[] idSelected) {
+	private boolean deleteListComputer(ModelAndView modelAndView, String[] idSelected) {
 		
 		String messageLogger="";
 		for(String id:idSelected) {
@@ -42,7 +38,7 @@ public class DeleteComputerServlet extends HttpServlet {
 					errorMessage+=pb.toString()+"\n";
 				}
 				LOGGER.error(ie.getStackTrace());
-				request.setAttribute("errors", errorMessage);
+				modelAndView.addObject("errors", errorMessage);
 			}
 			messageLogger+=id+",";
 		}
@@ -52,37 +48,39 @@ public class DeleteComputerServlet extends HttpServlet {
 		
 	}
 	
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@GetMapping
+	public ModelAndView getDeleteComputerController(
+			@RequestParam(name="currentPage", required=false, defaultValue="") String numPage,
+			@RequestParam(name="nbrElement", required=false, defaultValue="") String nbrElement) {
 		
-		String selected=request.getParameter("selection");
-		String[] idSelected=selected.split(",");
+		ModelAndView modelAndView= new ModelAndView("redirect:dashboard");
 		
-		if(deleteListComputer(request, idSelected)) {
-			doGet(request, response);
-		}
-		else {
-			RequestDispatcher rd=request.getRequestDispatcher("/ErrorServlet");
-			rd.forward(request, response);
-		}
-		
-	}
-	
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		Page page=MethodServlet.setNumPage(request);
-		MethodServlet.setNbrElementsInPage(request);
-		int nbrComputer= MethodServlet.setNbrComputer(computerService, null);
+		Page page=MethodServlet.setNumPage(modelAndView, numPage);
+		MethodServlet.setNbrElementsInPage(nbrElement);
+		int nbrComputer=MethodServlet.setNbrComputer(computerService, null);
 		MethodServlet.setNbrPages(nbrComputer);
 		
-		request.setAttribute("pcCount", nbrComputer);
-		request.setAttribute("pcList", computerService.getComputersService("", "", "", page));
-		request.setAttribute("nbrPage", Page.getNbrPages());
+		modelAndView.addObject("pcCount", nbrComputer);
+		modelAndView.addObject("pcList", computerService.getComputersService("", "", "", page));
+		modelAndView.addObject("nbrPage", Page.getNbrPages());
 		
-		RequestDispatcher rd= request.getRequestDispatcher("WEB-INF/views/dashboard.jsp");
-		rd.forward(request, response);
+		return modelAndView;
 		
 	}
 	
+	@PostMapping
+	public ModelAndView postDeleteComputerController(
+			@RequestParam(name="selection", required=false, defaultValue="") String selection) {
+		
+		ModelAndView modelAndView= new ModelAndView("redirect:DeleteComputerServlet");
+		
+		String[] selected=selection.split(",");
+		if(!(deleteListComputer(modelAndView, selected))) {
+			modelAndView.setViewName("redirect:ErrorServlet");
+		}
+		
+		return modelAndView;
+		
+	}
+
 }

@@ -62,7 +62,7 @@
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
-			<table class="table table-striped table-bordered">
+			<table class="table table-striped table-bfiltered">
 				<thead>
 					<tr>
 						<!-- Variable declarations for passing labels as parameters -->
@@ -76,30 +76,30 @@
 							</a>
 						</span></th>
 						<th>Computer name <a
-							href="ListComputerServlet?order=name&search=${search}&direction=asc"
-							id="orderBy" style="font-size: xx-large"> &uarr; </a> <a
-							href="ListComputerServlet?order=name&search=${search}&direction=desc"
-							id="orderBy" style="font-size: xx-large"> &darr; </a>
+							href="ListComputerServlet?filter=name&search=${search}&order=asc"
+							id="filterBy" style="font-size: xx-large"> &uarr; </a> <a
+							href="ListComputerServlet?filter=name&search=${search}&order=desc"
+							id="filterBy" style="font-size: xx-large"> &darr; </a>
 						</th>
 						<th>Introduced date <a
-							href="ListComputerServlet?order=introduced&search=${search}&direction=asc"
-							id="orderBy" style="font-size: xx-large"> &uarr; </a> <a
-							href="ListComputerServlet?order=introduced&search=${search}&direction=desc"
-							id="orderBy" style="font-size: xx-large"> &darr; </a>
+							href="ListComputerServlet?filter=introduced&search=${search}&order=asc"
+							id="filterBy" style="font-size: xx-large"> &uarr; </a> <a
+							href="ListComputerServlet?filter=introduced&search=${search}&order=desc"
+							id="filterBy" style="font-size: xx-large"> &darr; </a>
 						</th>
 						<!-- Table header for Discontinued Date -->
 						<th>Discontinued date <a
-							href="ListComputerServlet?order=discontinued&search=${search}&direction=asc"
-							id="orderBy" style="font-size: xx-large"> &uarr; </a> <a
-							href="ListComputerServlet?order=discontinued&search=${search}&direction=desc"
-							id="orderBy" style="font-size: xx-large"> &darr; </a>
+							href="ListComputerServlet?filter=discontinued&search=${search}&order=asc"
+							id="filterBy" style="font-size: xx-large"> &uarr; </a> <a
+							href="ListComputerServlet?filter=discontinued&search=${search}&order=desc"
+							id="filterBy" style="font-size: xx-large"> &darr; </a>
 						</th>
 						<!-- Table header for Company -->
 						<th>Company <a
-							href="ListComputerServlet?order=company_id&search=${search}&direction=asc"
-							id="orderBy" style="font-size: xx-large"> &uarr; </a> <a
-							href="ListComputerServlet?order=company_id&search=${search}&direction=desc"
-							id="orderBy" style="font-size: xx-large"> &darr; </a>
+							href="ListComputerServlet?filter=company_id&search=${search}&order=asc"
+							id="filterBy" style="font-size: xx-large"> &uarr; </a> <a
+							href="ListComputerServlet?filter=company_id&search=${search}&order=desc"
+							id="filterBy" style="font-size: xx-large"> &darr; </a>
 						</th>
 					</tr>
 				</thead>
@@ -136,7 +136,7 @@
 						</script>
 					</c:if> <c:if test="${numPage!=1}">
 						<a
-							href="ListComputerServlet?currentPage=${numPage-1}&search=${search}&order=${order}&direction=${direction}"
+							href="ListComputerServlet?currentPage=${numPage-1}&search=${search}&filter=${filter}&order=${order}"
 							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
 						</a>
 					</c:if></li>
@@ -144,7 +144,7 @@
 					<c:when test="${nbrPage<=5 }">
 						<c:forEach var="i" begin="1" end="${nbrPage}">
 							<li><a
-								href="ListComputerServlet?currentPage=${i}&search=${search}&order=${order}&direction=${direction}">
+								href="ListComputerServlet?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
 									<c:out value="${i}" />
 							</a></li>
 						</c:forEach>
@@ -154,29 +154,29 @@
 							<c:when test="${nbrPage - numPage >=5}">
 								<c:if test="${numPage !=1 }">
 									<li><a
-										href="ListComputerServlet?currentPage=1&search=${search}&order=${order}&direction=${direction}">
+										href="ListComputerServlet?currentPage=1&search=${search}&filter=${filter}&order=${order}">
 											<c:out value="1"></c:out>
 									</a></li>
 								</c:if>
 								<c:forEach var="i" begin="${numPage}" end="${numPage+4}">
 									<li><a
-										href="ListComputerServlet?currentPage=${i}&search=${search}&order=${order}&direction=${direction}">
+										href="ListComputerServlet?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
 											<c:out value="${i}"></c:out>
 									</a></li>
 								</c:forEach>
 								<li><a
-									href="ListComputerServlet?currentPage=${nbrPage}&search=${search}&order=${order}&direction=${direction}">
+									href="ListComputerServlet?currentPage=${nbrPage}&search=${search}&filter=${filter}&order=${order}">
 										<c:out value="${nbrPage}"></c:out>
 								</a></li>
 							</c:when>
 							<c:otherwise>
 								<li><a
-									href="ListComputerServlet?currentPage=1&search=${search}&order=${order}&direction=${direction}">
+									href="ListComputerServlet?currentPage=1&search=${search}&filter=${filter}&order=${order}">
 										<c:out value="1"></c:out>
 								</a></li>
 								<c:forEach var="i" begin="${nbrPage-4}" end="${nbrPage}">
 									<li><a
-										href="ListComputerServlet?currentPage=${i}&search=${search}&order=${order}&direction=${direction}">
+										href="ListComputerServlet?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
 											<c:out value="${i}"></c:out>
 									</a></li>
 								</c:forEach>
@@ -186,7 +186,7 @@
 				</c:choose>
 				<li><c:if test="${numPage!=nbrPage}">
 						<a
-							href="ListComputerServlet?currentPage=${numPage+1}&search=${search}&order=${order}&direction=${direction}"
+							href="ListComputerServlet?currentPage=${numPage+1}&search=${search}&filter=${filter}&order=${order}"
 							aria-label="Next"> <span aria-hidden="true">&raquo;</span>
 						</a>
 					</c:if></li>
@@ -196,11 +196,11 @@
 			<div class="btn-group btn-group-sm pull-right" role="group">
 				<form method="post" action="ListComputerServlet?nbrElement=20">
 					<button type="submit" class="btn btn-default"
-						formaction="ListComputerServlet?nbrElement=10&search=${search}&order=${order}&direction=${direction}">10</button>
+						formaction="ListComputerServlet?nbrElement=10&search=${search}&filter=${filter}&order=${order}">10</button>
 					<button type="submit" class="btn btn-default"
-						formaction="ListComputerServlet?nbrElement=50&search=${search}&order=${order}&direction=${direction}">50</button>
+						formaction="ListComputerServlet?nbrElement=50&search=${search}&filter=${filter}&order=${order}">50</button>
 					<button type="submit" class="btn btn-default"
-						formaction="ListComputerServlet?nbrElement=100&search=${search}&order=${order}&direction=${direction}">100</button>
+						formaction="ListComputerServlet?nbrElement=100&search=${search}&filter=${filter}&order=${order}">100</button>
 				</form>
 			</div>
 		</div>

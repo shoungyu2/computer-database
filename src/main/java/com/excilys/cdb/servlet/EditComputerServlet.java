@@ -1,16 +1,14 @@
 package com.excilys.cdb.servlet;
 
-import java.io.IOException;
 import java.util.Optional;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
@@ -19,84 +17,96 @@ import com.excilys.cdb.mapper.Mapper;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
-import com.excilys.cdb.spring.SpringConfiguration;
 
-@WebServlet("/EditComputerServlet")
-public class EditComputerServlet extends HttpServlet {
-
-	private static final long serialVersionUID = 3345158907466408519L;
+@Controller
+public class EditComputerServlet{
 	
-	private static AnnotationConfigApplicationContext context=SpringConfiguration.getContext();
+	@Autowired
+	private ComputerService computerService;
+	@Autowired
+	private CompanyService companyService;
+	@Autowired
+	private Mapper mapper;
 	
-	private ComputerService computerService=context.getBean(ComputerService.class);
-	private CompanyService companyService=context.getBean(CompanyService.class);
-	private Mapper mapper=context.getBean(Mapper.class);
+	@RequestMapping("/EditComputerServlet")
 	
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	private void setAllAttribute(ModelAndView modelAndView, String numPage, String nbrPage) {
 		
-		CompanyDTO companyDTO=MethodServlet.getCompanyDTOFromRequest(request, companyService, mapper);
-		String computerId=request.getParameter("computerId");
-		ComputerDTO computerDTO=MethodServlet.getComputerDTOFromRequest(request, computerId, companyDTO);		
-			
-		if(MethodServlet.createOrUpdateComputer(request, computerService, computerDTO, false)) {
-			int numPage=Integer.parseInt(request.getParameter("numPage"));
-			int nbrPage=Integer.parseInt(request.getParameter("nbrPage"));
-			
-			request.setAttribute("numPage", numPage);
-			request.setAttribute("nbrPage", nbrPage);
-			
-			doGet(request,response);
-		}
-		else {
-			RequestDispatcher rd=request.getRequestDispatcher("/ErrorServlet");
-			rd.forward(request, response);
-		}
+		modelAndView.addObject("numPage", numPage);
+		modelAndView.addObject("nbrPage", nbrPage);
+		modelAndView.addObject("listCompany", companyService.listCompanyService());
 		
 	}
 	
-	private String setAllAttribute(HttpServletRequest request) {
-		
-		String computerId=request.getParameter("computerId");
-		request.setAttribute("computerId", computerId);
-		request.setAttribute("numPage", Integer.parseInt(request.getParameter("numPage")));
-		request.setAttribute("nbrPage", Integer.parseInt(request.getParameter("nbrPage")));
-		request.setAttribute("listCompany", companyService.listCompanyService());
-		return computerId;
-		
-	}
-	
-	private void setComputerInRequest(HttpServletRequest request, Computer computer) {
+	private void setComputerInRequest(ModelAndView modelAndView, Computer computer) {
 		
 		if(computer!=null) {
-			request.setAttribute("computerName", computer.getName());
-			request.setAttribute("introducedDate",mapper.dateToString(computer.getIntroductDate()));
-			request.setAttribute("discontinuedDate",mapper.dateToString(computer.getDiscontinueDate()));
+			modelAndView.addObject("computerId", computer.getId());
+			modelAndView.addObject("computerName", computer.getName());
+			modelAndView.addObject("introducedDate",mapper.dateToString(computer.getIntroductDate()));
+			modelAndView.addObject("discontinuedDate",mapper.dateToString(computer.getDiscontinueDate()));
 			CompanyDTO comp= mapper.companyToString(computer.getCompany());
 			if(comp!=null) {
-				request.setAttribute("companyId", comp.getId());
+				modelAndView.addObject("companyId", comp.getId());
 			}
 		}
 		
 	}
+
 	
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@GetMapping
+	public ModelAndView getEditComputerController(
+			@RequestParam(name="computerId", required=true) String computerId,
+			@RequestParam(name="numPage", required=false, defaultValue="1") String numPage,
+			@RequestParam(name="nbrPage", required=true) String nbrPage) {
 		
-		String computerId=setAllAttribute(request);
+		ModelAndView modelAndView = new ModelAndView("redirect:editComputer");
 		
+		setAllAttribute(modelAndView, numPage, nbrPage);
 		try {
-			Optional<Computer> oc=computerService.getComputerFromIdService(computerId);
-			Computer c=oc.isEmpty()?null : oc.get();
-			setComputerInRequest(request, c);
-		} catch (InvalidEntryException e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			Optional<Computer> oComp=computerService.getComputerFromIdService(computerId);
+			Computer c=oComp.isEmpty()?null:oComp.get();
+			setComputerInRequest(modelAndView, c);
+		} catch(InvalidEntryException iee) {
+			iee.printStackTrace();
 		}
 		
-		RequestDispatcher rd= request.getRequestDispatcher("/WEB-INF/views/editComputer.jsp");
-		rd.forward(request, response);
+		return modelAndView;
 		
 	}
-
+	
+	@PostMapping
+	public ModelAndView postEditComputerController(
+			@RequestParam(name="companyId", required=false, defaultValue="") String companyId,
+			@RequestParam(name="computerId", required=true) String computerId,
+			@RequestParam(name="computerName", required=true) String computerName,
+			@RequestParam(name="introduced", required=false, defaultValue="") String introduced,
+			@RequestParam(name="discontinued", required=false, defaultValue="") String discontinued,
+			@RequestParam(name="numPage", required=true) String numPageStr,
+			@RequestParam(name="nbrPage", required=true) String nbrPageStr) {
+		
+		ModelAndView modelAndView = new ModelAndView("redirect:EditComputerServlet");
+		
+		CompanyDTO companyDTO = MethodServlet.getCompanyDTOFromRequest(modelAndView, companyService, mapper, companyId);
+		ComputerDTO computerDTO = new ComputerDTO.Builder(computerId, computerName)
+				.setIntroduced(introduced)
+				.setDiscontinued(discontinued)
+				.setCompanyDTO(companyDTO).build();
+		
+		if(MethodServlet.createOrUpdateComputer(modelAndView, computerService, computerDTO, false)) {
+			int numPage= Integer.parseInt(numPageStr);
+			int nbrPage= Integer.parseInt(nbrPageStr);
+			
+			modelAndView.addObject("numPage", numPage);
+			modelAndView.addObject("nbrPage", nbrPage);
+		}
+		else {
+			modelAndView.setViewName("redirect:ErrorServlet");
+		}
+		
+		return modelAndView;
+		
+	}
+	
 }
