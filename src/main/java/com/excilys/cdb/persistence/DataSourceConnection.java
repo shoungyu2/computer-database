@@ -3,16 +3,16 @@ package com.excilys.cdb.persistence;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.excilys.cdb.spring.SpringConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.zaxxer.hikari.HikariDataSource;
 
+@Component
 public class DataSourceConnection {
 
+	@Autowired
 	private static HikariDataSource hds;
-	
-	static {
-		hds= SpringConfiguration.getContext().getBean(HikariDataSource.class);
-	}
 	
 	private DataSourceConnection() {}
 	

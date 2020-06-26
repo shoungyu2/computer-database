@@ -7,18 +7,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @Configuration
 @ComponentScan(basePackages = {"com.excilys.cdb.sevlet","com.excilys.cdb.persistence","com.excilys.cdb.service","com.excilys.cdb.mapper"})
 public class SpringConfiguration {
-		
-	private static AnnotationConfigApplicationContext appContext = new AnnotationConfigApplicationContext (SpringConfiguration.class);
-	
-	public static AnnotationConfigApplicationContext getContext() {
-		return appContext;
-	}
 	
 	@Bean
 	public HikariConfig hikariConfig() {
