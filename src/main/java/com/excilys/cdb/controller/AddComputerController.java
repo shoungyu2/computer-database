@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.controller;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import com.excilys.cdb.service.ComputerService;
 
 @Controller
 @RequestMapping("AddComputerController")
-public class AddComputerServlet{
+public class AddComputerController{
 	
 	@Autowired
 	private ComputerService computerService;
@@ -45,13 +45,13 @@ public class AddComputerServlet{
 			@RequestParam(name="introduced", required=false, defaultValue="") String introduced,
 			@RequestParam(name="discontinued", required=false, defaultValue="") String discontinued) {
 				
-		CompanyDTO companyDTO=MethodServlet.getCompanyDTOFromRequest(modelMap, companyService, mapper, companyId);
+		CompanyDTO companyDTO=ControllerUtil.getCompanyDTOFromRequest(modelMap, companyService, mapper, companyId);
 		ComputerDTO computerDTO= new ComputerDTO.Builder("-1", computerName)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO).build();
 		
-		if(!(MethodServlet.createOrUpdateComputer(modelMap, computerService, computerDTO, true))) {
+		if(!(ControllerUtil.createOrUpdateComputer(modelMap, computerService, computerDTO, true))) {
 			return "redirect:ErrorServlet";
 		}
 		

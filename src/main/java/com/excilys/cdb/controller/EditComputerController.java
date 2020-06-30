@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.controller;
 
 import java.util.Optional;
 
@@ -20,7 +20,7 @@ import com.excilys.cdb.service.ComputerService;
 
 @Controller
 @RequestMapping("EditComputerController")
-public class EditComputerServlet{
+public class EditComputerController{
 	
 	@Autowired
 	private ComputerService computerService;
@@ -82,13 +82,13 @@ public class EditComputerServlet{
 			@RequestParam(name="numPage", required=true) String numPageStr,
 			@RequestParam(name="nbrPage", required=true) String nbrPageStr) {
 				
-		CompanyDTO companyDTO = MethodServlet.getCompanyDTOFromRequest(modelMap, companyService, mapper, companyId);
+		CompanyDTO companyDTO = ControllerUtil.getCompanyDTOFromRequest(modelMap, companyService, mapper, companyId);
 		ComputerDTO computerDTO = new ComputerDTO.Builder(computerId, computerName)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO).build();
 		
-		if(MethodServlet.createOrUpdateComputer(modelMap, computerService, computerDTO, false)) {
+		if(ControllerUtil.createOrUpdateComputer(modelMap, computerService, computerDTO, false)) {
 			int numPage= Integer.parseInt(numPageStr);
 			int nbrPage= Integer.parseInt(nbrPageStr);
 			

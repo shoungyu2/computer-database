@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,9 +19,9 @@ import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
-public class MethodServlet {
+public class ControllerUtil {
 
-	private static final Logger LOGGER=Logger.getLogger(MethodServlet.class);
+	private static final Logger LOGGER=Logger.getLogger(ControllerUtil.class);
 		
 	public static CompanyDTO getCompanyDTOFromRequest(ModelMap modelMap, CompanyService companyService, Mapper map, String companyId) {
 		

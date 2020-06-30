@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.controller;
 
 import java.util.List;
 
@@ -35,10 +35,10 @@ public class ListComputerController {
 			@RequestParam(name="nbrElement", required=false, defaultValue="")String nbrElement,
 			@RequestParam(name="currentPage", required=false, defaultValue="")String currentPage) {
 				
-		Page page=MethodServlet.setNumPage(modelMap, currentPage);
-		MethodServlet.setNbrElementsInPage(nbrElement);
-		int nbrComputer=MethodServlet.setNbrComputer(computerService, search);
-		MethodServlet.setNbrPages(nbrComputer);
+		Page page=ControllerUtil.setNumPage(modelMap, currentPage);
+		ControllerUtil.setNbrElementsInPage(nbrElement);
+		int nbrComputer=ControllerUtil.setNbrComputer(computerService, search);
+		ControllerUtil.setNbrPages(nbrComputer);
 		List<Computer> pcList=getPcList(filter, search, order, page);
 		
 		modelMap.addAttribute("search", search);

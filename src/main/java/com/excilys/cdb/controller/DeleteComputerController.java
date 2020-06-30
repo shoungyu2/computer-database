@@ -1,4 +1,4 @@
-package com.excilys.cdb.servlet;
+package com.excilys.cdb.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,9 @@ import com.excilys.cdb.service.ComputerService;
 
 @Controller
 @RequestMapping("DeleteComputerController")
-public class DeleteComputerServlet{
+public class DeleteComputerController{
 
-	private static final Logger LOGGER=org.apache.log4j.Logger.getLogger(DeleteComputerServlet.class);
+	private static final Logger LOGGER=org.apache.log4j.Logger.getLogger(DeleteComputerController.class);
 		
 	@Autowired
 	private ComputerService computerService;
@@ -52,10 +52,10 @@ public class DeleteComputerServlet{
 			@RequestParam(name="currentPage", required=false, defaultValue="") String numPage,
 			@RequestParam(name="nbrElement", required=false, defaultValue="") String nbrElement) {
 				
-		Page page=MethodServlet.setNumPage(modelMap, numPage);
-		MethodServlet.setNbrElementsInPage(nbrElement);
-		int nbrComputer=MethodServlet.setNbrComputer(computerService, null);
-		MethodServlet.setNbrPages(nbrComputer);
+		Page page=ControllerUtil.setNumPage(modelMap, numPage);
+		ControllerUtil.setNbrElementsInPage(nbrElement);
+		int nbrComputer=ControllerUtil.setNbrComputer(computerService, null);
+		ControllerUtil.setNbrPages(nbrComputer);
 		
 		modelMap.addAttribute("pcCount", nbrComputer);
 		modelMap.addAttribute("pcList", computerService.getComputersService("", "", "", page));
