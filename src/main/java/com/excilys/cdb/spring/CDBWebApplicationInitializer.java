@@ -13,13 +13,13 @@ public class CDBWebApplicationInitializer implements WebApplicationInitializer{
 	public void onStartup(ServletContext servletContext) {
 		
 		AnnotationConfigWebApplicationContext annotationConfigWebApplicationContext = new AnnotationConfigWebApplicationContext();
-		annotationConfigWebApplicationContext.register(SpringConfiguration.class);
-		annotationConfigWebApplicationContext.refresh();
+		annotationConfigWebApplicationContext.register(SpringConfiguration.class, WebConfig.class);
+		annotationConfigWebApplicationContext.setServletContext(servletContext);
 		
 		DispatcherServlet dispatcherServlet = new DispatcherServlet(annotationConfigWebApplicationContext);
 		ServletRegistration.Dynamic registration = servletContext.addServlet("computer-database", dispatcherServlet);
 		registration.setLoadOnStartup(1);
-		registration.addMapping("/computer-database/");
+		registration.addMapping("/");
 		
 	}
 	

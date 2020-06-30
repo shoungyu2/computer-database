@@ -10,7 +10,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 
 @Configuration
-@ComponentScan(basePackages = {"com.excilys.cdb.sevlet","com.excilys.cdb.persistence","com.excilys.cdb.service","com.excilys.cdb.mapper"})
+@ComponentScan(basePackages = {"com.excilys.cdb.spring", "com.excilys.cdb.persistence","com.excilys.cdb.service","com.excilys.cdb.mapper"})
 public class SpringConfiguration {
 	
 	@Bean

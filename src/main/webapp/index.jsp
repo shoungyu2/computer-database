@@ -1,6 +1,6 @@
 <html>
 <body>
-<form method="POST" action="ListComputerServlet">
+<form method="GET" action="ListComputerController">
 	<button type="submit">Go to dashboard</button>
 </form>
 </body>

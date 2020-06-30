@@ -20,7 +20,7 @@
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<c:if test="${fn:length(success)>0}">
-				<form id="bravo" action="ListComputerServlet" method="POST">
+				<form id="bravo" action="ListComputerController" method="POST">
 					<input type="hidden" name="success" value="${success}" />
 				</form>
 				<script>
@@ -42,7 +42,7 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
-					<form action="AddComputerServlet" id="formAddComputer"
+					<form action="AddComputerController" id="formAddComputer"
 						method="POST">
 						<fieldset>
 							<div class="form-group">
@@ -76,7 +76,7 @@
 						</fieldset>
 						<div class="actions pull-right">
 							<input type="submit" value="Add" class="btn btn-primary">
-							or <a href="ListComputerServlet" class="btn btn-default">Cancel</a>
+							or <a href="ListComputerController" class="btn btn-default">Cancel</a>
 						</div>
 					</form>
 				</div>

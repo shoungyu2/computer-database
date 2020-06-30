@@ -81,9 +81,10 @@ public class DAOMapper {
 		
 	}
 	
-	public static int getCompanieIDFromComputer(Computer c) {
+	public static Integer getCompanieIDFromComputer(Computer c) {
 		
-		return c.getCompany() == null?0:c.getCompany().getId();
+		Company company=c.getCompany();
+		return company == null?null:company.getId();
 		
 	}
 	

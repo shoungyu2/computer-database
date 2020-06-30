@@ -23,10 +23,9 @@
 		</div>
 	</header>
 	<c:if test="${fn:length(success)>0}">
-		<form id="bravo" action="ListComputerServlet" method="POST">
+		<form id="bravo" action="ListComputerController" method="POST">
 			<input type="hidden" name="success" value="${success}" /> <input
-				type="hidden" name="currentPage" value="${numPage}" /> <input
-				type="hidden" name="nbrPage" value="${nbrPage}" />
+				type="hidden" name="currentPage" value="${numPage}" /> 
 		</form>
 		<script>
 	        	document.getElementById("bravo").submit();
@@ -46,7 +45,7 @@
 					</div>
 					<h1>Edit Computer</h1>
 
-					<form action="EditComputerServlet" id="formEditComputer" method="POST">
+					<form action="EditComputerController" id="formEditComputer" method="POST">
 						<input type="hidden" value="${numPage}" name="numPage" /> <input
 							type="hidden" value="${nbrPage}" name="nbrPage" /> <input
 							type="hidden" value="${computerId}" id="id" name="computerId" />
@@ -92,7 +91,7 @@
 						</fieldset>
 						<div class="actions pull-right">
 							<input type="submit" value="Edit" class="btn btn-primary" /> or
-							<a href="ListComputerServlet" class="btn btn-default">Cancel</a>
+							<a href="ListComputerController" class="btn btn-default">Cancel</a>
 						</div>
 					</form>
 				</div>

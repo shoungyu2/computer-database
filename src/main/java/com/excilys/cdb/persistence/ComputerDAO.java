@@ -62,7 +62,7 @@ public class ComputerDAO {
 		
 		Timestamp introDate = DAOMapper.getDateFromComputer(c.getIntroductDate());
 		Timestamp discDate = DAOMapper.getDateFromComputer(c.getDiscontinueDate());
-		int companyID = DAOMapper.getCompanieIDFromComputer(c);	
+		Integer companyID = DAOMapper.getCompanieIDFromComputer(c);	
 		
 		return new MapSqlParameterSource()
 				.addValue("id", c.getId())

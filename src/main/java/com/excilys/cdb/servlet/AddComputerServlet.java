@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
@@ -18,6 +18,7 @@ import com.excilys.cdb.service.CompanyService;
 import com.excilys.cdb.service.ComputerService;
 
 @Controller
+@RequestMapping("AddComputerController")
 public class AddComputerServlet{
 	
 	@Autowired
@@ -26,41 +27,35 @@ public class AddComputerServlet{
 	private CompanyService companyService;
 	@Autowired
 	private Mapper mapper;
-	
-	@RequestMapping("/AddComputerServlet")
-	
+		
 	@GetMapping
-	public ModelAndView getAddComputerController() {
-		
-		ModelAndView modelAndView = new ModelAndView("redirect:addComputer");
-		
+	public String getAddComputerController(ModelMap modelMap) {
+				
 		List<Company> listComp=companyService.listCompanyService();
-		modelAndView.addObject("listCompany", listComp);
+		modelMap.addAttribute("listCompany", listComp);
 		
-		return modelAndView;
+		return "addComputer";
 		
 	}
 	
 	@PostMapping
-	public ModelAndView postAddComputerController(
-			@RequestParam(name="companyID", required=false, defaultValue="") String companyId,
+	public String postAddComputerController(ModelMap modelMap,
+			@RequestParam(name="companyId", required=false, defaultValue="") String companyId,
 			@RequestParam(name="computerName", required=true) String computerName,
 			@RequestParam(name="introduced", required=false, defaultValue="") String introduced,
 			@RequestParam(name="discontinued", required=false, defaultValue="") String discontinued) {
-		
-		ModelAndView modelAndView = new ModelAndView("redirect:AddComputerServlet");
-		
-		CompanyDTO companyDTO=MethodServlet.getCompanyDTOFromRequest(modelAndView, companyService, mapper, companyId);
+				
+		CompanyDTO companyDTO=MethodServlet.getCompanyDTOFromRequest(modelMap, companyService, mapper, companyId);
 		ComputerDTO computerDTO= new ComputerDTO.Builder("-1", computerName)
 				.setIntroduced(introduced)
 				.setDiscontinued(discontinued)
 				.setCompanyDTO(companyDTO).build();
 		
-		if(!(MethodServlet.createOrUpdateComputer(modelAndView, computerService, computerDTO, true))) {
-			modelAndView.setViewName("redirect:ErrorServlet");
+		if(!(MethodServlet.createOrUpdateComputer(modelMap, computerService, computerDTO, true))) {
+			return "redirect:ErrorServlet";
 		}
 		
-		return modelAndView;
+		return getAddComputerController(modelMap);
 		
 	}
 	
