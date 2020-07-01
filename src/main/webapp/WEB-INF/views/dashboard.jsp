@@ -136,7 +136,7 @@
 						</a>
 					</c:if></li>
 				<c:choose>
-					<c:when test="${nbrPage<=5 }">
+					<c:when test="${nbrPage<=5}">
 						<c:forEach var="i" begin="1" end="${nbrPage}">
 							<li><a
 								href="ListComputerController?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
@@ -146,35 +146,51 @@
 					</c:when>
 					<c:otherwise>
 						<c:choose>
-							<c:when test="${nbrPage - numPage >=5}">
-								<c:if test="${numPage !=1 }">
-									<li><a
-										href="ListComputerController?currentPage=1&search=${search}&filter=${filter}&order=${order}">
-											<c:out value="1"></c:out>
-									</a></li>
+							<c:when test="${numPage>=3}">
+								<c:if test="${numPage>=4}">
+									<li>
+										<a href="ListComputerController?currentPage=1&search=${search}&filter=${filter}&order=${order}">
+											<c:out value="1"/>
+										</a>
+									</li>
 								</c:if>
-								<c:forEach var="i" begin="${numPage}" end="${numPage+4}">
-									<li><a
-										href="ListComputerController?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
-											<c:out value="${i}"></c:out>
-									</a></li>
-								</c:forEach>
-								<li><a
-									href="ListComputerController?currentPage=${nbrPage}&search=${search}&filter=${filter}&order=${order}">
-										<c:out value="${nbrPage}"></c:out>
-								</a></li>
+								<c:if test="${nbrPage-numPage>=3}">
+									<c:forEach var="i" begin="${numPage-2}" end="${numPage+2}">
+										<li>
+											<a href="ListComputerController?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
+												<c:out value="${i}"/>
+											</a>
+										</li>
+									</c:forEach>
+									<li>
+										<a href="ListComputerController?currentPage=${nbrPage}&search=${search}&filter=${filter}&order=${order}">
+											<c:out value="${nbrPage}"/>
+										</a>
+									</li>
+								</c:if>
+								<c:if test="${nbrPage-numPage<=2}">
+									<c:forEach var="i" begin="${nbrPage-4}" end="${nbrPage}">
+										<li>
+											<a href="ListComputerController?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
+												<c:out value="${i}"/>
+											</a>
+										</li>
+									</c:forEach>
+								</c:if>
 							</c:when>
 							<c:otherwise>
-								<li><a
-									href="ListComputerController?currentPage=1&search=${search}&filter=${filter}&order=${order}">
-										<c:out value="1"></c:out>
-								</a></li>
-								<c:forEach var="i" begin="${nbrPage-4}" end="${nbrPage}">
-									<li><a
-										href="ListComputerController?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
-											<c:out value="${i}"></c:out>
-									</a></li>
+								<c:forEach var="i" begin="1" end="5">
+									<li>
+										<a href="ListComputerController?currentPage=${i}&search=${search}&filter=${filter}&order=${order}">
+											<c:out value="${i}"/>
+										</a>
+									</li>
 								</c:forEach>
+								<li>
+									<a href="ListComputerController?currentPage=${nbrPage}&search=${search}&filter=${filter}&order=${order}">
+										<c:out value="${nbrPage}"/>
+									</a>
+								</li>
 							</c:otherwise>
 						</c:choose>
 					</c:otherwise>
