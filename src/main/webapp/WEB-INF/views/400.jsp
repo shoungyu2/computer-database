@@ -18,13 +18,13 @@
     <section id="main">
         <div class="container">
             <div class="alert alert-danger">
-                Error 404: Page not found. Too bad bitch!
+                Error 400: Bad Request. Too bad bitch!
                 <br/>
                 <!-- stacktrace -->
             </div>
         </div>
         <div>
-        	<form method="POST" id="goToDash" action="ListComputerServlet">
+        	<form method="POST" id="goToDash" action="ListComputerController">
         		<button type="submit" class="btn btn-default">Return to dashboard</button>
         	</form>
         </div>

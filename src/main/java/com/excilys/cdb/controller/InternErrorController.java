@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("ErrorController")
-public class ErrorServlet{
+public class InternErrorController{
 	
 	@PostMapping
 	public void postErrorController(ModelMap modelMap){
@@ -17,7 +17,7 @@ public class ErrorServlet{
 	
 	@GetMapping
 	public String getErrorController(ModelMap modelMap){
-		return "500.html";
+		return "500";
 	}
 
 }

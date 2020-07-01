@@ -21,8 +21,8 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="ListComputerController"> Application -
-				Computer Database </a>
+			<a class="navbar-brand" href="ListComputerController">
+				Application - Computer Database </a>
 		</div>
 	</header>
 
@@ -129,12 +129,7 @@
 	<footer class="navbar-fixed-bottom">
 		<div class="container text-center">
 			<ul class="pagination">
-				<li><c:if test="${numPage>nbrPage || numPage<=0}">
-						<form action="NotFoundServlet" id="page" method="POST"></form>
-						<script>
-							document.getElementById("page").submit()
-						</script>
-					</c:if> <c:if test="${numPage!=1}">
+				<li><c:if test="${numPage!=1}">
 						<a
 							href="ListComputerController?currentPage=${numPage-1}&search=${search}&filter=${filter}&order=${order}"
 							aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
@@ -194,13 +189,13 @@
 
 
 			<div class="btn-group btn-group-sm pull-right" role="group">
-				
-					<button class="btn btn-default"
-						onclick="window.location.href='?nbrElement=10&search=${search}&filter=${filter}&order=${order}';">10</button>
-					<button class="btn btn-default"
-						onclick="window.location.href='?nbrElement=50&search=${search}&filter=${filter}&order=${order}';">50</button>
-					<button class="btn btn-default"
-						onclick="window.location.href='?nbrElement=100&search=${search}&filter=${filter}&order=${order}';">100</button>
+
+				<button class="btn btn-default"
+					onclick="window.location.href='?nbrElement=10&search=${search}&filter=${filter}&order=${order}';">10</button>
+				<button class="btn btn-default"
+					onclick="window.location.href='?nbrElement=50&search=${search}&filter=${filter}&order=${order}';">50</button>
+				<button class="btn btn-default"
+					onclick="window.location.href='?nbrElement=100&search=${search}&filter=${filter}&order=${order}';">100</button>
 			</div>
 		</div>
 	</footer>

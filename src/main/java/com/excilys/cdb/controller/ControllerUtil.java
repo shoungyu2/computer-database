@@ -10,6 +10,7 @@ import org.springframework.ui.ModelMap;
 
 import com.excilys.cdb.dto.CompanyDTO;
 import com.excilys.cdb.dto.ComputerDTO;
+import com.excilys.cdb.exception.BadRequestException;
 import com.excilys.cdb.exception.ComputerIsNullException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
@@ -60,23 +61,31 @@ public class ControllerUtil {
 		
 	}
 	
-	public static void setNbrElementsInPage(String nbrElementStr) {
+	public static void setNbrElementsInPage(String nbrElementStr) throws BadRequestException{
 		
 		if(nbrElementStr!=null && !nbrElementStr.isEmpty()) {
-			int nbrElement=Integer.parseInt(nbrElementStr);
-			Page.setNbrElements(nbrElement);
+			try {
+				int nbrElement=Integer.parseInt(nbrElementStr);
+				Page.setNbrElements(nbrElement);
+			} catch (NumberFormatException nfe) {
+				throw new BadRequestException();
+			}
 		}
 		
 	}
 	
-	public static Page setNumPage(ModelMap modelMap, String numPageStr) {
+	public static Page setNumPage(ModelMap modelMap, String numPageStr) throws BadRequestException{
 		
 		Page page;
 		
 		if(numPageStr!=null && !numPageStr.isEmpty()) {
-			int numPage=Integer.parseInt(numPageStr);
-			page=new Page(numPage);
-			modelMap.addAttribute("numPage", numPage);
+			try {
+				int numPage=Integer.parseInt(numPageStr);
+				page=new Page(numPage);
+				modelMap.addAttribute("numPage", numPage);
+			} catch (NumberFormatException nfe) {
+				throw new BadRequestException();
+			}
 		}
 		else {
 			page=new Page(1);
@@ -84,6 +93,14 @@ public class ControllerUtil {
 		}
 		
 		return page;
+		
+	}
+	
+	public static void verifNumPage(Page page, int nbrPage) throws BadRequestException{
+		
+		if(page.getNumPage()<=0 || page.getNumPage()>nbrPage) {
+			throw new BadRequestException();
+		}
 		
 	}
 	

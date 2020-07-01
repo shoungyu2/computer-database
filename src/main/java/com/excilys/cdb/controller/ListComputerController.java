@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.excilys.cdb.exception.BadRequestException;
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
 import com.excilys.cdb.service.ComputerService;
@@ -34,20 +35,26 @@ public class ListComputerController {
 			@RequestParam(name="order", required=false, defaultValue="")String order,
 			@RequestParam(name="nbrElement", required=false, defaultValue="")String nbrElement,
 			@RequestParam(name="currentPage", required=false, defaultValue="")String currentPage) {
-				
-		Page page=ControllerUtil.setNumPage(modelMap, currentPage);
-		ControllerUtil.setNbrElementsInPage(nbrElement);
-		int nbrComputer=ControllerUtil.setNbrComputer(computerService, search);
-		ControllerUtil.setNbrPages(nbrComputer);
-		List<Computer> pcList=getPcList(filter, search, order, page);
 		
-		modelMap.addAttribute("search", search);
-		modelMap.addAttribute("filter", filter);
-		modelMap.addAttribute("order", order);
-		modelMap.addAttribute("nbrElement", nbrElement);
-		modelMap.addAttribute("pcCount", nbrComputer);
-		modelMap.addAttribute("pcList", pcList);
-		modelMap.addAttribute("nbrPage", Page.getNbrPages());
+		try {
+			Page page=ControllerUtil.setNumPage(modelMap, currentPage);
+			ControllerUtil.setNbrElementsInPage(nbrElement);
+			int nbrComputer=ControllerUtil.setNbrComputer(computerService, search);
+			ControllerUtil.setNbrPages(nbrComputer);
+			ControllerUtil.verifNumPage(page, Page.getNbrPages());
+			List<Computer> pcList=getPcList(filter, search, order, page);
+			
+			modelMap.addAttribute("search", search);
+			modelMap.addAttribute("filter", filter);
+			modelMap.addAttribute("order", order);
+			modelMap.addAttribute("nbrElement", nbrElement);
+			modelMap.addAttribute("pcCount", nbrComputer);
+			modelMap.addAttribute("pcList", pcList);
+			modelMap.addAttribute("nbrPage", Page.getNbrPages());
+			
+		} catch (BadRequestException bre) {
+			return "400";
+		}
 		
 		return "dashboard";
 		

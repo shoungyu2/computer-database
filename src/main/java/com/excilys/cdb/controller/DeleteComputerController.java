@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.excilys.cdb.exception.BadRequestException;
 import com.excilys.cdb.exception.InvalidEntryException;
 import com.excilys.cdb.exception.Problems;
 import com.excilys.cdb.model.Page;
@@ -51,16 +52,22 @@ public class DeleteComputerController{
 	public String getDeleteComputerController(ModelMap modelMap,
 			@RequestParam(name="currentPage", required=false, defaultValue="") String numPage,
 			@RequestParam(name="nbrElement", required=false, defaultValue="") String nbrElement) {
-				
-		Page page=ControllerUtil.setNumPage(modelMap, numPage);
-		ControllerUtil.setNbrElementsInPage(nbrElement);
-		int nbrComputer=ControllerUtil.setNbrComputer(computerService, null);
-		ControllerUtil.setNbrPages(nbrComputer);
 		
-		modelMap.addAttribute("pcCount", nbrComputer);
-		modelMap.addAttribute("pcList", computerService.getComputersService("", "", "", page));
-		modelMap.addAttribute("nbrPage", Page.getNbrPages());
+		try {
+			Page page=ControllerUtil.setNumPage(modelMap, numPage);
+			ControllerUtil.setNbrElementsInPage(nbrElement);
+			int nbrComputer=ControllerUtil.setNbrComputer(computerService, null);
+			ControllerUtil.setNbrPages(nbrComputer);
+			ControllerUtil.verifNumPage(page, Page.getNbrPages());
+			
+			modelMap.addAttribute("pcCount", nbrComputer);
+			modelMap.addAttribute("pcList", computerService.getComputersService("", "", "", page));
+			modelMap.addAttribute("nbrPage", Page.getNbrPages());
 		
+		} catch (BadRequestException bre) {
+			return "400";
+		}
+			
 		return "dashboard";
 		
 	}
