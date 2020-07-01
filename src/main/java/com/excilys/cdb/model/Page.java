@@ -1,5 +1,8 @@
 package com.excilys.cdb.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Page {
 
 	private static int nbrElements=20;

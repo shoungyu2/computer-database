@@ -52,7 +52,7 @@ public class AddComputerController{
 				.setCompanyDTO(companyDTO).build();
 		
 		if(!(ControllerUtil.createOrUpdateComputer(modelMap, computerService, computerDTO, true))) {
-			return "redirect:ErrorServlet";
+			return "500";
 		}
 		
 		return getAddComputerController(modelMap);

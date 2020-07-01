@@ -96,7 +96,7 @@ public class EditComputerController{
 			modelMap.addAttribute("nbrPage", nbrPage);
 		}
 		else {
-			return "redirect:ErrorServlet";
+			return "500";
 		}
 		
 		return getEditComputerController(modelMap, computerId, numPageStr, nbrPageStr);

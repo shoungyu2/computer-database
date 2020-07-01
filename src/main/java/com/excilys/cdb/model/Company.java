@@ -1,7 +1,8 @@
 package com.excilys.cdb.model;
 
+import org.springframework.stereotype.Component;
 
-
+@Component
 public final class Company {
 	
 	private final String name;

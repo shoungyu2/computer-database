@@ -78,7 +78,7 @@ public class DeleteComputerController{
 				
 		String[] selected=selection.split(",");
 		if(!(deleteListComputer(modelMap, selected))) {
-			return "redirect:ErrorServlet";
+			return "500";
 		}
 		
 		return getDeleteComputerController(modelMap, "", "");

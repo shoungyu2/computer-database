@@ -2,7 +2,9 @@ package com.excilys.cdb.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public final class Computer {
 	
 	private final String name;
