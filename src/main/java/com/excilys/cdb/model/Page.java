@@ -1,14 +1,11 @@
 package com.excilys.cdb.model;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Page {
 
 	private static int nbrElements=20;
 	private final int offset;
 	private final int numPage;
-	private static int nbrPages;
+	private static long nbrPages;
 	
 	public Page(int numPage) {
 		this.numPage=numPage;
@@ -31,12 +28,12 @@ public class Page {
 		return numPage;
 	}
 
-	public static int getNbrPages() {
+	public static long getNbrPages() {
 		return nbrPages;
 	}
 	
-	public static void setNbrPages(int nbrPages) {
-		Page.nbrPages = nbrPages;
+	public static void setNbrPages(long nbrPages2) {
+		Page.nbrPages = nbrPages2;
 	}
 	
 	

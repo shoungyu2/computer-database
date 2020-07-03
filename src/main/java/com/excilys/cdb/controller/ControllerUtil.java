@@ -96,7 +96,7 @@ public class ControllerUtil {
 		
 	}
 	
-	public static void verifNumPage(Page page, int nbrPage) throws BadRequestException{
+	public static void verifNumPage(Page page, long nbrPage) throws BadRequestException{
 		
 		if(page.getNumPage()<=0 || page.getNumPage()>nbrPage) {
 			throw new BadRequestException();
@@ -104,9 +104,9 @@ public class ControllerUtil {
 		
 	}
 	
-	public static void setNbrPages(int nbrComputer) {
+	public static void setNbrPages(long nbrComputer) {
 		
-		int nbrPages= nbrComputer/Page.getNbrElements();
+		long nbrPages= nbrComputer/Page.getNbrElements();
 		if(nbrComputer%Page.getNbrElements()!=0) {
 			nbrPages++;
 		}
@@ -114,7 +114,7 @@ public class ControllerUtil {
 	
 	}
 	
-	public static int setNbrComputer(ComputerService computerService, String search) {
+	public static long setNbrComputer(ComputerService computerService, String search) {
 		
 			return computerService.getNbrComputerService(search);
 			

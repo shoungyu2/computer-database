@@ -39,7 +39,7 @@ public class ListComputerController {
 		try {
 			Page page=ControllerUtil.setNumPage(modelMap, currentPage);
 			ControllerUtil.setNbrElementsInPage(nbrElement);
-			int nbrComputer=ControllerUtil.setNbrComputer(computerService, search);
+			long nbrComputer=ControllerUtil.setNbrComputer(computerService, search);
 			ControllerUtil.setNbrPages(nbrComputer);
 			ControllerUtil.verifNumPage(page, Page.getNbrPages());
 			List<Computer> pcList=getPcList(filter, search, order, page);

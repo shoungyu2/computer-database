@@ -1,12 +1,22 @@
 package com.excilys.cdb.model;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Component
+@Entity(name="Company")
+@Table(name="company")
 public final class Company {
 	
-	private final String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private final int id;
+
+	@Column(name="name", nullable=false)
+	private final String name;
 	
 	private Company(Builder build) {
 		this.name=build.name;

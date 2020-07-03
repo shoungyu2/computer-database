@@ -56,7 +56,7 @@ public class DeleteComputerController{
 		try {
 			Page page=ControllerUtil.setNumPage(modelMap, numPage);
 			ControllerUtil.setNbrElementsInPage(nbrElement);
-			int nbrComputer=ControllerUtil.setNbrComputer(computerService, null);
+			long nbrComputer=ControllerUtil.setNbrComputer(computerService, null);
 			ControllerUtil.setNbrPages(nbrComputer);
 			ControllerUtil.verifNumPage(page, Page.getNbrPages());
 			

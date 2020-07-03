@@ -1,261 +1,160 @@
 package com.excilys.cdb.persistence;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Repository;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
-import com.excilys.cdb.mapper.ComputerRowMapper;
-import com.excilys.cdb.mapper.DAOMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 import com.excilys.cdb.model.Computer;
 import com.excilys.cdb.model.Page;
+import com.excilys.cdb.model.QCompany;
+import com.excilys.cdb.model.QComputer;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
+@EnableTransactionManagement
 @Repository
 public class ComputerDAO {
-	
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-	private enum AllComputerQuery {
 
-		INSERT_COMPUTER("INSERT INTO computer "
-				+ "(name,introduced,discontinued, company_id)"
-				+ " VALUES ( :name , :introduced , :discontinued , :company_id )") ,
-		SELECT_ALL_COMPUTER_WITH_PARAMETER(
-				"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
-				+ " FROM computer LEFT JOIN company ON computer.company_id=company.id"
-				+ " searchParameter filterParameter LIMIT :limit OFFSET :offset" ) ,
-		SELECT_COMPUTER(
-				"SELECT computer.id,computer.name,introduced,discontinued,company_id,company.name"
-				+ " FROM computer LEFT JOIN company ON company_id=company.id"
-				+ " WHERE computer.id= :id") ,
-		UPDATE_COMPUTER(
-				"UPDATE computer SET name= :name , introduced= :introduced , discontinued= :discontinued , company_id= :company_id WHERE id= :id") ,
-		DELETE_COMPUTER("DELETE FROM computer WHERE id= :id") ,
-		GET_NBR_COMPUTER(
-				"SELECT COUNT(*) FROM computer "
-				+ " WHERE computer.name LIKE :search ");
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	private JPAQuery<Computer> setOrderInQuery(JPAQuery<Computer> query, String filter, String order) {
 		
-		private String query;
-		
-		private AllComputerQuery(String query) {
-			this.query=query;
-		}
-		
-		public String getQuery() {
-			return this.query;
-		}
-		
-	}
-	
-	private final static Logger LOGGER = Logger.getLogger(ComputerDAO.class);
-	
-	private SqlParameterSource setParameterSourceForComputer(Computer c){
-		
-		Timestamp introDate = DAOMapper.getDateFromComputer(c.getIntroductDate());
-		Timestamp discDate = DAOMapper.getDateFromComputer(c.getDiscontinueDate());
-		Integer companyID = DAOMapper.getCompanieIDFromComputer(c);	
-		
-		return new MapSqlParameterSource()
-				.addValue("id", c.getId())
-				.addValue("name", c.getName())
-				.addValue("introduced", introDate)
-				.addValue("discontinued", discDate)
-				.addValue("company_id", companyID);
-		
-	}
-	
-	private String setOrderInQuery(String query, String filter, String order) {
+		QComputer computer = QComputer.computer;
 		
 		if(filter==null) {
 			filter="";
 		}
-		if(order != null && order.equals("desc")) {
-			order="DESC";
-		}
-		else {
-			order="ASC";
-		}
+		
 		switch(filter) {
 			
 		case "name":
-			query=query.replace("filterParameter", "ORDER BY computer.name "+order);
-			break;
-			
-		case "introduced":
-			query=query.replace("filterParameter", "ORDER BY computer.introduced "+order);
-			break;
-			
-		case "discontinued":
-			query=query.replace("filterParameter", "ORDER BY computer.discontinued "+order);
-			break;
-			
-		case "company_id":
-			query=query.replace("filterParameter", "ORDER BY company.name "+order);
-			break;
-			
-		default:
-			query=query.replace("filterParameter", "ORDER BY computer.id "+order);
-		}
-				
-		return query;
-		
-	}
-	
-	private String generateQuery(String search, String filter, String order) {
-		
-		String query=AllComputerQuery.SELECT_ALL_COMPUTER_WITH_PARAMETER.getQuery();	
-			
-		if(search != null && !search.isEmpty()) {
-			search = search.replace("%", "\\%");
-			query=query.replace("searchParameter", "WHERE computer.name LIKE '%"+search+"%'");
-		}
-		else {
-			query=query.replace("searchParameter", "");
-		}
-		
-		query=setOrderInQuery(query, filter, order);
-		
-		return query;
-		
-	}
-	
-	public Optional<Computer> getComputerFromId(int id) {
-		
-		String selectComputer = AllComputerQuery.SELECT_COMPUTER.getQuery();
-		
-		try{
-			
-			SqlParameterSource sqlParameterSource= new MapSqlParameterSource()
-					.addValue("id", id);
-			Computer computer=namedParameterJdbcTemplate.queryForObject(selectComputer, sqlParameterSource, new ComputerRowMapper());
-			LOGGER.debug("Requête effectuée: " + selectComputer);
-		
-			return Optional.ofNullable(computer);
-			
-		} catch (DataAccessException dae) {
-			LOGGER.error("Requête refusée: " + selectComputer,dae);
-		}	
-		
-		return Optional.empty();
-		
-	}
-	
-	public boolean createComputer(Computer c) {
-		
-		String insertComputer = AllComputerQuery.INSERT_COMPUTER.getQuery();
-		
-		try{
-			
-			SqlParameterSource sqlParameterSource=setParameterSourceForComputer(c);
-			namedParameterJdbcTemplate.update(insertComputer, sqlParameterSource);
-			LOGGER.debug("Requête effectuée: "+insertComputer);
-			
-			return true;
-			
-		} catch (DataAccessException dae) {
-			
-			LOGGER.error("Requête refusée: "+insertComputer,dae);
-			return false;
-		
-		}
-		
-	}
-	
-	public boolean updateComputer(Computer c) {
-		
-		String updateComputer = AllComputerQuery.UPDATE_COMPUTER.getQuery();
-		
-		try{			
-		
-			SqlParameterSource sqlParameterSource=setParameterSourceForComputer(c);
-			namedParameterJdbcTemplate.update(updateComputer, sqlParameterSource);
-			LOGGER.debug("Requête effectuée: "+updateComputer);
-			
-			return true;
-			
-		} catch (DataAccessException dae) {
-			
-			LOGGER.error("Requête refusée: "+updateComputer,dae);
-			return false;
-			
-		}
-		
-	}
-	
-	public boolean deleteComputer(int id) {
-		
-		String deleteComputer =  AllComputerQuery.DELETE_COMPUTER.getQuery();
-		
-		try{
-			
-			SqlParameterSource sqlParameterSource=new MapSqlParameterSource()
-					.addValue("id", id);
-			namedParameterJdbcTemplate.update(deleteComputer, sqlParameterSource);
-			LOGGER.debug("Requête effectuée: "+deleteComputer);
-			return true;
-			
-		} catch (DataAccessException dae) {
-			
-			LOGGER.error("Requête refusée: "+deleteComputer,dae);
-			return false;
-		
-		}
-		
-	}
-	
-	public int getNbrComputer(String search) {
-		
-		String getNbrComputer = AllComputerQuery.GET_NBR_COMPUTER.getQuery();
-		
-		try{
-			if(search!=null) {
-				search=search.replace("%", "\\%");
+			if(order != null && order.equals("desc")) {
+				return query.orderBy(computer.name.desc());
 			}
 			else {
-				search="";
+				return query.orderBy(computer.name.asc());
 			}
-			SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("search", "%"+search+"%");
-			int res=namedParameterJdbcTemplate.queryForObject(getNbrComputer, namedParameters, Integer.class);
-			LOGGER.debug("Requête effectuée: "+getNbrComputer);
-
-			return res;
 			
-		} catch(DataAccessException dae) {	
-			LOGGER.error("Requête refusée: "+getNbrComputer, dae);
+		case "introduced":
+			if(order != null && order.equals("desc")) {
+				return query.orderBy(computer.introductDate.desc());
+			}
+			else {
+				return query.orderBy(computer.introductDate.asc());
+			}
+			
+		case "discontinued":
+			if(order != null && order.equals("desc")) {
+				return query.orderBy(computer.discontinueDate.desc());
+			}
+			else {
+				return query.orderBy(computer.discontinueDate.asc());
+			}
+			
+		case "company_id":
+			if(order != null && order.equals("desc")) {
+				return query.orderBy(computer.company.name.desc());
+			}
+			else {
+				return query.orderBy(computer.company.name.asc());
+			}
+			
+		default:
+			return query.orderBy(computer.id.asc());
 		}
+						
+	}
+	
+	@Transactional
+	public Optional<Computer> getComputerFromId(int id){
 		
-		return 0;
+		JPAQuery<Computer> query= new JPAQuery<Computer>(entityManager);
+		QComputer computer= QComputer.computer;
+		QCompany company=QCompany.company;
+		Computer comp= query.from(computer)
+				.leftJoin(computer.company,company)
+				.where(computer.id.eq(id))
+				.fetchOne();
+		return Optional.ofNullable(comp);
+	}
+	
+	@Transactional
+	public boolean createComputer(Computer c) {
+		
+		this.entityManager.persist(c);
+		return true;
 		
 	}
 	
-	public List<Computer> getComputers(String search, String filter, String order, Page page){
+	@Transactional
+	public boolean updateComputer(Computer c) {
 		
-		List<Computer> listComputers = new ArrayList<Computer>();
-		String getComputers = generateQuery(search, filter, order);
+		JPAQueryFactory queryFactory= new JPAQueryFactory(entityManager);
+		QComputer computer= QComputer.computer;
+		long success = queryFactory.update(computer).where(computer.id.eq(c.getId()))
+		.set(computer.name, c.getName())
+		.set(computer.introductDate, c.getIntroductDate())
+		.set(computer.discontinueDate, c.getDiscontinueDate())
+		.set(computer.company, c.getCompany())
+		.execute();
 		
-		try{
-			
-			SqlParameterSource namedParameters= new MapSqlParameterSource()
-					.addValue("limit", Page.getNbrElements())
-					.addValue("offset", page.getOffset());
-			listComputers=namedParameterJdbcTemplate.query(getComputers, namedParameters, new ComputerRowMapper());
-			LOGGER.debug("Requête effectuée: "+getComputers);
-			
-		} catch(DataAccessException dae) {
-			LOGGER.error("Requête refusée: "+getComputers,dae);
-		}
-		
-		return listComputers;
+		return success==1;
 		
 	}
+	
+	@Transactional
+	public boolean deleteComputer(int id) {
 		
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		QComputer computer = QComputer.computer;
+		long success = queryFactory.delete(computer).where(computer.id.eq(id)).execute();
+		
+		return success==1;
+		
+	}
+	
+	@Transactional
+	public long getNbrComputer(String search) {
+		
+		JPAQuery<Computer> query = new JPAQuery<>(entityManager);
+		QComputer computer = QComputer.computer;
+		
+		if(search==null) {
+			search="";
+		}
+		
+		return query.from(computer)
+				.where(computer.name.like("%"+search+"%"))
+				.fetchCount();
+				
+	}
+	
+	@Transactional
+	public List<Computer> getComputers(String search, String filter, String order, Page page){
+		
+		List<Computer> listComp= new ArrayList<Computer>();
+		
+		JPAQuery<Computer> query =  new JPAQuery<Computer>(entityManager);
+		QComputer computer = QComputer.computer;
+		QCompany company = QCompany.company;
+		query = query.from(computer)
+				.leftJoin(computer.company, company)
+				.where(computer.name.contains(search));
+		
+		query = setOrderInQuery(query, filter, order);
+		
+		listComp = query.fetch();
+		
+		return listComp;
+		
+	}
+			
 }

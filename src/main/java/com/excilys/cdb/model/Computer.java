@@ -2,15 +2,33 @@ package com.excilys.cdb.model;
 
 import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-@Component
+@Entity(name="Computer")
+@Table(name="computer")
 public final class Computer {
 	
-	private final String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private final int id;
+	
+	@Column(name="name", nullable=false)
+	private final String name;
+	
+	@Column(name="introduced", nullable=true)
 	private final LocalDateTime introductDate;
+	
+	@Column(name="discontinued", nullable=true)
 	private final LocalDateTime discontinueDate;
+	
+	@ManyToOne @JoinColumn(name="company_id")
 	private final Company company;
 	
 	private Computer(Builder cb) {

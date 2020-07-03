@@ -1,121 +1,62 @@
 package com.excilys.cdb.persistence;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.excilys.cdb.mapper.CompanyRowMapper;
 import com.excilys.cdb.model.Company;
+import com.excilys.cdb.model.QCompany;
+import com.excilys.cdb.model.QComputer;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
 public class CompanyDAO {
 	
-	private final static Logger LOGGER = Logger.getLogger(CompanyDAO.class);
+	@PersistenceContext
+	private EntityManager entityManager;
 	
-	@Autowired
-	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-	private enum AllCompanyQuery{
-		SELECT_ALL_COMPANY("SELECT id,name FROM company ORDER BY id"),
-		SELECT_COMPANY("SELECT id,name FROM company WHERE id = :id"),
-		DELETE_COMPANY("DELETE FROM company WHERE id = :id"),
-		DELETE_ALL_COMPUTER_WITH_COMPANY("DELETE FROM computer WHERE company_id = :company_id");
-	
-		private final String query;
-		
-		private AllCompanyQuery(String query) {
-			this.query=query;
-		}
-		
-		public String getQuery() {
-			return this.query;
-		}
-	
-	}
-	
-	private String loggingQuery(String query, String...params) {
-		
-		String[] str = query.split("\\?");
-		String finalQuery = "";
-		
-		for(int i = 0;i<str.length-1;i++) {
-			finalQuery += str[i] + params[i];
-		}
-		
-		return finalQuery + str[str.length-1];
-		
-	}
-	
+	@Transactional
 	public List<Company> listCompany(){
 		
-		List<Company> listComp = new ArrayList<>();
-		String selectAllCompany = AllCompanyQuery.SELECT_ALL_COMPANY.getQuery();
+		JPAQuery<Company> query = new JPAQuery<Company>(entityManager);
+		QCompany company = QCompany.company;
 		
-		try {
-			
-			listComp = namedParameterJdbcTemplate.query(selectAllCompany, new CompanyRowMapper());
-			LOGGER.debug("Requête effectuée: " + loggingQuery(selectAllCompany));
+		return query.from(company).fetch();
 		
-		} catch (DataAccessException dae) {
-			LOGGER.error("Tentative de requête: " + loggingQuery(selectAllCompany) + " échouée", dae);
-		}
-		
-		return listComp;
-	
 	}
 	
-	public Optional<Company> showDetailCompany(int id) {
+	@Transactional
+	public Optional<Company> showDetailCompany(int id){
 		
-		String selectCompany = AllCompanyQuery.SELECT_COMPANY.getQuery();
+		JPAQuery<Company> query = new JPAQuery<Company>(entityManager);
+		QCompany company = QCompany.company;
 		
-		try{
-			
-			SqlParameterSource sqlParameterSource=new MapSqlParameterSource()
-					.addValue("id", id);
-			Company company=namedParameterJdbcTemplate.queryForObject(selectCompany, sqlParameterSource, new CompanyRowMapper());
-			LOGGER.debug("Requête effectuée: " + loggingQuery(selectCompany, String.valueOf(id)));
-			
-			return Optional.ofNullable(company);
-						
-		} catch(DataAccessException dae) {
-			LOGGER.error("Tentative de requête: " + loggingQuery(selectCompany, String.valueOf(id)) + " échouée", dae);
-		}
+		Company comp = query.from(company)
+				.where(company.id.eq(id))
+				.fetchOne();
 		
-		return Optional.empty();
+		return Optional.ofNullable(comp);
+		
 	}
 	
 	@Transactional
 	public void deleteCompany(int id) {
 		
-		String deleteCompany = AllCompanyQuery.DELETE_COMPANY.getQuery();
-		String deleteAllComputerWithCompany = AllCompanyQuery.DELETE_ALL_COMPUTER_WITH_COMPANY.getQuery();
+		JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+		QCompany company = QCompany.company;
+		QComputer computer = QComputer.computer;
 		
-		try{
-
-			SqlParameterSource sqlParameterSource=new MapSqlParameterSource()
-					.addValue("company_id", id);
-			namedParameterJdbcTemplate.update(deleteAllComputerWithCompany, sqlParameterSource);
-			
-			sqlParameterSource=new MapSqlParameterSource()
-					.addValue("id", id);
-			namedParameterJdbcTemplate.update(deleteCompany, sqlParameterSource);
-			
-			LOGGER.debug("Requêtes effectuées: \n" + loggingQuery(deleteCompany, String.valueOf(id))
-			 + "\n" + loggingQuery(deleteAllComputerWithCompany, String.valueOf(id)));
-			
-		} catch(DataAccessException dae) {
-				LOGGER.error("Tentatives de requête:\n" + loggingQuery(deleteCompany, String.valueOf(id))
-				 + "\n" + loggingQuery(deleteAllComputerWithCompany, String.valueOf(id)), dae);			
-		}
+		queryFactory.delete(computer)
+				.where(computer.company.id.eq(id)).execute();
+		
+		queryFactory.delete(company)
+				.where(company.id.eq(id)).execute();
 		
 	}
 	
