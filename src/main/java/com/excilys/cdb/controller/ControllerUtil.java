@@ -98,7 +98,7 @@ public class ControllerUtil {
 	
 	public static void verifNumPage(Page page, long nbrPage) throws BadRequestException{
 		
-		if(page.getNumPage()<=0 || page.getNumPage()>nbrPage) {
+		if((page.getNumPage()<=0 && nbrPage!=0)|| ((page.getNumPage()!=1 || nbrPage!=0) && page.getNumPage()>nbrPage)) {
 			throw new BadRequestException();
 		}
 		

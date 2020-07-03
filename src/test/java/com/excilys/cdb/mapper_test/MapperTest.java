@@ -130,7 +130,7 @@ public class MapperTest {
 		map.setParseProb(new ArrayList<Problems>());
 		
 		try {
-			map.stringToComputer(null,true);
+			map.stringToComputer(null);
 			assert(false);
 		} catch (ComputerIsNullException cine) {
 			assert(true);
@@ -153,7 +153,7 @@ public class MapperTest {
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
 				.setCompany(company).build();
 		
-		assertEquals(computerComplete, map.stringToComputer(computerDTOComplete,false));
+		assertEquals(computerComplete, map.stringToComputer(computerDTOComplete));
 		
 	}
 

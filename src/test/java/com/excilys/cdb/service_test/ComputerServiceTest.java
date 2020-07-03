@@ -138,8 +138,8 @@ public class ComputerServiceTest {
 		listProbs1.add(Problems.createNameIsNullProblem(null));
 		
 		Mockito.when(map.getParseProb()).thenReturn(new ArrayList<Problems>());
-		Mockito.when(map.stringToComputer(cdtoEmpty,true)).thenReturn(compEmpty);
-		Mockito.when(map.stringToComputer(cdto,true)).thenReturn(comp);
+		Mockito.when(map.stringToComputer(cdtoEmpty)).thenReturn(compEmpty);
+		Mockito.when(map.stringToComputer(cdto)).thenReturn(comp);
 		Mockito.doCallRealMethod().when(map).setParseProb(new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifNameIsNotNull(null, new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifDate(null, null, listProbs1);
@@ -194,8 +194,8 @@ public class ComputerServiceTest {
 		listProbs1.add(Problems.createNameIsNullProblem(null));
 		
 		Mockito.when(map.getParseProb()).thenReturn(new ArrayList<Problems>());
-		Mockito.when(map.stringToComputer(cdtoEmpty,false)).thenReturn(compEmpty);
-		Mockito.when(map.stringToComputer(cdto,false)).thenReturn(comp);
+		Mockito.when(map.stringToComputer(cdtoEmpty)).thenReturn(compEmpty);
+		Mockito.when(map.stringToComputer(cdto)).thenReturn(comp);
 		Mockito.doCallRealMethod().when(map).setParseProb(new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifNameIsNotNull(null, new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifDate(null, null, listProbs1);
