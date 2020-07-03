@@ -20,7 +20,8 @@ public class ComputerRowMapper implements RowMapper<Computer> {
 		LocalDateTime introLdt=DAOMapper.getComputerIntroDateFromBDD(res);
 		LocalDateTime discLdt=DAOMapper.getComputerDiscDateFromBDD(res);
 		
-		return new Computer.Builder(res.getString("computer.name"), res.getInt("computer.id"))
+		return new Computer.Builder(res.getString("computer.name"))
+				.setId(res.getInt("computer.id"))
 				.setIntroductDate(introLdt)
 				.setDiscontinueDate(discLdt)
 				.setCompany(company).build();

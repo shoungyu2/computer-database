@@ -69,7 +69,8 @@ public class ComputerServiceTest {
 		compService.setVerifServ(verifService);
 		compService.setCompDAO(computerDAO);
 		
-		Computer comp=new Computer.Builder("XBox One", 343)
+		Computer comp=new Computer.Builder("XBox One")
+				.setId(343)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
@@ -119,13 +120,15 @@ public class ComputerServiceTest {
 				.setCompanyDTO(null)
 				.build();
 		
-		Computer compEmpty=new Computer.Builder(null, 0)
+		Computer compEmpty=new Computer.Builder(null)
+				.setId(0)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
 				.build();
 		
-		Computer comp= new Computer.Builder("XBox One", 343)
+		Computer comp= new Computer.Builder("XBox One")
+				.setId(343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
 				.setCompany(null)
@@ -135,8 +138,8 @@ public class ComputerServiceTest {
 		listProbs1.add(Problems.createNameIsNullProblem(null));
 		
 		Mockito.when(map.getParseProb()).thenReturn(new ArrayList<Problems>());
-		Mockito.when(map.stringToComputer(cdtoEmpty)).thenReturn(compEmpty);
-		Mockito.when(map.stringToComputer(cdto)).thenReturn(comp);
+		Mockito.when(map.stringToComputer(cdtoEmpty,true)).thenReturn(compEmpty);
+		Mockito.when(map.stringToComputer(cdto,true)).thenReturn(comp);
 		Mockito.doCallRealMethod().when(map).setParseProb(new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifNameIsNotNull(null, new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifDate(null, null, listProbs1);
@@ -173,13 +176,15 @@ public class ComputerServiceTest {
 				.setCompanyDTO(null)
 				.build();
 		
-		Computer compEmpty=new Computer.Builder(null, 0)
+		Computer compEmpty=new Computer.Builder(null)
+				.setId(0)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)
 				.build();
 		
-		Computer comp= new Computer.Builder("XBox One", 343)
+		Computer comp= new Computer.Builder("XBox One")
+				.setId(343)
 				.setIntroductDate(LocalDateTime.parse("2002-02-02T00:00:00"))
 				.setDiscontinueDate(LocalDateTime.parse("2003-03-03T00:00:00"))
 				.setCompany(null)
@@ -189,8 +194,8 @@ public class ComputerServiceTest {
 		listProbs1.add(Problems.createNameIsNullProblem(null));
 		
 		Mockito.when(map.getParseProb()).thenReturn(new ArrayList<Problems>());
-		Mockito.when(map.stringToComputer(cdtoEmpty)).thenReturn(compEmpty);
-		Mockito.when(map.stringToComputer(cdto)).thenReturn(comp);
+		Mockito.when(map.stringToComputer(cdtoEmpty,false)).thenReturn(compEmpty);
+		Mockito.when(map.stringToComputer(cdto,false)).thenReturn(comp);
 		Mockito.doCallRealMethod().when(map).setParseProb(new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifNameIsNotNull(null, new ArrayList<Problems>());
 		Mockito.doCallRealMethod().when(verifService).verifDate(null, null, listProbs1);

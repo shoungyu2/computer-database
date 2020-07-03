@@ -63,7 +63,8 @@ public class DAOMapper {
 		LocalDateTime discLDT = getComputerDiscDateFromBDD(res);
 		Company company = getComputerCompanyFromBDD(res);
 		
-		c = new Computer.Builder(name,id)
+		c = new Computer.Builder(name)
+				.setId(id)
 				.setIntroductDate(introLDT)
 				.setDiscontinueDate(discLDT)
 				.setCompany(company)

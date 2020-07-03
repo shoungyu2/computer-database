@@ -97,7 +97,7 @@ public class Mapper {
 		
 	}	
 	
-	public Computer stringToComputer(ComputerDTO infoComp) throws ComputerIsNullException {
+	public Computer stringToComputer(ComputerDTO infoComp, boolean createOrUpdate) throws ComputerIsNullException {
 		
 		if(infoComp!=null) {
 			int idComputer=stringToID(infoComp.getId());
@@ -111,11 +111,22 @@ public class Mapper {
 			Optional<Company> oc=stringToCompany(infoComp.getCompanyDTO());
 			Company comp=oc.isEmpty()?
 					null:oc.get();
-			return new Computer.Builder(name, idComputer)
+			
+			if(createOrUpdate) {
+				return new Computer.Builder(name)
+						.setIntroductDate(introDate)
+						.setDiscontinueDate(discDate)
+						.setCompany(comp)
+						.build();
+			}
+			else {
+				return new Computer.Builder(name)
+					.setId(idComputer)
 					.setIntroductDate(introDate)
 					.setDiscontinueDate(discDate)
 					.setCompany(comp)
 					.build();
+			}
 		}
 		else {
 			throw new ComputerIsNullException();

@@ -44,7 +44,7 @@ public class SpringConfiguration {
 		
 		LocalContainerEntityManagerFactoryBean entityManager= new LocalContainerEntityManagerFactoryBean();
 		entityManager.setDataSource(getHikariDataSource());
-		entityManager.setPackagesToScan("com.excilys.cdb.persistence");
+		entityManager.setPackagesToScan("com.excilys.cdb.model");
 		
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		entityManager.setJpaVendorAdapter(vendorAdapter);

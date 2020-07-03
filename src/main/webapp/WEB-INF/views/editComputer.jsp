@@ -49,7 +49,6 @@
 						<input type="hidden" value="${numPage}" name="numPage" /> <input
 							type="hidden" value="${nbrPage}" name="nbrPage" /> <input
 							type="hidden" value="${computerId}" id="id" name="computerId" />
-						<!-- TODO: Change this value with the computer id -->
 						<fieldset>
 							<div class="form-group">
 								<label for="computerName">Computer name</label> <input

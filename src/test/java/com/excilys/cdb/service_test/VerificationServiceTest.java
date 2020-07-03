@@ -90,7 +90,8 @@ public class VerificationServiceTest {
 		verifService.setComputerDAO(computerDAO);
 		
 		Optional<Computer> empty=Optional.empty();
-		Computer comp= new Computer.Builder("XBox One", 343)
+		Computer comp= new Computer.Builder("XBox One")
+				.setId(343)
 				.setIntroductDate(null)
 				.setDiscontinueDate(null)
 				.setCompany(null)

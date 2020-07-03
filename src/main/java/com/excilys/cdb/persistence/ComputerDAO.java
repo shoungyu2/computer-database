@@ -124,7 +124,7 @@ public class ComputerDAO {
 	@Transactional
 	public long getNbrComputer(String search) {
 		
-		JPAQuery<Computer> query = new JPAQuery<>(entityManager);
+		JPAQuery<Void> query = new JPAQuery<>(entityManager);
 		QComputer computer = QComputer.computer;
 		
 		if(search==null) {
@@ -147,7 +147,9 @@ public class ComputerDAO {
 		QCompany company = QCompany.company;
 		query = query.from(computer)
 				.leftJoin(computer.company, company)
-				.where(computer.name.contains(search));
+				.where(computer.name.contains(search))
+				.limit(Page.getNbrElements())
+				.offset(page.getOffset());
 		
 		query = setOrderInQuery(query, filter, order);
 		

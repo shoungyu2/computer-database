@@ -17,19 +17,21 @@ public final class Computer {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private final int id;
+	private int id;
 	
 	@Column(name="name", nullable=false)
-	private final String name;
+	private String name;
 	
 	@Column(name="introduced", nullable=true)
-	private final LocalDateTime introductDate;
+	private LocalDateTime introductDate;
 	
 	@Column(name="discontinued", nullable=true)
-	private final LocalDateTime discontinueDate;
+	private LocalDateTime discontinueDate;
 	
 	@ManyToOne @JoinColumn(name="company_id")
-	private final Company company;
+	private Company company;
+		
+	public Computer() {}
 	
 	private Computer(Builder cb) {
 		this.name=cb.name;
@@ -59,6 +61,26 @@ public final class Computer {
 		return company;
 	}
 	
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setIntroductDate(LocalDateTime introductDate) {
+		this.introductDate = introductDate;
+	}
+
+	public void setDiscontinueDate(LocalDateTime discontinueDate) {
+		this.discontinueDate = discontinueDate;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
 	@Override
 	public String toString() {
 		
@@ -114,16 +136,20 @@ public final class Computer {
 	public static class Builder{
 		
 		private final String name;
-		private final int id;
+		private int id;
 		private LocalDateTime introductDate;
 		private LocalDateTime discontinueDate;
 		private Company company;
 
-		public Builder(String name, int id) {
+		public Builder(String name) {
 			this.name=name;
-			this.id=id;
 		}
 
+		public Builder setId(int id) {
+			this.id=id;
+			return this;
+		}
+		
 		public Builder setIntroductDate(LocalDateTime introductDate) {
 			this.introductDate = introductDate;
 			return this;

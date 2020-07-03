@@ -13,10 +13,12 @@ public final class Company {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private final int id;
+	private int id;
 
 	@Column(name="name", nullable=false)
-	private final String name;
+	private String name;
+	
+	public Company() {}
 	
 	private Company(Builder build) {
 		this.name=build.name;

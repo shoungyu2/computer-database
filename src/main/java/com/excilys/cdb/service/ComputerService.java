@@ -88,7 +88,7 @@ public class ComputerService {
 	public boolean createComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException{
 		
 		Computer c;
-		c=map.stringToComputer(infoComp);
+		c=map.stringToComputer(infoComp,true);
 		List<Problems> listProb=map.getParseProb();
 		verifServ.verifNameIsNotNull(c.getName(), listProb);
 		verifServ.verifDate(c.getIntroductDate(), c.getDiscontinueDate(), listProb);
@@ -117,7 +117,7 @@ public class ComputerService {
 	public boolean updateComputerService(ComputerDTO infoComp) throws InvalidEntryException, ComputerIsNullException {
 		
 		Computer c=null;
-		c=map.stringToComputer(infoComp);
+		c=map.stringToComputer(infoComp,false);
 		List<Problems> listProb=generateProblems(infoComp, c, map.getParseProb());
 		if(listProb.size()!=0) {
 			map.setParseProb(new ArrayList<Problems>());
