@@ -29,6 +29,11 @@ public class ComputerService {
 	
 	public List<Computer> getComputersService(String search, String filter, String order, Page page){
 		
+		if(search==null) {
+			search="";
+		}
+		search=search.replace("%", "\\search");
+		
 		return compDAO.getComputers(search, filter, order, page);
 		
 	}
@@ -46,6 +51,12 @@ public class ComputerService {
 	}
 	
 	public long getNbrComputerService(String search) {
+		
+		if(search==null) {
+			search="";
+		}
+		search=search.replace("%", "\\%");
+		
 		return compDAO.getNbrComputer(search);
 	}
 	

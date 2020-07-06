@@ -36,11 +36,11 @@ public class VerificationService {
 			listProbs.add(Problems.createInvalidDatesProblem(introLDT.toString()+">"+discLDT.toString()));
 		}
 		
-		if(introLDT!=null && (introLDT.getYear()>2100 || introLDT.getYear()<1970)) {
+		if(introLDT!=null && (introLDT.getYear()>2038 || introLDT.getYear()<1970)) {
 			listProbs.add(Problems.createDateOutOfBoundsProblem(introLDT.toString()));
 		}
 		
-		if(discLDT!=null && (discLDT.getYear()>2100 || discLDT.getYear()<1970)) {
+		if(discLDT!=null && (discLDT.getYear()>2038 || discLDT.getYear()<1970)) {
 			listProbs.add(Problems.createDateOutOfBoundsProblem(discLDT.toString()));
 		}
 		

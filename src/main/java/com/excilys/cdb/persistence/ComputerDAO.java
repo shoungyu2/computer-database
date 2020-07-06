@@ -127,10 +127,6 @@ public class ComputerDAO {
 		JPAQuery<Void> query = new JPAQuery<>(entityManager);
 		QComputer computer = QComputer.computer;
 		
-		if(search==null) {
-			search="";
-		}
-		
 		return query.from(computer)
 				.where(computer.name.like("%"+search+"%"))
 				.fetchCount();
