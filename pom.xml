@@ -7,7 +7,7 @@
   <groupId>com.excilys</groupId>
   <artifactId>cdb</artifactId>
   <version>3.0.0</version>
-  <packaging>war</packaging>
+  <packaging>pom</packaging>
 
   <name>cdb Maven Webapp</name>
   <url>https://github.com/shoungyu2/computer-database</url>
@@ -211,4 +211,11 @@
 		</plugin>
     </plugins>
   </build>
+  <modules>
+  	<module>binding</module>
+  	<module>core</module>
+  	<module>persistence</module>
+  	<module>service</module>
+  	<module>webapp</module>
+  </modules>
 </project>
