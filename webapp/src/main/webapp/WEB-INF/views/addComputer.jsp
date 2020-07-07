@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <%@ page isELIgnored="false"%>
 
@@ -31,9 +32,12 @@
 				Computer Database </a>
 		</div>
 	</header>
-
 	<section id="main">
 		<div class="container">
+			<form:form modelAttribute="computerDTO">
+				<form:errors path="name"/>
+				<form:errors path="companyDTO"/>
+			</form:form>
 			<c:if test="${fn:length(errors)>0}">
 				<div class="alert alert-danger">
 					<c:out value="${errors}" />
@@ -42,25 +46,26 @@
 			<div class="row">
 				<div class="col-xs-8 col-xs-offset-2 box">
 					<h1>Add Computer</h1>
-					<form action="AddComputerController" id="formAddComputer"
+					<form:form modelAttribute="computerDTO" action="AddComputerController" id="formAddComputer"
 						method="POST">
+						<form:input type="hidden" path="id" value="-1"/>
 						<fieldset>
 							<div class="form-group">
-								<label for="computerName">Computer name</label> <input
-									type="text" class="form-control" id="computerName"
-									placeholder="Computer name" name="computerName" required>
+								<label for="computerName">Computer name</label> <form:input
+									type="text" class="form-control" id="computerName" path="name"
+									placeholder="Computer name" name="computerName" required="required"/>
 							</div>
 							<div class="form-group">
-								<label for="introduced">Introduced date</label> <input
-									type="date" class="form-control" id="introduced"
+								<label for="introduced">Introduced date</label> <form:input
+									type="date" class="form-control" id="introduced" path="introduced"
 									placeholder="Introduced date" name="introduced"
-									min="1970-01-01">
+									min="1970-01-01"/>
 							</div>
 							<div class="form-group">
-								<label for="discontinued">Discontinued date</label> <input
-									type="date" class="form-control" id="discontinued"
+								<label for="discontinued">Discontinued date</label> <form:input
+									type="date" class="form-control" id="discontinued" path="discontinued"
 									placeholder="Discontinued date" name="discontinued"
-									min="1970-01-01">
+									min="1970-01-01"/>
 							</div>
 							<div class="form-group">
 								<label for="companyId">Company</label> <select
@@ -78,7 +83,7 @@
 							<input type="submit" value="Add" class="btn btn-primary">
 							or <a href="ListComputerController" class="btn btn-default">Cancel</a>
 						</div>
-					</form>
+					</form:form>
 				</div>
 			</div>
 		</div>

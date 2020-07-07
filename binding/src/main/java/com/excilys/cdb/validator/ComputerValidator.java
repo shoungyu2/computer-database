@@ -2,6 +2,8 @@ package com.excilys.cdb.validator;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -9,10 +11,12 @@ import org.springframework.validation.Validator;
 import com.excilys.cdb.model.Company;
 import com.excilys.cdb.model.Computer;
 
+@Component
 public class ComputerValidator implements Validator{
 
 	private final Validator companyValidator;
 	
+	@Autowired
 	public ComputerValidator(Validator companyValidator) {
 		
 		if(companyValidator == null) {

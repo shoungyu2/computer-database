@@ -1,10 +1,12 @@
 package com.excilys.cdb.validator;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.excilys.cdb.model.Page;
 
+@Component
 public class PageValidator implements Validator {
 
 	public boolean supports(Class<?> clazz) {

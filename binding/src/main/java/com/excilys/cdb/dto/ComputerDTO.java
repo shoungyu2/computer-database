@@ -2,12 +2,12 @@ package com.excilys.cdb.dto;
 
 public final class ComputerDTO {
 	
-	private final String id;
-	private final String name;
-	private final String introduced;
-	private final String discontinued;
-	private final CompanyDTO companyDTO;
-	
+	private String id;
+	private String name;
+	private String introduced;
+	private String discontinued;
+	private CompanyDTO companyDTO;
+		
 	private ComputerDTO(Builder cdtob) {
 		
 		this.id=cdtob.id;
@@ -60,6 +60,26 @@ public final class ComputerDTO {
 			
 		}
 		
+		public String getId() {
+			return id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public String getIntroduced() {
+			return introduced;
+		}
+
+		public String getDiscontinued() {
+			return discontinued;
+		}
+
+		public CompanyDTO getCompanyDTO() {
+			return companyDTO;
+		}
+
 		public Builder setIntroduced(String introduced) {
 			this.introduced=introduced;
 			return this;

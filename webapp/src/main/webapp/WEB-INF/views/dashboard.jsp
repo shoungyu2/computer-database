@@ -29,7 +29,7 @@
 	<section id="main">
 		<div class="container">
 			<c:if test="${fn:length(success)>0}">
-				<div class="alert alert-danger">
+				<div class="alert alert-success">
 					<c:out value="${success}" />
 				</div>
 			</c:if>
