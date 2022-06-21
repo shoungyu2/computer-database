@@ -21,7 +21,7 @@
     <slf4j_version>2.0.0-alpha1</slf4j_version>
     <jquery_version>3.3.1</jquery_version>
     <mockito_version>3.3.3</mockito_version>
-    <mysql_version>8.0.20</mysql_version>
+    <mysql_version>8.0.28</mysql_version>
     <dbunit_version>2.5.3</dbunit_version>
     <h2_version>1.4.200</h2_version>
     <javax_version>3.1.0</javax_version>
